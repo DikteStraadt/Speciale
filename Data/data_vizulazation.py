@@ -4,10 +4,13 @@ from datetime import datetime
 import math
 import operator
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Import data
 data = pd.read_excel("C:/Users/User/Downloads/Master_Excel_Sep4.xlsx")
+data2 = pd.read_excel("C:/Users/User/Downloads/Master_Excel_Sep4.xlsx", "Sheet2")
 n = len(data)
+n2 = len(data2)
 
 # Calculate average age at first visitation (average_age_first_visitation)
 years = 0
@@ -58,7 +61,7 @@ average_years = years/n
 average_months = months/n
 average_days = days/n
 
-print("Years: ", average_years, ", months: ", average_months, ", days: ", average_days)  
+#print("Years: ", average_years, ", months: ", average_months, ", days: ", average_days)  
 
 total_years_int = int(average_years)
 
@@ -106,9 +109,9 @@ for i in range(n):
 print("Distribution of arthritis type of patients:", type_array)
         
 # Plotting distribution of JIA types as bar chart
-# (https://www.tutorialspoint.com/matplotlib/matplotlib_bar_plot.htm)
 fig = plt.figure()
 ax = fig.add_axes([0,0,1,1])
+ax.set_ylabel('Number of patients')
 labels = ['pauci','poly','systemic','enthecitis','psoriasis related','poly+psoriasis','systemic+psoriasis','pauci+psoriasis', 'CRMO','CRMO+JIA','Not registered']
 plt.xticks(rotation='vertical')
 ax.bar(labels, type_array)
@@ -132,10 +135,46 @@ for i in range(n):
 print("Overall TMJ status of patients:", status_array)
 
 # Plotting overall TMJ involvement status as bar chart
-# (https://www.tutorialspoint.com/matplotlib/matplotlib_bar_plot.htm)
 fig = plt.figure()
 ax = fig.add_axes([0,0,1,1])
+ax.set_ylabel('Number of patients')
 labels = ['No TMJ involvment','Right TMJ','Left TMJ','Both TMJ', "Misregistered"]
 plt.xticks(rotation='vertical')
 ax.bar(labels, status_array)
 plt.show()
+
+# Import data
+data = pd.read_excel("C:/Users/User/Downloads/Master_Excel_Sep4.xlsx")
+data2 = pd.read_excel("C:/Users/User/Downloads/Master_Excel_Sep4.xlsx", "Sheet2")
+n = len(data)
+n2 = len(data2)
+
+# Trajectory
+status_matrix = np.zeros(18)
+
+for i in range(n2):
+    
+    status = data2['overall TMJ involvement'][i]
+    
+    if status == 1 or status == 2 or status == 3:
+        
+        row = data2.loc[i,:]
+        status_matrix = np.vstack([status_matrix, row])
+    
+# Remove first row
+status_matrix = np.delete(status_matrix, 0, 0)
+
+# Remove first column
+status_matrix = np.delete(status_matrix, 0, 1)
+
+# Plot
+fig = plt.figure()
+ax = fig.add_axes([0,0,1,1])
+ax.set_ylabel('Involvment status')
+ax.set_xlabel('Visitation number')
+plt.xlim([0, 17])
+#for i in range(len(status_matrix)):
+for i in range(40,41):
+    plt.plot(status_matrix[i])
+plt.show()
+
