@@ -27,19 +27,21 @@ for i in range(n):
    
     # Calculate the difference between the two dates
     difference = relativedelta.relativedelta(date_visitation, date_birth)
-      
-    if difference.years < 0:
-        difference.years = 100 + difference.years
-        #print("OBS old/misregistred: index", i, ", year difference:", difference.years)
-           
-    if difference.years < 100:
-        age_array[difference.years] = operator.add(age_array[difference.years], 1)    
+    
+    if difference.years > 0 and difference.years < 19:
         
-    days = days + (difference.years * 365.25 + difference.months * (365.25/12) + difference.days)
+        if difference.years < 0:
+            difference.years = 100 + difference.years
+            print("OBS old/misregistred: index", i, ", year difference:", difference.years)
+               
+        if difference.years < 100:
+            age_array[difference.years] = operator.add(age_array[difference.years], 1)    
+            
+        days = days + (difference.years * 365.25 + difference.months * (365.25/12) + difference.days)
     
 average_years = days/365.25/n
     
-#print("Average age at first visitation:", average_years, " years")      
+print("Average age at first visitation:", average_years, " years")      
 
 total_years_int = int(average_years)
 
@@ -49,7 +51,7 @@ total_months_int = int(total_months)
 total_days = ((total_months - total_months_int) * (365.25/12))
 total_days_int = int(total_days)
 
-print("Average age at first visitation (all patients):", total_years_int, " years,", total_months_int, "months, and ", total_days_int, "days") 
+print("Average age at first visitation:", total_years_int, " years,", total_months_int, "months, and ", total_days_int, "days") 
 
 
 # Plotting age distribution as bar chart
