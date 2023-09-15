@@ -4,7 +4,7 @@ from datetime import datetime
 import math
 import operator
 import matplotlib.pyplot as plt
-import numpy as np
+import numpy as np     
 
 # Import data
 data = pd.read_excel("C:/Users/User/Downloads/Master_Excel_Sep4.xlsx")
@@ -13,69 +13,63 @@ n = len(data)
 n2 = len(data2)
 
 # Calculate average age at first visitation (average_age_first_visitation)
-years = 0
-months = 0
 days = 0
+age_array = [0] * 100
+relativedeltas = []
 
 for i in range(n):
         
     # Parse the dates from strings into datetime objects
     date_birth = datetime.strptime(data['birth'][i], "%d-%b-%y")
     
-    if math.isnan(data['age_onset'][i]):
-       
-        # Convert first visitation value to datetime
-       date_visitation = datetime.strptime(data['first_visitation'][i], "%d-%b-%y")
-       
-       # Calculate the difference between the two dates
-       difference = relativedelta.relativedelta(date_visitation, date_birth)
-
-       # Print the number of days between the two dates
-       # print(difference.years, "years,", difference.months, "months,", difference.days, "days")
-       
-       years = years + difference.years
-       months = months + difference.months
-       days = days + difference.days
-       
-    else:
-        
-        # Convert age onset value to date       
-        year = int(data['age_onset'][i])        
-        month = int((data['age_onset'][i] - year) * 12) 
-
-        if month < 1:
-            day = int((data['age_onset'][i] - year) * 365.25)
-        else:
-            day = int((((data['age_onset'][i] - year) * 12) - month) * (365.25/12))
-        
-        # Print the age on the onset date
-        # print("From onset date: i: ", i, ",", year, "years,", month, "months,", day, "days")
-        
-        years = years + year
-        months = months + month
-        days = days + day
+    # Convert first visitation value to datetime
+    date_visitation = datetime.strptime(data['first_visitation'][i], "%d-%b-%y")
    
-# print("Years: ", years, ", months: ", months, ", days: ", days)  
-
-average_years = years/n
-average_months = months/n
-average_days = days/n
-
-#print("Years: ", average_years, ", months: ", average_months, ", days: ", average_days)  
+    # Calculate the difference between the two dates
+    difference = relativedelta.relativedelta(date_visitation, date_birth)
+      
+    if difference.years < 0:
+        difference.years = 100 + difference.years
+        #print("OBS old/misregistred: index", i, ", year difference:", difference.years)
+           
+    if difference.years < 100:
+        age_array[difference.years] = operator.add(age_array[difference.years], 1)    
+        
+    days = days + (difference.years * 365.25 + difference.months * (365.25/12) + difference.days)
+    
+average_years = days/365.25/n
+    
+#print("Average age at first visitation:", average_years, " years")      
 
 total_years_int = int(average_years)
 
-total_months = ((average_years - int(average_years)) * 12) + average_months
+total_months = ((average_years - int(average_years)) * 12)
 total_months_int = int(total_months)
 
-total_days = ((total_months - total_months_int) * (365.25/12)) + average_days
+total_days = ((total_months - total_months_int) * (365.25/12))
 total_days_int = int(total_days)
 
-if total_months >= 1:
-    total_years_int += 1
-    total_months_int -= 12
+print("Average age at first visitation (all patients):", total_years_int, " years,", total_months_int, "months, and ", total_days_int, "days") 
 
-print("Average age at first visitation:", total_years_int, " years,", total_months_int, "months, and ", total_days_int, "days")      
+
+# Plotting age distribution as bar chart
+fig = plt.figure()
+ax = fig.add_axes([0,0,1,1])
+ax.set_ylabel('Number of patients')
+ax.set_xlabel('Age')
+labels = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18']
+ax.bar(labels, age_array[:len(labels)])
+plt.show()
+
+fig = plt.figure()
+ax = fig.add_axes([0,0,1,1])
+ax.set_ylabel('Number of patients')
+ax.set_xlabel('Age')
+plt.plot(age_array)
+plt.show()
+
+print("Age distribution at first visitation:", age_array[:18])
+#print("The rest:", age_array[18:])
 
 # Calculate gender distribution
 girls = 0
