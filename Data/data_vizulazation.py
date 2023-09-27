@@ -28,17 +28,17 @@ for i in range(n):
     # Calculate the difference between the two dates
     difference = relativedelta.relativedelta(date_visitation, date_birth)
     
-    #difference.years > 0 and difference.years < 19:
+    if difference.years > 0 and difference.years < 19:
+
+        if difference.years < 0:
+            difference.years = 100 + difference.years
+            print("OBS old/misregistred: index", i, ", year difference:", difference.years)
+               
+        if difference.years < 100:
+            age_array[difference.years] = operator.add(age_array[difference.years], 1)    
+            
+        days = days + (difference.years * 365.25 + difference.months * (365.25/12) + difference.days)
         
-    if difference.years < 0:
-        difference.years = 100 + difference.years
-        print("OBS old/misregistred: index", i, ", year difference:", difference.years)
-           
-    if difference.years < 100:
-        age_array[difference.years] = operator.add(age_array[difference.years], 1)    
-        
-    days = days + (difference.years * 365.25 + difference.months * (365.25/12) + difference.days)
-    
 average_years = days/365.25/n
     
 print("Average age at first visitation:", average_years, " years")      
