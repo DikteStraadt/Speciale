@@ -30,13 +30,15 @@ def read_visitations(data):
         [headers_visitation_0, headers_visitation_1, headers_visitation_2, headers_visitation_3, headers_visitation_4,
          headers_visitation_5, headers_visitation_6, headers_visitation_7, headers_visitation_8, headers_visitation_9,
          headers_visitation_10, headers_visitation_11, headers_visitation_12, headers_visitation_13,
-         headers_visitation_14, headers_visitation_15, headers_visitation_16, headers_patient_info_first,
-         headers_patient_info_last])
+         headers_visitation_14, headers_visitation_15, headers_visitation_16])
 
     for visitation in visitation_headers:
         start_index = data.columns.get_loc(visitation[0])
         end_index = data.columns.get_loc(visitation[1])
         list_visitations = data.iloc[:, start_index: end_index + 1]
+        list_visitations.insert(0, 'type', data['type'])
+        list_visitations.insert(0, 'sex', data['sex'])
+        list_visitations.insert(0, 'study_id', data['study_id'])
         list_list_visitations.append(list_visitations)
 
     return list_list_visitations
