@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.datasets import load_wine
-from HelperFunction import data_prep, train_test, sfs_feature_selection, xgboostClassification
+from HelperFunction import data_prep, train_test, sfs_feature_selection, xgboostClassification, makeClassification
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import seaborn as sns
@@ -23,12 +23,6 @@ test = 0.3
 shuffle_flag = True
 stratify_flag = True
 
-# Sequential Feature Selector
-
-sfs_feature = 10
-sfs_cv = 5
-sfs_scoring = 'f1_micro'
-
 
 if __name__ == '__main__':
     wine_df=pd.DataFrame(data=np.c_[wine['data'],wine['target']],columns=wine['feature_names']+['target'])
@@ -43,18 +37,15 @@ if __name__ == '__main__':
     # Create Train and Test Data
     X_train, X_test, Y_train, Y_test = train_test_split(wine.data, wine.target, train_size=0.80, stratify=wine.target, random_state=101)
     print("*********** First fitting without feature selection ***************")
-    xgboostClassification(wine.feature_names, X_train, X_test, Y_train, Y_test)
+    makeClassification(wine_df, "XGBoost", X_train, X_test, Y_train, Y_test, False)
+
+    # Perform feature selection - sfsFlag indicates that feature selection should be done before fitting model
+    makeClassification(wine_df, "XGBoost", X_train, X_test, Y_train, Y_test, True)
 
 
-    # Perform feature selection
-    X_train_sfs, sfs1 = sfs_feature_selection(wine_df ,X_train, Y_train, sfs_feature, sfs_cv, sfs_scoring)
-
-    newData = wine_df.loc[:, X_train_sfs].copy()
-
-    X_train2, X_test2, Y_train2, Y_test2 = train_test_split(newData, wine.target, train_size=0.80, stratify=wine.target,
-                                                        random_state=101)
 
 
-    xgboostClassification(X_train_sfs, X_train2, X_test2, Y_train2, Y_test2)
+
+
 
 

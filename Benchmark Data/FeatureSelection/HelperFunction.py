@@ -11,10 +11,16 @@ from sklearn.model_selection import StratifiedKFold
 
 import xgboost as xgb
 from xgboost import XGBClassifier
-from catboost import CatBoostClassifier
+from catboost import CatBoost
+from catboost.utils import eval_metric
 import seaborn as sns
 from sklearn.metrics import accuracy_score,classification_report, confusion_matrix
 import matplotlib.pyplot as plt
+
+# Sequential Feature Selector
+sfs_feature = 10
+sfs_cv = 5
+sfs_scoring = 'f1_micro'
 
 def data_prep(data, fields_to_drop, string_columns, numeric_columns):
     try:
@@ -116,9 +122,10 @@ def train_test(data, test, shuffle_flag, stratify_flag, WOE_encoding):
     return train_features, test_features, train_target, test_target, features, Target
 
 # Sequential Feature Selector
-def sfs_feature_selection(data ,train_features, train_target, sfs_feature, sfs_cv, sfs_scoring):
+def sfs_feature_selection(estimatorClass, data, train_features, train_target, sfs_feature, sfs_cv, sfs_scoring):
 
     # Input feature data
+    # estimatorClass - the type of estimator (XGBoost, CatBoost, etc)
     # data - Input feature data
     # train_target - Target variable training data
     # sfs_feature - no. of features to select
@@ -126,11 +133,9 @@ def sfs_feature_selection(data ,train_features, train_target, sfs_feature, sfs_c
     # sfs_cv - cross-validation splitting strategy
     # sfs_scoring - CV performance scoring metric
 
-    xgb = XGBClassifier(n_jobs = -1, random_state=101)
+    cv = StratifiedKFold(n_splits=sfs_cv, random_state=101, shuffle=True)
 
-    cv = StratifiedKFold(n_splits=sfs_cv, random_state=73, shuffle=True)
-
-    sfs1 = SFS(estimator=xgb,
+    sfs1 = SFS(estimator=estimatorClass,
                k_features=(3,10),
                forward=True,
                floating=False,
@@ -161,10 +166,20 @@ def sfs_feature_selection(data ,train_features, train_target, sfs_feature, sfs_c
     return sfs_train_features , sfs1
 
 
-def makeClassification(classification_estimator):
+def makeClassification(data, classification_estimator, X_train, X_test, Y_train, Y_test, sfsFlag):
     if classification_estimator == "XGBoost":
+        if sfsFlag == True:
+            print("Performing feature selection")
+            xgb = XGBClassifier(n_jobs=-1, random_state=101)
+            X_train_sfs, sfs1 = sfs_feature_selection(xgb,data, X_train, Y_train, sfs_feature, sfs_cv, sfs_scoring)
+            newData = data.loc[:, X_train_sfs].copy()
+            X_train2, X_test2, Y_train2, Y_test2 = train_test_split(newData, data['target'], train_size=0.80,
+                                                                    stratify=data['target'],
+                                                                    random_state=101)
+            xgboostClassification(X_train2, X_test2, Y_train2, Y_test2)
+            return
         # Link to the function parameters - https://xgboost.readthedocs.io/en/stable/parameter.html
-        xgboostClassification()
+        xgboostClassification(X_train, X_test, Y_train, Y_test)
 
     elif classification_estimator == "CatBoost":
         # call CatBoost classifier
@@ -177,12 +192,12 @@ def makeClassification(classification_estimator):
 
 
 
-def xgboostClassification(feature, X_train, X_test, Y_train, Y_test):
+def xgboostClassification(X_train, X_test, Y_train, Y_test):
     print("Train/Test Sizes : ", X_train.shape, X_test.shape, Y_train.shape, Y_test.shape, "\n")
 
 
-    dmat_train = xgb.DMatrix(X_train, Y_train, feature_names=feature)
-    dmat_test = xgb.DMatrix(X_test, Y_test, feature_names=feature)
+    dmat_train = xgb.DMatrix(X_train, Y_train)
+    dmat_test = xgb.DMatrix(X_test, Y_test)
 
     param = {
         'max_depth': 5,  # the maximum depth of each tree
@@ -209,5 +224,16 @@ def xgboostClassification(feature, X_train, X_test, Y_train, Y_test):
 def catboostClassification(feature, X_train, X_test, Y_train, Y_test):
     print("Train/Test sizes : ", X_train.shape, X_test.shape, Y_train.shape, Y_test.shape, "\n")
 
+    booster = CatBoost(params={'iterations': 100, 'verbose':10, 'loss_function': 'MultiClass', 'classes_count':3 })
+    booster.fit(X_train, Y_train, eval_set=(X_test, Y_test))
+    booster.set_feature_names(feature)
+
+    test_preds = booster.predict(X_test, prediction_type="Class").flatten()
+    train_preds = booster.predict(X_train, prediction_type="Class").flatten()
+
+    print("\nTest Accuracy : %.2f"%eval_metric(Y_test, test_preds, "Accuracy")[0])
+    print("Train Accuracy : %.2f"%eval_metric(Y_train, train_preds, "Accuracy")[0])
+
+    booster.predict(X_test, prediction_type="Probability")[:5]
 
 
