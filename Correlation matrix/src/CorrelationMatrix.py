@@ -8,9 +8,9 @@ def correlation_matrix(df, plot_name):
 
     plt.close("all")
     corr = df.iloc[:, 1:].corr()
-    fig, ax = plt.subplots(figsize=(24, 18))
+    fig, ax = plt.subplots(figsize=(32, 24))
 
-    heatmap = sns.heatmap(corr, cbar=True, vmin=-0.5, vmax=0.5, fmt='.2f', annot_kws={'size': 3}, annot=True, square=True, cmap="YlGnBu")
+    heatmap = sns.heatmap(corr, cbar=True, vmin=-0.5, vmax=0.5, fmt='.2f', annot_kws={'size': 2}, annot=True, square=True, cmap="YlGnBu")
 
     ticks = np.arange(corr.shape[0]) + 0.5
     ax.set_xticks(ticks)

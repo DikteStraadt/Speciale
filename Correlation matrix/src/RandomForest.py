@@ -1,4 +1,4 @@
-from sklearn.datasets import make_friedman1
+#from sklearn.datasets import make_friedman1
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.feature_selection import RFECV
 from sklearn.metrics import confusion_matrix, classification_report

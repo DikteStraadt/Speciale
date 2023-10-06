@@ -49,7 +49,7 @@ def clean_columns(visitations_2D):
     visitations_2D.rename(columns={'tem_sen_right15': 'temp_sen_right15'}, inplace=True)
     visitations_2D.rename(columns={'tem_sen_right16': 'temp_sen_right16'}, inplace=True)
 
-    # Remove redundant columns in visitation 0
+    # Remove columns
     visitations_2D = visitations_2D.drop(columns=['click_lateroleft_right'])
     visitations_2D = visitations_2D.drop(columns=['click_lateroright_left'])
 

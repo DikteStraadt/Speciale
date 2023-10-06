@@ -2,6 +2,7 @@ import ImportExportData as d
 import ReadWriteVisitations as v
 import CleanData as cd
 import CleanVisitations as cv
+import EncodeData as e
 
 if __name__ == '__main__':
 
@@ -36,6 +37,10 @@ if __name__ == '__main__':
     # Insert zero in all empty entries
     visitations = cv.insert_zeros(visitations)
     print("Zeroes inserted")
+
+    # Encode predictors
+    visitations = e.one_hot_encode(visitations)
+    print("Encoding completed")
 
     # Add all visitations to one dataframe
     visitations_list = v.combine_to_dataframe(visitations)
