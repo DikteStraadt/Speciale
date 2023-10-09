@@ -6,7 +6,7 @@ def read_visitations(data):
     visitation_headers = []
     list_list_visitations = []
 
-    headers_visitation_0 = ('first_visitation', 'Alder_ved_afslut')
+    headers_visitation_0 = ('first_visitation', 'transversal')
     headers_visitation_1 = ('second_US', 'transversal1')
     headers_visitation_2 = ('third_US', 'transversal2')
     headers_visitation_3 = ('fourth_US', 'transversal3')

@@ -1,4 +1,5 @@
 import numpy as np
+import Utils as u
 def remove_visitations(visitations_3D):
 
     visitation_number = 1
@@ -38,7 +39,7 @@ def remove_visitations(visitations_3D):
 
 def insert_zeros(visitations_3D):
 
-    prefixes_to_exclude = ['study_id', 'type', 'sex', 'Alder_ved_afslut', 'columns_to_include', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', ' eighths', 'nineth', 'tenths', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth']
+    prefixes_to_exclude = ['study_id', 'type', 'sex', 'columns_to_include', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', ' eighths', 'nineth', 'tenths', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth']
 
     for visitation_2D in visitations_3D[0:17]:
 
@@ -60,21 +61,12 @@ def insert_zeros(visitations_3D):
 
     return visitations_3D
 
-def transform_status(value):
-
-    if value == 0:  # No
-        return 0
-    elif value == 1 or value == 2 or value == 3 or value == 4 or value == 5 or value == 6:  # Yes
-        return 1
-    elif value == 7:  # Obs
-        return 2
-
 def convert_visitation_status(visitations_3D):
     visitations_number = 1
 
     # Visitation 0
     for i, value in enumerate(visitations_3D[0]['involvement_status_0']):
-        visitations_3D[0].at[i, 'involvement_status_0'] = transform_status(value)
+        visitations_3D[0].at[i, 'involvement_status_0'] = u.transform_status(value)
 
     # Visitation 1-16
     for visitation_2D in visitations_3D[1:17]:
@@ -82,7 +74,7 @@ def convert_visitation_status(visitations_3D):
         involvement_status_column_name = next((col for col in visitation_2D.columns if col.startswith("involvement_status_")), None)
 
         for i, value in enumerate(visitation_2D[involvement_status_column_name]):
-            visitations_3D[visitations_number].at[i, involvement_status_column_name] = transform_status(value)
+            visitations_3D[visitations_number].at[i, involvement_status_column_name] = u.transform_status(value)
 
         visitations_number = visitations_number + 1
 

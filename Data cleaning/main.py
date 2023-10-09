@@ -1,8 +1,9 @@
 import ImportExportData as d
 import ReadWriteVisitations as v
+import ReadWritePatients as p
 import CleanData as cd
 import CleanVisitations as cv
-import EncodeData as e
+import CleanPatients as cp
 
 if __name__ == '__main__':
 
@@ -22,30 +23,54 @@ if __name__ == '__main__':
     data = cd.remove_old_patients(data)
     print("Old patients removed")
 
+    # Convert time stamps
+    data = cd.convert_time_stamps(data)
+    print("Time stamps converted")
+
+########################## READ PATIENTS ##########################
+
     # Change format of visitations
-    visitations = v.read_visitations(data)
+    patients = p.read_patients(data)
     print("Format converted")
 
     # Remove visitations if they do not have involvement status
-    visitations = cv.remove_visitations(visitations)
+    patients = cp.remove_visitations(patients)
     print("Empty visitations removed")
 
     # Convert involvement status
-    visitations = cv.convert_visitation_status(visitations)
+    patients = cp.convert_visitation_status(patients)
     print("Involvement status converted")
 
     # Insert zero in all empty entries
-    visitations = cv.insert_zeros(visitations)
+    patients = cp.insert_zeros(patients)
     print("Zeroes inserted")
 
-    # Encode predictors
-    visitations = e.one_hot_encode(visitations)
-    print("Encoding completed")
+########################## READ VISITATIONS ##########################
+
+    # Change format of visitations
+    # visitations = v.read_visitations(data)
+    # print("Format converted")
+
+    # Remove visitations if they do not have involvement status
+    # visitations = cv.remove_visitations(visitations)
+    # print("Empty visitations removed")
+
+    # Convert involvement status
+    # visitations = cv.convert_visitation_status(visitations)
+    # print("Involvement status converted")
+
+    # Insert zero in all empty entries
+    # visitations = cv.insert_zeros(visitations)
+    # print("Zeroes inserted")
 
     # Add all visitations to one dataframe
-    visitations_list = v.combine_to_dataframe(visitations)
-    print("Visitations combined to one data frame")
+    # data = v.combine_to_dataframe(visitations)
+    # print("Visitations combined to one data frame")
 
     # Save visitations to file
-    d.export_data(visitations_list, "C:/Users/User/Downloads/output.xlsx")
-    print("Data saved to file")
+    # d.export_data(data, "C:/Users/User/Downloads/output.xlsx")
+    # print("Data saved to file")
+
+########################## DONE ##########################
+
+    print("Done!")
