@@ -50,9 +50,43 @@ def clean_columns(data):
     data.rename(columns={'tem_sen_right15': 'temp_sen_right15'}, inplace=True)
     data.rename(columns={'tem_sen_right16': 'temp_sen_right16'}, inplace=True)
 
-    # Remove columns
+    # Remove click_latero columns
     data = data.drop(columns=['click_lateroleft_right'])
     data = data.drop(columns=['click_lateroright_left'])
+
+    # Remove traction columns
+    data = data.drop(columns=['traction_right'])
+    data = data.drop(columns=['traction_left'])
+    data = data.drop(columns=['traction_right2'])
+    data = data.drop(columns=['traction_left2'])
+    data = data.drop(columns=['traction_right3'])
+    data = data.drop(columns=['traction_left3'])
+    data = data.drop(columns=['traction_right4'])
+    data = data.drop(columns=['traction_left4'])
+    data = data.drop(columns=['traction_right5'])
+    data = data.drop(columns=['traction_left5'])
+    data = data.drop(columns=['traction_right6'])
+    data = data.drop(columns=['traction_left6'])
+    data = data.drop(columns=['traction_right7'])
+    data = data.drop(columns=['traction_left7'])
+    data = data.drop(columns=['traction_right8'])
+    data = data.drop(columns=['traction_left8'])
+    data = data.drop(columns=['traction_right9'])
+    data = data.drop(columns=['traction_left9'])
+    data = data.drop(columns=['traction_right10'])
+    data = data.drop(columns=['traction_left10'])
+    data = data.drop(columns=['traction_right11'])
+    data = data.drop(columns=['traction_left11'])
+    data = data.drop(columns=['traction_right12'])
+    data = data.drop(columns=['traction_left12'])
+    data = data.drop(columns=['traction_right13'])
+    data = data.drop(columns=['traction_left13'])
+    data = data.drop(columns=['traction_right14'])
+    data = data.drop(columns=['traction_left14'])
+    data = data.drop(columns=['traction_right15'])
+    data = data.drop(columns=['traction_left15'])
+    data = data.drop(columns=['traction_right16'])
+    data = data.drop(columns=['traction_left16'])
 
     # rename columns in visitation 0
     data.rename(columns={'micrognathism': 'retrognathism'}, inplace=True)
@@ -152,10 +186,8 @@ def convert_time_stamps(data):
     for i, patient in data.iterrows():
 
         for column in time_stamp_columns:
-
-            if data[column][i] != "#NULL!" and type(data[column][i]) != float:
-
-                data_object = datetime.strptime(data[column][i], "%d-%b-%y")
-                data[column][i] = data_object
+            value = data[column][i]
+            if value != "#NULL!" and type(value) != float:
+                data[column][i] = datetime.strptime(value, "%d-%b-%y")
 
     return data

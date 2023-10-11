@@ -4,6 +4,7 @@ import ReadWritePatients as p
 import CleanData as cd
 import CleanVisitations as cv
 import CleanPatients as cp
+import TimeSeriesDataset as t
 
 if __name__ == '__main__':
 
@@ -33,7 +34,7 @@ if __name__ == '__main__':
     patients = p.read_patients(data)
     print("Format converted")
 
-    # Remove visitations if they do not have involvement status
+    # Remove visitations if they do not have involvement status or visitation date
     patients = cp.remove_visitations(patients)
     print("Empty visitations removed")
 
@@ -44,6 +45,10 @@ if __name__ == '__main__':
     # Insert zero in all empty entries
     patients = cp.insert_zeros(patients)
     print("Zeroes inserted")
+
+    # Make visitations dependent on previous involvement status
+    patients = t.add_sliding_timewindow(patients)
+    print("Sliding time window added")
 
 ########################## READ VISITATIONS ##########################
 
