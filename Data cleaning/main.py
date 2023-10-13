@@ -5,6 +5,8 @@ import CleanData as cd
 import CleanVisitations as cv
 import CleanPatients as cp
 import TimeSeriesDataset as t
+import Plot as plot
+import Utils as u
 
 if __name__ == '__main__':
 
@@ -38,8 +40,13 @@ if __name__ == '__main__':
     patients = cp.remove_visitations(patients)
     print("Empty visitations removed")
 
+    ################ TRADJECTORY PLOT ################
+    plot.trajectory_plot(patients)
+    print("Trajectory plot plotted")
+    ################################ #################
+
     # Convert involvement status
-    patients = cp.convert_visitation_status(patients)
+    patients = u.convert_visitation_status(patients, "ml")
     print("Involvement status converted")
 
     # Insert zero in all empty entries

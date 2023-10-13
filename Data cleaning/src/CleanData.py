@@ -184,7 +184,6 @@ def convert_time_stamps(data):
     time_stamp_columns = ['birth', 'first_visitation', 'second_US', 'third_US', 'fourth_US', 'fifth_US', 'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US', 'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US', 'fifteenth_US', 'sixteenth_US', 'seventeenth_US']
 
     for i, patient in data.iterrows():
-
         for column in time_stamp_columns:
             value = data[column][i]
             if value != "#NULL!" and type(value) != float:
