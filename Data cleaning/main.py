@@ -33,55 +33,58 @@ if __name__ == '__main__':
 ########################## READ PATIENTS ##########################
 
     # Change format of visitations
-    patients = p.read_patients(data)
-    print("Format converted")
+    # patients = p.read_patients(data)
+    # print("Format converted")
 
     # Remove visitations if they do not have involvement status or visitation date
-    patients = cp.remove_visitations(patients)
-    print("Empty visitations removed")
+    # patients = cp.remove_visitations(patients)
+    # print("Empty visitations removed")
 
     ################ TRADJECTORY PLOT ################
-    plot.trajectory_plot(patients)
-    print("Trajectory plot plotted")
+    # plot.trajectory_plot(patients)
+    # print("Trajectory plot plotted")
     ################################ #################
 
     # Convert involvement status
-    patients = u.convert_visitation_status(patients, "ml")
-    print("Involvement status converted")
+    # patients = u.convert_visitation_status(patients, "ml")
+    # print("Involvement status converted")
 
     # Insert zero in all empty entries
-    patients = cp.insert_zeros(patients)
-    print("Zeroes inserted")
+    # patients = cp.insert_zeros(patients)
+    # print("Zeroes inserted")
 
     # Make visitations dependent on previous involvement status
-    patients = t.add_sliding_timewindow(patients)
-    print("Sliding time window added")
+    # patients = t.add_sliding_timewindow(patients)
+    # print("Sliding time window added")
 
 ########################## READ VISITATIONS ##########################
 
     # Change format of visitations
-    # visitations = v.read_visitations(data)
-    # print("Format converted")
+    visitations = v.read_visitations(data)
+    print("Format converted")
 
     # Remove visitations if they do not have involvement status
-    # visitations = cv.remove_visitations(visitations)
-    # print("Empty visitations removed")
+    visitations = cv.remove_visitations(visitations)
+    print("Empty visitations removed")
 
     # Convert involvement status
-    # visitations = cv.convert_visitation_status(visitations)
-    # print("Involvement status converted")
+    visitations = cv.convert_visitation_status(visitations)
+    print("Involvement status converted")
 
     # Insert zero in all empty entries
-    # visitations = cv.insert_zeros(visitations)
-    # print("Zeroes inserted")
+    visitations = cv.insert_zeros(visitations)
+    print("Zeroes inserted")
 
     # Add all visitations to one dataframe
-    # data = v.combine_to_dataframe(visitations)
+    data = v.combine_to_dataframe(visitations)
+    print("Visitations combined to one data frame")
+
+    # Perform unsupervised feature selection
     # print("Visitations combined to one data frame")
 
     # Save visitations to file
-    # d.export_data(data, "C:/Users/User/Downloads/output.xlsx")
-    # print("Data saved to file")
+    d.export_data(data, "C:/Users/User/Downloads/output.xlsx")
+    print("Data saved to file")
 
 ########################## DONE ##########################
 

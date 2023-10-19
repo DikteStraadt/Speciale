@@ -8,7 +8,7 @@ from sklearn.svm import SVR
 
 def random_forest(data, target):
 
-    data.head()
+    # data.head()
 
     X_train, X_test, Y_train, Y_test = train_test_split(data, target, train_size=0.9, stratify=target, random_state=123)
 

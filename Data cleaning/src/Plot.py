@@ -46,6 +46,6 @@ def trajectory_plot(patients):
         plt.tight_layout()
         plt.savefig(f"Tradjectory ({n})")
         plt.show()
-        plt.figure(figsize=(10, 6)) # (8, 6)
+        plt.figure(figsize=(10, 6))
         i = i + interval
         n = n + 1
