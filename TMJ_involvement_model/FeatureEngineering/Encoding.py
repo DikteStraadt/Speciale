@@ -20,3 +20,12 @@ class OneHotEncode:
         print("Data encoded")
 
         return new_df
+
+class EntityEmbeddingEncoding:
+
+    def fit(self, data, y=None):
+        return self
+
+    def transform(self, data, y=None):
+
+        return data

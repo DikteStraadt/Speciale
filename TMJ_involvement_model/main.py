@@ -3,6 +3,7 @@ from DataCleaning import ImportExportData as d
 from FeatureEngineering import Encoding as e
 from FeatureEngineering import Normalization as n
 from FeatureEngineering import Sampling as s
+from ModelTraining import RandomForest as r
 from sklearn.pipeline import Pipeline
 
 warnings.filterwarnings('ignore')
@@ -42,8 +43,10 @@ if __name__ == '__main__':
     pipeline = Pipeline(steps=[
         ("Up sampling", s.UpsampleData()),
         ("Down sampling", s.DownsampleData()),
+        # ("Feature selection", X)
         # ("Encoding", e.OneHotEncode()),
         # ("Normalization", n.NormalizeData()),
+        ("Random forest", r.RandomForest())
     ])
 
     data = pipeline.fit_transform(data)
