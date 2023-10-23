@@ -2,6 +2,7 @@ import pandas as pd
 import CorrelationMatrix as c
 import RandomForest as r
 import XGBoost as x
+import CatBoost as cat
 import EncodeData as e
 import PCA as p
 import LowVarianceThreshold as l
@@ -11,10 +12,10 @@ import NonLinearCorMatrix as n
 if __name__ == '__main__':
 
     # data = pd.read_excel("C:/Users/User/Downloads/output.xlsx")
-    data = pd.read_csv("C:/Users/User/Desktop/CorMatrix/Book1.csv", sep=';')
-    print("Data imported")
+    # data = pd.read_csv("C:/Users/User/Desktop/CorMatrix/Book1.csv", sep=';')
+    # print("Data imported")
 
-    n.non_linear_cor_matrix(data)
+    # n.non_linear_cor_matrix(data)
 
     # f.feature_clustering()
     # print("Feature clustering")
@@ -40,6 +41,8 @@ if __name__ == '__main__':
     #target = data['involvementstatus']
     #r.random_forest(data3, target)
     #x.xgboost(data3, target)
+
+    cat.catBoost()
 
     print("Done!")
 

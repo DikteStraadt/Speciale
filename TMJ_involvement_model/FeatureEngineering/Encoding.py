@@ -1,5 +1,4 @@
 import pandas as pd
-
 class OneHotEncode:
 
     def fit(self, data, y=None):

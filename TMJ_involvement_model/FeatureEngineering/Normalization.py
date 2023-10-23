@@ -23,4 +23,6 @@ class NormalizeData:
 
         print(normalized_df)
 
+        return normalized_df
+
 
