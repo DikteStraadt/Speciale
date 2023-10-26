@@ -31,20 +31,20 @@ class RandomForest:
         }
 
         param_grid = {
-            'RandomForest__n_estimators': [100, 200, 300, 400, 500],
-            # 'RandomForest__max_depth': [None, 10, 20, 30, 40, 50],
-            # 'RandomForest__min_samples_split': [2, 5, 10],
-            # 'RandomForest__min_samples_leaf': [1, 2, 4],
-            # 'max_features': ['auto', 'sqrt', 'log2'],
-            # 'bootstrap': [True, False],
-            # 'class_weight': [None, 'balanced'],
+            'RandomForest__n_estimators': [100, 200, 300, 400, 500, 600, 700],
+            'RandomForest__max_depth': [None, 10, 20, 30, 40, 50],
+            'RandomForest__min_samples_split': [2, 5, 10],
+            'RandomForest__min_samples_leaf': [1, 2, 4],
+            'RandomForest__max_features': ['auto', 'sqrt', 'log2'],
+            'RandomForest__bootstrap': [True, False],
+            'RandomForest__class_weight': [None, 'balanced'],
             'RandomForest__random_state': [123]
         }
 
         random_search = RandomizedSearchCV(
             estimator=model,
             param_distributions=param_grid,
-            n_iter=10,
+            n_iter=100,
             cv=5,
             n_jobs=-1,
             random_state=123,
@@ -61,6 +61,7 @@ class RandomForest:
         print("Best Params: ", best_parameters)
         print("Accuracy: ", accuracy)
 
+        r.write_to_report("ml algorithm", "random forest")
         r.write_to_report("best model", str(best_model))
         r.write_to_report("best parameters", str(best_parameters))
         r.write_to_report("accuracy", accuracy)

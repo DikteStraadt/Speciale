@@ -20,24 +20,26 @@ class PCATransformer:
         columns_to_exclude = ['sex', 'type', 'studyid', 'involvementstatus', 'Unnamed: 0', 'visitationdate']
         data_no_pca = data.drop(columns=columns_to_exclude)
 
-        # fig, ax = plt.subplots(figsize=(32, 24))
-        # sns.heatmap(data.corr())
-        # plt.tight_layout()
-        # plt.savefig("withoutPCA", dpi=300)
+        fig, ax = plt.subplots(figsize=(32, 24))
+        sns.heatmap(data_no_pca.corr())
+        plt.tight_layout()
+        plt.savefig("withoutPCA", dpi=300)
 
         pca = PCA(n_components=self.n_components)
         pca.fit(data_no_pca)
         data_pca = pca.transform(data_no_pca)
         data_pca = pd.DataFrame(data_pca)
 
+        fig, ax = plt.subplots(figsize=(32, 24))
+        sns.heatmap(data_pca.corr())
+        plt.tight_layout()
+        plt.savefig("withPCA", dpi=300)
+
         data = pd.concat([data[columns_to_exclude], data_pca], axis=1)
 
-        #fig, ax = plt.subplots(figsize=(32, 24))
-        #sns.heatmap(data_pca.corr())
-        #plt.tight_layout()
-        #plt.savefig("withPCA", dpi=300)
-
         r.write_to_report("feature selection", "PCA")
+        r.write_to_report("PCA components", self.n_components)
+
         print("PCA performed")
         return data
 

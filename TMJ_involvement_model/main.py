@@ -49,7 +49,7 @@ if __name__ == '__main__':
         ("Downsampling", s.DownsampleData(2500)),
         ("Encoding", e.OneHotEncode()),
         ("Normalization", n.NormalizeData()),
-        ("Feature selection", f.PCATransformer(50)),
+        # ("Feature selection", f.PCATransformer(50)),
     ])
 
     data = feature_engineering_pipeline.fit_transform(data)
