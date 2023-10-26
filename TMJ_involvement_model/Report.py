@@ -1,26 +1,46 @@
 import csv
+import json
 import os
 from datetime import datetime
 
 def create_empty_report():
 
-    path = "report_not_completed.csv"
+    path = "report_not_completed.json"
 
     with open(path, "w", newline="") as file:
-        print("Empty report file created")
+        json.dump({}, file)
 
-def write_to_report(data_to_append):
+    file.close()
 
-    path = "report_not_completed.csv"
+def write_to_report(key, value):
 
-    with open(path, mode="a", newline="") as file:
-        writer = csv.writer(file)
+    path = "report_not_completed.json"
+    data_to_append = {key: value}
 
-        for string in data_to_append:
-            writer.writerow([string])
+    try:
+        with open(path, 'r') as file:
+            existing_data = json.load(file)
+    except FileNotFoundError:
+        existing_data = {}
+
+    existing_data.update(data_to_append)
+
+    with open(path, 'w') as file:
+        json.dump(existing_data, file, indent=4)
+
+    file.close()
+
 
 def rename_report_file():
 
-    current_filename = "report_not_completed.csv"
-    new_filename = f"report ({datetime.now().strftime('%d-%m-%Y %H-%M-%S')}).csv"
+    path = "report_not_completed.json"
+
+    with open(path, "r") as file:
+        string_data = f"""{file.read()}"""
+
+    file.close()
+
+    json_data = json.loads(string_data)
+    current_filename = "report_not_completed.json"
+    new_filename = f"report (cat={json_data['N_categories']}, timeliness={json_data['timeliness']}, encoding={json_data['encoding']}) {json_data['timestamp']}.json"
     os.rename(current_filename, new_filename)

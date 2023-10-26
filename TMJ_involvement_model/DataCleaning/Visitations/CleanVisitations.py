@@ -1,5 +1,5 @@
 import numpy as np
-from Utils import Utils as u
+import DataCleaning.Utils as u
 
 class RemoveVisitations:
 

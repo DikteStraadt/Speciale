@@ -1,48 +1,68 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix, classification_report
-from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, classification_report, make_scorer, accuracy_score, f1_score
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.pipeline import Pipeline
+import Report as r
 
 
 class RandomForest:
 
-    def __init__(self, n_estimators, criterion, random_state):
-        self.n_estimators = n_estimators
-        self.criterion = criterion
-        self.random_state = random_state
+    def __init__(self, X_train, X_test, y_train, y_test):
+        self.X_train = X_train
+        self.X_test = X_test
+        self.y_train = y_train
+        self.y_test = y_test
 
     def fit(self, data, y=None):
         return self
 
     def transform(self, data, y=None):
 
-        columns_to_exclude = ['sex', 'type', 'studyid', 'involvementstatus', 'Unnamed: 0', 'visitationdate']
-        target = data['involvementstatus']
-        data = data.drop(columns=columns_to_exclude)
+        model = Pipeline(steps=[
+            ("RandomForest", RandomForestClassifier()),
+        ])
 
-        X_train, X_test, Y_train, Y_test = train_test_split(data, target, train_size=0.9, stratify=target, random_state=123)
-        print("Train/Test Sizes : ", X_train.shape, X_test.shape, Y_train.shape, Y_test.shape, "\n")
-
-        model_params = {
-            'n_estimators': self.n_estimators,
-            'criterion': self.criterion,
-            'random_state': self.random_state
+        scoring = {
+            'accuracy': make_scorer(accuracy_score),
+            # 'f1': make_scorer(f1_score),
+            # 'f1_macro': make_scorer(f1_score, average='macro'),
+            # 'f1_micro': make_scorer(f1_score, average='micro')
         }
 
-        random_forest_classifier = RandomForestClassifier(**model_params)
-        parameters = random_forest_classifier.get_params()
-        random_forest_classifier.fit(X_train, Y_train)
-        Y_preds = random_forest_classifier.predict(X_test)
+        param_grid = {
+            'RandomForest__n_estimators': [100, 200, 300, 400, 500],
+            # 'RandomForest__max_depth': [None, 10, 20, 30, 40, 50],
+            # 'RandomForest__min_samples_split': [2, 5, 10],
+            # 'RandomForest__min_samples_leaf': [1, 2, 4],
+            # 'max_features': ['auto', 'sqrt', 'log2'],
+            # 'bootstrap': [True, False],
+            # 'class_weight': [None, 'balanced'],
+            'RandomForest__random_state': [123]
+        }
 
-        print('Training Coefficient of R^2 : %.3f' % random_forest_classifier.score(X_train, Y_train))
-        print('Test Coefficient of R^2 : %.3f' % random_forest_classifier.score(X_test, Y_test))
+        random_search = RandomizedSearchCV(
+            estimator=model,
+            param_distributions=param_grid,
+            n_iter=10,
+            cv=5,
+            n_jobs=-1,
+            random_state=123,
+            scoring=scoring,
+            refit='accuracy'
+        )
 
-        print("\nConfusion Matrix : ")
-        print(confusion_matrix(Y_test, Y_preds))
+        model = random_search.fit(self.X_train, self.y_train)
 
-        print("\nClassification Report : ")
-        print(classification_report(Y_test, Y_preds))
+        best_model = random_search.best_estimator_
+        best_parameters = random_search.best_params_
+        accuracy = random_search.best_estimator_.score(self.X_test, self.y_test)
 
-        print("Random forest model fitted")
+        print("Best Params: ", best_parameters)
+        print("Accuracy: ", accuracy)
 
-        return data
+        r.write_to_report("best model", str(best_model))
+        r.write_to_report("best parameters", str(best_parameters))
+        r.write_to_report("accuracy", accuracy)
+
+        return model
