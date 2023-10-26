@@ -1,3 +1,4 @@
+import sys
 import warnings
 from datetime import datetime
 
@@ -12,6 +13,7 @@ from DataCleaning.RawData import ImportExportData as d
 from FeatureEngineering import Normalization as n
 from FeatureEngineering import Sampling as s
 from FeatureEngineering import Encoding as e
+from FeatureEngineering import FeatureSelection as f
 from ModelTraining import RandomForest as rf
 from sklearn.pipeline import Pipeline
 
@@ -45,9 +47,9 @@ if __name__ == '__main__':
     feature_engineering_pipeline = Pipeline(steps=[
         ("Upsampling", s.UpsampleData(2500, 500)),
         ("Downsampling", s.DownsampleData(2500)),
-        # ("Feature selection", f.SubsetSelection()),
         ("Encoding", e.OneHotEncode()),
-        ("Normalization", n.NormalizeData())
+        ("Normalization", n.NormalizeData()),
+        ("Feature selection", f.PCATransformer(50)),
     ])
 
     data = feature_engineering_pipeline.fit_transform(data)

@@ -21,7 +21,7 @@ class NormalizeData:
         summary = normalized_df.describe()
         column_ranges = summary.loc[['min', 'max']]
 
-        print(normalized_df)
+        print(column_ranges)
 
         return normalized_df
 
