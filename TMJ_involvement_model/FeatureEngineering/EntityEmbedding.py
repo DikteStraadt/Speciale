@@ -9,25 +9,29 @@ from keras.utils import plot_model
 from IPython.display import Image
 from matplotlib import pyplot
 
+class EntityEmbeddingTransformer:
+    def __init__(self, target, embeddingList):
+        self.target = target
+        self.embeddingList = embeddingList
+
+    def fit(self, data, y:None):
+        return self
+
+    def transform(self, data, y=None):
+        for idx, x in enumerate(self.embeddingList):
+            string = "entityEmbedding_" + str(idx)
+            data = doEmbedding(data, x, self.target, string)
+
+        return data
+
+
+
 def doEmbedding(data, featureEm, target, embeddingName):
-    """
-    data: data frame with all the predictors and target
-    featureEm: column name of predictor that needs to be encoded
-    target: column name of target
-    embeddingName: the name for the embedding when saved to a csv file
-
-    Example of how to run this:
-    featureListEmb = ["asypupilline", "headache"]
-
-    for idx, x in enumerate(featureListEmb):
-        string = "entityEmbedding_" + str(idx)
-        data = doEmbedding(data, x, "involvementstatus", string)
-    """
     print(data.isna().sum())
     y = data[target]
     X = data.drop(target, axis=1).astype(float)
 
-    # evt. noget stratify på, eller skabe artifical data på en måde
+    # evt. noget stratify på
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=11)
 
     print(f'The training dataset has {X_train.shape[0]} records and {X_train.shape[1]} columns')
@@ -135,8 +139,7 @@ def doEmbedding(data, featureEm, target, embeddingName):
     X_emb[featureEm] = X_emb['emb_0']
     X_emb = X_emb.drop('emb_0', axis=1)
 
-    X_emb.to_csv('tester.csv', index=False)
-    #print(X_emb.info())
+    X_emb.to_csv('embeddedFeatures.csv', index=False)
     return X_emb
 
 
