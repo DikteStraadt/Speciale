@@ -11,9 +11,9 @@ import NonLinearCorMatrix as n
 
 if __name__ == '__main__':
 
-    # data = pd.read_excel("C:/Users/User/Downloads/output.xlsx")
+    data = pd.read_excel("C:/Users/User/Downloads/output.xlsx")
     # data = pd.read_csv("C:/Users/User/Desktop/CorMatrix/Book1.csv", sep=';')
-    # print("Data imported")
+    print("Data imported")
 
     # n.non_linear_cor_matrix(data)
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     # l.low_variance_threshold(data)
     # print("Low variance threshold")
 
-    #p.PCA_tmj(data)
+    p.PCA_tmj(data)
     #print("PCA")
 
     # Encode data
@@ -42,7 +42,9 @@ if __name__ == '__main__':
     #r.random_forest(data3, target)
     #x.xgboost(data3, target)
 
-    cat.catBoost()
+    #cat.catBoost()
+
+
 
     print("Done!")
 

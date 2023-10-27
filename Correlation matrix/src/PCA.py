@@ -14,8 +14,8 @@ def PCA_tmj(data):
     data = data.drop(columns=['sex'])
     data = data.drop(columns=['type'])
     data = data.drop(columns=['studyid'])
-    data = data.drop(columns=['tractionleft'])
-    data = data.drop(columns=['tractionright'])
+    #data = data.drop(columns=['tractionleft'])
+    #data = data.drop(columns=['tractionright'])
 
     scalar = StandardScaler()
     scaled_data = pd.DataFrame(scalar.fit_transform(data))  # scaling the data
