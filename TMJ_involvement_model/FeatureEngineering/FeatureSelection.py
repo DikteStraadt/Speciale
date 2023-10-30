@@ -28,7 +28,7 @@ class ForwardSubsetSelection:
                    floating=False,
                    scoring='accuracy',
                    cv=2,
-                   verbose=3)
+                   verbose=4)
 
         sfs.fit(data, self.target)
 
@@ -50,8 +50,9 @@ class ForwardSubsetSelection:
 
         data = data.loc[:, sfs_features].copy()
 
-        r.write_to_report(f"SFS number of features ({str(self.estimator).split('(')[0]})", len(features))
-        r.write_to_report(f"SFS features names ({str(self.estimator).split('(')[0]})", features)
+        r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS n_features", len(features))
+        r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS features names ({str(self.estimator).split('(')[0]})", features)
+        r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS accuracy ({str(self.estimator).split('(')[0]})", sfs.k_score_)
 
         return data
 

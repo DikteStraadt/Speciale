@@ -1,15 +1,19 @@
 import pickle
+from datetime import datetime
 
-def save_model(model):
 
-    with open('model_pkl', 'wb') as files:
+def save_model(model, type):
+
+    path = f"model-{type}-{datetime.now().strftime('%d-%m-%Y %H-%M-%S')}.pkl"
+
+    with open(path, 'wb') as files:
         pickle.dump(model, files)
 
     print("Model saved")
 
-def load_model():
+def load_model(path):
 
-    with open('model_pkl', 'rb') as file:
-        lr = pickle.load(file)
+    with open(path, 'rb') as file:
+        model = pickle.load(file)
 
-    return lr
+    return model

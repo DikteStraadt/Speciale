@@ -1,49 +1,78 @@
-from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
-from sklearn.model_selection import train_test_split
+from matplotlib import pyplot
+from sklearn.ensemble import RandomForestClassifier
+from FeatureEngineering import FeatureSelection as f
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, make_scorer, f1_score
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
 import xgboost as xgb
-import json
+import Report as r
 
-class XGBoost:
 
-    def __init__(self, max_depth, eta, num_class):
-        self.max_depth = max_depth
-        self.eta = eta
-        self.num_class = num_class
+class XGBoostClassifier:
+
+    def __init__(self, X_train, X_test, y_train, y_test, target):
+        self.X_train = X_train
+        self.X_test = X_test
+        self.y_train = y_train
+        self.y_test = y_test
+        self.target = target
 
     def fit(self, data, y=None):
         return self
 
     def transform(self, data, y=None):
+        sfs_data = f.ForwardSubsetSelection(xgb.XGBClassifier(), self.target).transform(data)
+        self.X_train = self.X_train.loc[:, sfs_data.columns]
+        self.X_test = self.X_test.loc[:, sfs_data.columns]
 
-        columns_to_exclude = ['sex', 'type', 'studyid', 'involvementstatus', 'Unnamed: 0', 'visitationdate']
-        target = data['involvementstatus']
-        data = data.drop(columns=columns_to_exclude)
+        model = Pipeline(steps=[
+            ("xgboost", xgb.XGBClassifier()),
+        ])
 
-        X_train, X_test, Y_train, Y_test = train_test_split(data, target, train_size=0.9, stratify=target, random_state=123)
-
-        dmat_train = xgb.DMatrix(X_train, Y_train)
-        dmat_test = xgb.DMatrix(X_test, Y_test)
-
-        model_params = {
-            'max_depth': self.max_depth,
-            'eta': self.eta,
-            'objective': 'multi:softmax',
-            'num_class': self.num_class
+        scoring = {
+            'accuracy': make_scorer(accuracy_score),
+            'f1_micro': make_scorer(f1_score, average='micro'),
+            'f1_macro': make_scorer(f1_score, average='macro'),
+            'f1_weighted': make_scorer(f1_score, average='weighted'),
         }
 
-        booster = xgb.train(model_params, dmat_train, evals=[(dmat_train, "train"), (dmat_test, "test")])
-        parameters = json.loads(booster.save_config())
+        param = {
+            'xgboost__max_depth': [3, 7, 10],
+            'xgboost__eta': [0.01, 0.1, 0.2],
+            'xgboost__objective': ['multi:softmax'],
+            'xgboost__min_child_weight': [10, 15, 20, 25],
+            'xgboost__colsample_bytree': [0.8, 0.9, 1],
+            'xgboost__n_estimators': [300, 400, 500, 600],
+            'xgboost__reg_alpha': [0.5, 0.2, 1],
+            'xgboost__reg_lambda': [2, 3, 5],
+            'xgboost__gamma': [1, 2, 3],
+            'xgboost__random_state': [123]
+        }
 
-        print("\nTrain RMSE : ", booster.eval(dmat_train))
-        print("Test  RMSE : ", booster.eval(dmat_test))
+        random_search = RandomizedSearchCV(
+            estimator=model,
+            param_distributions=param,
+            n_iter=2,
+            cv=2,
+            n_jobs=-1,
+            random_state=123,
+            scoring=scoring,
+            refit='f1_weighted',
+            verbose=3
+        )
 
-        print("Train Accuracy : %.2f" % accuracy_score(Y_train, booster.predict(data=dmat_train)))
-        print("\nTest  Accuracy : %.2f" % accuracy_score(Y_test, booster.predict(data=dmat_test)))
+        random_search.fit(self.X_train, self.y_train)
 
-        print("\nConfusion Matrix : ")
-        print(confusion_matrix(Y_test, booster.predict(data=dmat_test)))
+        importance = random_search.best_estimator_.named_steps["xgboost"].feature_importances_
+        category_names = self.X_train.columns  # Replace with your actual feature names
 
-        print("\nClassification Report : ")
-        print(classification_report(Y_test, booster.predict(data=dmat_test)))
+        pyplot.bar(category_names, importance)
+        pyplot.xlabel('Features')
+        pyplot.ylabel('Importance')
+        pyplot.show()
 
-        print("XGBoost model fitted")
+        r.write_to_report("(XGBClassifier) best model", str(random_search.best_estimator_))
+        r.write_to_report("(XGBClassifier) best parameters", str(random_search.best_params_))
+        r.write_to_report("(XGBClassifier) accuracy", random_search.best_estimator_.score(self.X_test, self.y_test))
+
+        return data
