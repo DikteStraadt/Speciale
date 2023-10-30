@@ -5,19 +5,26 @@ import Report as r
 from imblearn.combine import SMOTEENN
 from collections import Counter
 
-
-class SMOTETransformer:
+class SMOTE:
     def fit(self, data, y:None):
         return self
+
     def transform(self, data, y=None):
+
+        columns_to_exclude = ['sex', 'type', 'studyid', 'involvementstatus', 'Unnamed: 0', 'visitationdate']
         y = data["involvementstatus"]
-        X = data.drop("involvementstatus", axis=1)
+        print("Before SMOTE: ", Counter(y))
+        X = data.drop(columns=columns_to_exclude)
+        columns_to_exclude.remove("involvementstatus")
 
         sme = SMOTEENN(random_state=42)
         X_res, y_res = sme.fit_resample(X, y)
-        final_df = pd.concat([X_res.reset_index(drop=True), y_res.reset_index(drop=True)], axis=1)
-        return final_df
+        final_df = pd.concat([y_res.reset_index(drop=True), X_res.reset_index(drop=True), data[columns_to_exclude]], axis=1)
+        print("After SMOTE: ", Counter(y_res))
 
+        r.write_to_report("smote size", final_df.shape)
+
+        return final_df
 
 class UpsampleData:
 

@@ -50,8 +50,7 @@ if __name__ == '__main__':
             encoding_method = e.OneHotEncode()
 
         feature_engineering_pipeline = Pipeline(steps=[
-            ("Upsampling", s.UpsampleData(2500, 500)),
-            ("Downsampling", s.DownsampleData(2500)),
+            ("Sampling", s.SMOTE()),
             ("Encoding", encoding_method),
             ("Normalization", n.NormalizeData()),
         ])
