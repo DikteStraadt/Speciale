@@ -28,8 +28,10 @@ class EntityEmbeddingTransformer:
 
 def doEmbedding(data, featureEm, target, embeddingName):
     print(data.isna().sum())
-    y = data[target]
-    X = data.drop(target, axis=1).astype(float)
+    embeddingData = data.copy()
+    embeddingData[target].replace(2.0, 1.0)
+    y = embeddingData[target]
+    X = embeddingData.drop(target, axis=1).astype(float)
 
     # evt. noget stratify på
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=11)
@@ -74,7 +76,7 @@ def doEmbedding(data, featureEm, target, embeddingName):
     # Dense layer with 2 neurons and relu activation function
     model = Dense(2, activation='relu', kernel_initializer='he_uniform')(model)
 
-    outputs = Dense(1, activation='softmax')(model)
+    outputs = Dense(1, activation='sigmoid')(model)
 
     model = Model(inputs=input_data, outputs=outputs, name=embeddingName)
     print(model.summary())
@@ -86,13 +88,13 @@ def doEmbedding(data, featureEm, target, embeddingName):
     Image(retina=True, filename=string)
 
     # Compile the model and set up early stopping
-    #opt = SGD(learning_rate=0.01)
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    opt = SGD(learning_rate=0.01)
+    model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy'])
     history = model.fit(
         [X_train[featureEm], X_train[numeric_cols]],
         y_train,
         validation_data = ([X_test[featureEm], X_test[numeric_cols]], y_test),
-        epochs=50
+        epochs=1000
     )
 
 

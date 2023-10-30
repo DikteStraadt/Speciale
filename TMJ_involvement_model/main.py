@@ -3,6 +3,7 @@ import warnings
 from datetime import datetime
 
 import numpy as np
+import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import make_scorer, precision_score, recall_score, accuracy_score, f1_score
 from sklearn.model_selection import GridSearchCV, train_test_split, RandomizedSearchCV
@@ -16,13 +17,13 @@ from FeatureEngineering import Encoding as e
 from FeatureEngineering import FeatureSelection as f
 from ModelTraining import RandomForest as rf
 from sklearn.pipeline import Pipeline
+from FeatureEngineering import EntityEmbedding
 
 warnings.filterwarnings('ignore')
 N_CATEGORIES = 3  # 3, 4, 5, 8
 TIMELINESS = "false"  # true, false
 
 if __name__ == '__main__':
-
     # Create empty report file
     r.create_empty_report()
     r.write_to_report("timestamp", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
