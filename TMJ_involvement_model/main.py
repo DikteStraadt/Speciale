@@ -18,6 +18,7 @@ from FeatureEngineering import FeatureSelection as f
 from ModelTraining import RandomForest as rf
 from sklearn.pipeline import Pipeline
 from FeatureEngineering import EntityEmbedding
+from collections import Counter
 
 warnings.filterwarnings('ignore')
 N_CATEGORIES = 3  # 3, 4, 5, 8
