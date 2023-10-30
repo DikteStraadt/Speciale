@@ -1,12 +1,17 @@
+import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
+from sklearn.model_selection import StratifiedKFold
 from sklearn.decomposition import PCA
 from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
 from mlxtend.feature_selection import SequentialFeatureSelector as SFS
 from sklearn.feature_selection import SelectKBest
 from sklearn.model_selection import StratifiedKFold
 from sklearn.ensemble import RandomForestClassifier
+from mlxtend.feature_selection import SequentialFeatureSelector as SFS
+from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
+from sklearn.preprocessing import StandardScaler
 
 import Report as r
 

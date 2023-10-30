@@ -63,9 +63,11 @@ class RandomForest:
         importance = random_search.best_estimator_.named_steps["randomforest"].feature_importances_
         category_names = self.X_train.columns  # Replace with your actual feature names
 
+        pyplot.figure(figsize=(10, 6))
         pyplot.bar(category_names, importance)
         pyplot.xlabel('Features')
         pyplot.ylabel('Importance')
+        pyplot.xticks(rotation=45, ha='right')
         pyplot.show()
 
         r.write_to_report("(RandomForestClassifier) best model", str(random_search.best_estimator_))

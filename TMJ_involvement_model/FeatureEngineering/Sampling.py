@@ -2,6 +2,22 @@
 import pandas as pd
 from sklearn.utils import resample
 import Report as r
+from imblearn.combine import SMOTEENN
+from collections import Counter
+
+
+class SMOTETransformer:
+    def fit(self, data, y:None):
+        return self
+    def transform(self, data, y=None):
+        y = data["involvementstatus"]
+        X = data.drop("involvementstatus", axis=1)
+
+        sme = SMOTEENN(random_state=42)
+        X_res, y_res = sme.fit_resample(X, y)
+        final_df = pd.concat([X_res.reset_index(drop=True), y_res.reset_index(drop=True)], axis=1)
+        return final_df
+
 
 class UpsampleData:
 

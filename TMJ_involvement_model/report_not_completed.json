@@ -1,0 +1,22 @@
+{
+    "timestamp": "30-10-2023 15-43-28",
+    "N_categories": 3,
+    "timeliness": "false",
+    "original data size": "(6066, 99)",
+    "upsampling (cat1)": 2500,
+    "upsampling (cat2)": 500,
+    "downsampling (cat0)": 2500,
+    "encoding": "one hot",
+    "train size": "(4400, 196) (4400,)",
+    "test size": "(550, 196) (550,)",
+    "validation size": "(550, 196) (550,)",
+    "(RandomForestClassifier) SFS n_features": 5,
+    "(RandomForestClassifier) SFS features names (RandomForestClassifier)": [
+        "painmoveright",
+        "morningstiffness",
+        "bruxism",
+        "chewingfunction",
+        "openingfunction"
+    ],
+    "(RandomForestClassifier) SFS accuracy (RandomForestClassifier)": 0.5567272727272727
+}

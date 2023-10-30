@@ -4,26 +4,39 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3d0dedd6-53a1-4eb9-a1cf-3f7e1e98c0ea" name="Changes" comment="ML methods working with feature selection">
+    <list default="true" id="ea0cc13c-e1b4-4a5b-a6e5-e06bfdf509cc" name="Changes" comment="Save model, feature importance ect.">
+      <change afterPath="$PROJECT_DIR$/../Benchmark Data/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Benchmark Data/.idea/Benchmark Data.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Benchmark Data/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Benchmark Data/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Benchmark Data/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Benchmark Data/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Benchmark Data/catboost_info/catboost_training.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Benchmark Data/catboost_info/learn/events.out.tfevents" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Benchmark Data/catboost_info/learn_error.tsv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Benchmark Data/catboost_info/test/events.out.tfevents" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Benchmark Data/catboost_info/test_error.tsv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Benchmark Data/catboost_info/time_left.tsv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FeatureEngineering/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FeatureEngineering/.idea/FeatureEngineering.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FeatureEngineering/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FeatureEngineering/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FeatureEngineering/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FeatureEngineering/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Benchmark Data/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Benchmark Data/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/TMJ_involvement_model.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TMJ_involvement_model.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FeatureEngineering/EntityEmbedding.py" beforeDir="false" afterPath="$PROJECT_DIR$/FeatureEngineering/EntityEmbedding.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FeatureEngineering/FeatureSelection.py" beforeDir="false" afterPath="$PROJECT_DIR$/FeatureEngineering/FeatureSelection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ModelTraining/RandomForest.py" beforeDir="false" afterPath="$PROJECT_DIR$/ModelTraining/RandomForest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ModelTraining/XGBoost.py" beforeDir="false" afterPath="$PROJECT_DIR$/ModelTraining/XGBoost.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SaveLoadModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/SaveLoadModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FeatureEngineering/Sampling.py" beforeDir="false" afterPath="$PROJECT_DIR$/FeatureEngineering/Sampling.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/report_not_completed.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -31,25 +44,25 @@
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
-  <component name="ProjectId" id="2XKwn8b5N2shzJsNERPzLEcalLP" />
+  <component name="ProjectId" id="2XTmNFSduFRSPanpCF9PgZmPShV" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Documents/Speciale NEW/Speciale/TMJ_involvement_model/main.py&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "Merging main",
+    "last_opened_file_path": "C:/Users/User/Documents/Speciale NEW/Speciale/TMJ_involvement_model/main.py",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="TMJ_involvement_model" />
@@ -59,8 +72,9 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.9 (TMJ_involvement_model) (2)" />
       <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
@@ -77,80 +91,25 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="3d0dedd6-53a1-4eb9-a1cf-3f7e1e98c0ea" name="Changes" comment="" />
-      <created>1698391243551</created>
+      <changelist id="ea0cc13c-e1b4-4a5b-a6e5-e06bfdf509cc" name="Changes" comment="" />
+      <created>1698661402939</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1698391243551</updated>
-      <workItem from="1698391244575" duration="430000" />
-      <workItem from="1698391701656" duration="39128000" />
+      <updated>1698661402939</updated>
+      <workItem from="1698661404007" duration="4236000" />
     </task>
-    <task id="LOCAL-00001" summary="XGboost">
-      <option name="closed" value="true" />
-      <created>1698653494383</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1698653494383</updated>
-    </task>
-    <task id="LOCAL-00002" summary="ML methods working with feature selection">
-      <option name="closed" value="true" />
-      <created>1698664839242</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1698664839242</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="XGboost" />
-    <MESSAGE value="ML methods working with feature selection" />
-    <option name="LAST_COMMIT_MESSAGE" value="ML methods working with feature selection" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/ModelTraining/XGBoost.py</url>
-          <line>19</line>
-          <option name="timeStamp" value="115" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/ModelTraining/XGBoost.py</url>
-          <line>22</line>
-          <option name="timeStamp" value="119" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/SaveLoadModel.py</url>
-          <line>8</line>
-          <option name="timeStamp" value="124" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/ModelTraining/RandomForest.py</url>
-          <line>64</line>
-          <option name="timeStamp" value="128" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/ModelTraining/RandomForest.py</url>
-          <line>72</line>
-          <option name="timeStamp" value="130" />
-        </line-breakpoint>
-      </breakpoints>
-      <default-breakpoints>
-        <breakpoint type="python-exception">
-          <properties notifyOnTerminate="true" exception="BaseException">
-            <option name="notifyOnTerminate" value="true" />
-          </properties>
-        </breakpoint>
-      </default-breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Save model, feature importance ect." />
+    <option name="LAST_COMMIT_MESSAGE" value="Save model, feature importance ect." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/TMJ_involvement_model$main.coverage" NAME="main Coverage Results" MODIFIED="1698675683774" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/TMJ_involvement_model$Sampling.coverage" NAME="Sampling Coverage Results" MODIFIED="1698676423718" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FeatureEngineering" />
+    <SUITE FILE_PATH="coverage/TMJ_involvement_model$EntityEmbedding.coverage" NAME="EntityEmbedding Coverage Results" MODIFIED="1698661798503" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FeatureEngineering" />
+    <SUITE FILE_PATH="coverage/TMJ_involvement_model$main.coverage" NAME="main Coverage Results" MODIFIED="1698676711717" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>

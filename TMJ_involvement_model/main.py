@@ -22,6 +22,8 @@ from ModelTraining import RandomForest as rf
 from ModelTraining import XGBoost as xg
 from sklearn.pipeline import Pipeline
 import SaveLoadModel as sl
+from FeatureEngineering import EntityEmbedding
+from collections import Counter
 
 warnings.filterwarnings('ignore')
 N_CATEGORIES = 3  # 2, 3, 4, 5, 8
