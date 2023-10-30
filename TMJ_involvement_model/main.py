@@ -1,33 +1,24 @@
-import sys
 import warnings
-import xgboost as xgb
-from datetime import datetime
-from catboost import CatBoostClassifier, Pool
-
-import numpy as np
-import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import make_scorer, precision_score, recall_score, accuracy_score, f1_score
-from sklearn.model_selection import GridSearchCV, train_test_split, RandomizedSearchCV
-from xgboost import XGBClassifier
-
 import Report as r
-from DataCleaning import PreprocessData as p
+
+from datetime import datetime
+from sklearn.model_selection import train_test_split
 from DataCleaning.RawData import ImportExportData as d
 from FeatureEngineering import Normalization as n
 from FeatureEngineering import Sampling as s
 from FeatureEngineering import Encoding as e
-from FeatureEngineering import FeatureSelection as f
 from ModelTraining import RandomForest as rf
 from ModelTraining import XGBoost as xg
 from sklearn.pipeline import Pipeline
-import SaveLoadModel as sl
-from FeatureEngineering import EntityEmbedding
-from collections import Counter
 
 warnings.filterwarnings('ignore')
-N_CATEGORIES = 3  # 2, 3, 4, 5, 8
-TIMELINESS = "false"  # true, false
+
+configs = [
+    {'N_CATEGORIES': 3, 'TIMELINESS': False, 'FEATURES_STATISTICAL': False, 'ENCODING_EMBEDDING': False},
+    {'N_CATEGORIES': 3, 'TIMELINESS': False, 'FEATURES_STATISTICAL': False, 'ENCODING_EMBEDDING': True},
+    {'N_CATEGORIES': 3, 'TIMELINESS': False, 'FEATURES_STATISTICAL': True, 'ENCODING_EMBEDDING': False},
+    {'N_CATEGORIES': 3, 'TIMELINESS': False, 'FEATURES_STATISTICAL': True, 'ENCODING_EMBEDDING': True}
+]
 
 if __name__ == '__main__':
 
@@ -37,52 +28,58 @@ if __name__ == '__main__':
     # data = p.preprocess_data(N_CATEGORIES)
     # print("Data is preprocessed")
 
-    ##################### IMPORT DATA #####################
+    for config in configs:
 
-    # Import formatted visitation data
-    data = d.import_data("C:/Users/User/Downloads/output.xlsx", "Sheet1")
-    print("Data is imported")
+        ##################### IMPORT DATA #####################
 
-    # Create empty report file
-    r.create_empty_report()
-    r.write_to_report("timestamp", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
-    r.write_to_report("N_categories", N_CATEGORIES)
-    r.write_to_report("timeliness", TIMELINESS)
-    r.write_to_report("original data size", f"{data.shape}")
+        # Import formatted visitation data
+        data = d.import_data("C:/Users/User/Downloads/output.xlsx", "Sheet1")
+        print("Data is imported")
 
-    ##################### PROCESS DATA #####################
+        r.create_empty_report()
+        r.write_to_report("timestamp", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
+        r.write_to_report("N_categories", config['N_CATEGORIES'])
+        r.write_to_report("timeliness", config['TIMELINESS'])
+        r.write_to_report("original data size", f"{data.shape}")
 
-    feature_engineering_pipeline = Pipeline(steps=[
-        ("Upsampling", s.UpsampleData(2500, 500)),
-        ("Downsampling", s.DownsampleData(2500)),
-        ("Encoding", e.OneHotEncode()),
-        ("Normalization", n.NormalizeData()),
-    ])
+        ##################### PROCESS DATA #####################
 
-    data = feature_engineering_pipeline.fit_transform(data)
+        if config['ENCODING_EMBEDDING']:
+            encoding_method = e.EntityEmbeddingEncoding()
+        else:
+            encoding_method = e.OneHotEncode()
 
-    ##################### SPLIT DATA #####################
+        feature_engineering_pipeline = Pipeline(steps=[
+            ("Upsampling", s.UpsampleData(2500, 500)),
+            ("Downsampling", s.DownsampleData(2500)),
+            ("Encoding", encoding_method),
+            ("Normalization", n.NormalizeData()),
+        ])
 
-    columns_to_exclude = ['sex', 'type', 'studyid', 'involvementstatus', 'Unnamed: 0', 'visitationdate']
-    target = data['involvementstatus']
-    data = data.drop(columns=columns_to_exclude)
+        data = feature_engineering_pipeline.fit_transform(data)
 
-    X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=123, shuffle=True)
-    X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, test_size=0.5, random_state=123, shuffle=True)
+        ##################### SPLIT DATA #####################
 
-    r.write_to_report("train size", f"{X_train.shape} {y_train.shape}")
-    r.write_to_report("test size", f"{X_test.shape} {y_test.shape}")
-    r.write_to_report("validation size", f"{X_valid.shape} {y_valid.shape}")
+        columns_to_exclude = ['sex', 'type', 'studyid', 'involvementstatus', 'Unnamed: 0', 'visitationdate']
+        target = data['involvementstatus']
+        data = data.drop(columns=columns_to_exclude)
 
-    ##################### PERFORM FEATURE SELECTION AND TRAIN MODEL #####################
+        X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=123, shuffle=True)
+        X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, test_size=0.5, random_state=123, shuffle=True)
 
-    pipeline = Pipeline(steps=[
-       ("randomforest", rf.RandomForest(X_train, X_test, y_train, y_test, target)),
-       ("xgboost", xg.XGBoostClassifier(X_train, X_test, y_train, y_test, target)),
-    ])
+        r.write_to_report("train size", f"{X_train.shape} {y_train.shape}")
+        r.write_to_report("test size", f"{X_test.shape} {y_test.shape}")
+        r.write_to_report("validation size", f"{X_valid.shape} {y_valid.shape}")
 
-    pipeline.transform(data)
+        ##################### PERFORM FEATURE SELECTION AND TRAIN MODEL #####################
 
-    r.rename_report_file()
+        pipeline = Pipeline(steps=[
+            ("randomforest", rf.RandomForest(X_train, X_test, y_train, y_test, target, config)),
+            ("xgboost", xg.XGBoostClassifier(X_train, X_test, y_train, y_test, target, config)),
+        ])
+
+        pipeline.transform(data)
+
+        r.rename_report_file()
 
     print("Done!")

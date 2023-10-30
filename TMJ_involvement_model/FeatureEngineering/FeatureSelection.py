@@ -55,6 +55,7 @@ class ForwardSubsetSelection:
 
         data = data.loc[:, sfs_features].copy()
 
+        r.write_to_report("feature selection", "SFS")
         r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS n_features", len(features))
         r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS features names ({str(self.estimator).split('(')[0]})", features)
         r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS accuracy ({str(self.estimator).split('(')[0]})", sfs.k_score_)

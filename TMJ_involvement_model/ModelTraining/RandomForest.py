@@ -9,20 +9,27 @@ import Report as r
 
 class RandomForest:
 
-    def __init__(self, X_train, X_test, y_train, y_test, target):
+    def __init__(self, X_train, X_test, y_train, y_test, target, config):
         self.X_train = X_train
         self.X_test = X_test
         self.y_train = y_train
         self.y_test = y_test
         self.target = target
+        self.config = config
 
     def fit(self, data, y=None):
         return self
 
     def transform(self, data, y=None):
-        sfs_data = f.ForwardSubsetSelection(RandomForestClassifier(), self.target).transform(data)
-        self.X_train = self.X_train.loc[:, sfs_data.columns]
-        self.X_test = self.X_test.loc[:, sfs_data.columns]
+
+        if self.config["FEATURES_STATISTICAL"]:
+            sfs_data = f.ForwardSubsetSelection(RandomForestClassifier(), self.target).transform(data)
+            self.X_train = self.X_train.loc[:, sfs_data.columns]
+            self.X_test = self.X_test.loc[:, sfs_data.columns]
+        else:
+            # Det sæt af features klinikerne kommer med
+            r.write_to_report("feature selection", "Clinical")
+
 
         model = Pipeline(steps=[
             ("randomforest", RandomForestClassifier()),
@@ -61,9 +68,9 @@ class RandomForest:
         random_search.fit(self.X_train, self.y_train)
 
         importance = random_search.best_estimator_.named_steps["randomforest"].feature_importances_
-        category_names = self.X_train.columns  # Replace with your actual feature names
+        category_names = self.X_train.columns
 
-        pyplot.figure(figsize=(10, 6))
+        pyplot.figure(figsize=(8, 10))
         pyplot.bar(category_names, importance)
         pyplot.xlabel('Features')
         pyplot.ylabel('Importance')
