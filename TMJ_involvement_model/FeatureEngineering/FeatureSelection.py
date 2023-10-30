@@ -1,11 +1,59 @@
-import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
+from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
+from mlxtend.feature_selection import SequentialFeatureSelector as SFS
+from sklearn.feature_selection import SelectKBest
+from sklearn.model_selection import StratifiedKFold
+from sklearn.ensemble import RandomForestClassifier
 
 import Report as r
+
+class ForwardSubsetSelection:
+    def __init__(self, estimator, target):
+        self.estimator = estimator
+        self.target = target
+
+    def fit(self, data, y=None):
+        return self
+
+    def transform(self, data, y=None):
+
+        data = data.iloc[:, 10:20]
+
+        sfs = SFS(estimator=self.estimator,
+                   k_features=5,
+                   forward=True,
+                   floating=False,
+                   scoring='accuracy',
+                   cv=2,
+                   verbose=3)
+
+        sfs.fit(data, self.target)
+
+        print('Best combination (ACC: %.3f): %s\n ' % (sfs.k_score_, sfs.k_feature_idx_))
+        print(pd.DataFrame.from_dict(sfs.get_metric_dict()).T)
+        plot_sfs(sfs.get_metric_dict(), kind='std_err')
+        plt.grid()
+        plt.show()
+
+        features = []
+        sfs_df = pd.DataFrame(columns=['Feature'])
+
+        for x in sfs.k_feature_idx_:
+            print(data.columns[x])
+            features.append(data.columns[x])
+
+        sfs_df['Feature'] = features
+        sfs_features = sfs_df['Feature'].tolist()
+
+        data = data.loc[:, sfs_features].copy()
+
+        r.write_to_report(f"SFS number of features ({str(self.estimator).split('(')[0]})", len(features))
+        r.write_to_report(f"SFS features names ({str(self.estimator).split('(')[0]})", features)
+
+        return data
 
 class PCATransformer:
 
@@ -41,15 +89,4 @@ class PCATransformer:
         r.write_to_report("PCA components", self.n_components)
 
         print("PCA performed")
-        return data
-
-class SubsetSelection:
-
-    def fit(self, data, y=None):
-        return self
-
-    def transform(self, data, y=None):
-
-        r.write_to_report("feature selection", "subset selection")
-        print("Subset selection performed")
         return data
