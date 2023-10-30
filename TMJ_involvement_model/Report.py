@@ -42,5 +42,5 @@ def rename_report_file():
 
     json_data = json.loads(string_data)
     current_filename = "report_not_completed.json"
-    new_filename = f"report (timeliness={json_data['timeliness']}, encoding={json_data['encoding']}, ml={json_data['ml algorithm']}) {json_data['timestamp']}.json"
+    new_filename = f"report (timeliness={json_data['timeliness']}, encoding={json_data['encoding']}, {json_data['timestamp']}.json"
     os.rename(current_filename, new_filename)
