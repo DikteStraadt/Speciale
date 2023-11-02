@@ -1,46 +1,90 @@
+import pandas as pd
+from imblearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, classification_report, make_scorer, accuracy_score, f1_score
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from catboost import CatBoostClassifier, Pool
 from sklearn.datasets import load_iris
+from FeatureEngineering import FeatureSelection as f
+import Report as r
 
 class CatBoost:
 
-    def __init__(self, iterations, depth, learning_rate):
-        self.iterations = iterations
-        self.depth = depth
-        self.learning_rate = learning_rate
+    def __init__(self, X_train, X_test, y_train, y_test, target, config):
+        self.X_train = X_train
+        self.X_test = X_test
+        self.y_train = y_train
+        self.y_test = y_test
+        self.target = target
+        self.config = config
 
     def fit(self, data, y=None):
         return self
 
     def transform(self, data, y=None):
 
-        columns_to_exclude = ['sex', 'type', 'studyid', 'involvementstatus', 'Unnamed: 0', 'visitationdate']
-        target = data['involvementstatus']
-        data = data.drop(columns=columns_to_exclude)
+        if self.config["FEATURES_STATISTICAL"]:
+            sfs_data = f.ForwardSubsetSelection(CatBoostClassifier(), self.target).transform(data)
+            self.X_train = self.X_train.loc[:, sfs_data.columns]
+            self.X_test = self.X_test.loc[:, sfs_data.columns]
+        else:
+            # Det sæt af features klinikerne kommer med
+            r.write_to_report("feature selection", "Clinical")
 
-        X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.1, random_state=123)
+        model = Pipeline(steps=[
+            ("catboost", CatBoostClassifier()),
+        ])
 
-        model_params = {
-            'iterations': self.iterations,
-            'depth': self.depth,
-            'learning_rate': self.learning_rate,
-            'loss_function': 'MultiClass',
-            'verbose': False
+        feature_names = self.X_train.columns.tolist()
+        model.named_steps['catboost'].set_feature_names(feature_names)
+
+        scoring = {
+            'accuracy': make_scorer(accuracy_score),
+            'f1_micro': make_scorer(f1_score, average='micro'),
+            'f1_macro': make_scorer(f1_score, average='macro'),
+            'f1_weighted': make_scorer(f1_score, average='weighted'),
         }
 
-        model = CatBoostClassifier(**model_params)
-        parameters = model.get_params()
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
+        param = {
+            'catboost__iterations': [100, 500],
+            'catboost__learning_rate': [0.1, 0.2, 1],
+            'catboost__depth': [3, 6, 10],
+            'catboost__l2_leaf_reg': [3],
+            'catboost__border_count': [254],
+            'catboost__thread_count': [4],
+            'catboost__one_hot_max_size': [20],
+            'catboost__bagging_temperature': [1.0],
+            'catboost__early_stopping_rounds': [50],
+            'catboost__loss_function': ['MultiClass'],
+            'catboost__verbose': [False]
+        }
 
-        print('Training Coefficient of R^2 : %.3f' % model.score(X_train, y_train))
-        print('Test Coefficient of R^2 : %.3f' % model.score(X_test, y_test))
+        random_search = RandomizedSearchCV(
+            estimator=model,
+            param_distributions=param,
+            n_iter=10,
+            cv=5,
+            n_jobs=-1,
+            random_state=123,
+            scoring=scoring,
+            refit='f1_weighted',
+            verbose=3,
+        )
 
-        print("\nConfusion Matrix : ")
-        print(confusion_matrix(y_test, y_pred))
+        random_search.fit(self.X_train, self.y_train)
 
-        print("\nClassification Report : ")
-        print(classification_report(y_test, y_pred))
+        #importance = random_search.best_estimator_.named_steps["catboost"].feature_importances_
+        #category_names = self.X_train.columns
 
-        print("CatBoost model fitted")
+        # pyplot.figure(figsize=(8, 10))
+        # pyplot.bar(category_names, importance)
+        # pyplot.xlabel('Features')
+        # pyplot.ylabel('Importance')
+        # pyplot.xticks(rotation=45, ha='right')
+        # pyplot.show()
+
+        r.write_to_report("(CatBoostClassifier) best model", str(random_search.best_estimator_))
+        r.write_to_report("(CatBoostClassifier) best parameters", str(random_search.best_params_))
+        r.write_to_report("(CatBoostClassifier) accuracy", random_search.best_estimator_.score(self.X_test, self.y_test))
+
+        return data

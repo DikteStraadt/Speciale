@@ -9,16 +9,17 @@ from FeatureEngineering import Sampling as s
 from FeatureEngineering import Encoding as e
 from ModelTraining import RandomForest as rf
 from ModelTraining import XGBoost as xg
+from ModelTraining import CatBoost as cat
 from sklearn.pipeline import Pipeline
+from itertools import product
 
 warnings.filterwarnings('ignore')
 
-configs = [
-    {'N_CATEGORIES': 3, 'TIMELINESS': False, 'FEATURES_STATISTICAL': False, 'ENCODING_EMBEDDING': False},
-    {'N_CATEGORIES': 3, 'TIMELINESS': False, 'FEATURES_STATISTICAL': False, 'ENCODING_EMBEDDING': True},
-    {'N_CATEGORIES': 3, 'TIMELINESS': False, 'FEATURES_STATISTICAL': True, 'ENCODING_EMBEDDING': False},
-    {'N_CATEGORIES': 3, 'TIMELINESS': False, 'FEATURES_STATISTICAL': True, 'ENCODING_EMBEDDING': True}
-]
+N_CATEGORIES = [3]  # [2, 3, 5, 8]
+TIMELINESS = [False]  # True, False
+FEATURES_STATISTICAL = [True]  # True, False
+ENCODING_EMBEDDING = [False]  # True, False
+configs = list(product(N_CATEGORIES, TIMELINESS, FEATURES_STATISTICAL, ENCODING_EMBEDDING))
 
 if __name__ == '__main__':
 
@@ -28,13 +29,23 @@ if __name__ == '__main__':
     # data = p.preprocess_data(N_CATEGORIES)
     # print("Data is preprocessed")
 
-    for config in configs:
+    ##################### IMPORT DATA #####################
 
-        ##################### IMPORT DATA #####################
+    # Import formatted visitation data
+    imported_data = d.import_data("output.xlsx", "Sheet1")
+    print("Data is imported")
 
-        # Import formatted visitation data
-        data = d.import_data("C:/Users/User/Downloads/output.xlsx", "Sheet1")
-        print("Data is imported")
+    for c in configs:
+
+        config = {
+            'N_CATEGORIES': c[0],
+            'TIMELINESS': c[1],
+            'FEATURES_STATISTICAL': c[2],
+            'ENCODING_EMBEDDING': c[3]
+        }
+
+        data = imported_data
+        target = data['involvementstatus']
 
         r.create_empty_report()
         r.write_to_report("timestamp", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
@@ -44,13 +55,18 @@ if __name__ == '__main__':
 
         ##################### PROCESS DATA #####################
 
+        columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asymenton', 'asyoccl', 'asyupmid', 'asylowmi',
+                             'profile', 'lowerface', 'spacerelationship', 'sagittalrelationright',
+                             'sagitalrelationleft', 'transversal']
+
         if config['ENCODING_EMBEDDING']:
-            encoding_method = e.EntityEmbeddingEncoding()
+            print("Embedding not working")
+            encoding_method = e.EntityEmbeddingTransformer(columns_to_encode, target)
         else:
-            encoding_method = e.OneHotEncode()
+            encoding_method = e.OneHotEncode(columns_to_encode)
 
         feature_engineering_pipeline = Pipeline(steps=[
-            ("Sampling", s.SMOTE()),
+            # ("Sampling", s.SMOTE()),
             ("Encoding", encoding_method),
             ("Normalization", n.NormalizeData()),
         ])
@@ -60,7 +76,6 @@ if __name__ == '__main__':
         ##################### SPLIT DATA #####################
 
         columns_to_exclude = ['sex', 'type', 'studyid', 'involvementstatus', 'Unnamed: 0', 'visitationdate']
-        target = data['involvementstatus']
         data = data.drop(columns=columns_to_exclude)
 
         X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=123, shuffle=True)
@@ -75,6 +90,7 @@ if __name__ == '__main__':
         pipeline = Pipeline(steps=[
             ("randomforest", rf.RandomForest(X_train, X_test, y_train, y_test, target, config)),
             ("xgboost", xg.XGBoostClassifier(X_train, X_test, y_train, y_test, target, config)),
+            ("catboost", cat.CatBoost(X_train, X_test, y_train, y_test, target, config))
         ])
 
         pipeline.transform(data)

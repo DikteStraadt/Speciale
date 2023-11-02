@@ -6,7 +6,7 @@ from imblearn.combine import SMOTEENN
 from collections import Counter
 
 class SMOTE:
-    def fit(self, data, y:None):
+    def fit(self, data, y=None):
         return self
 
     def transform(self, data, y=None):
@@ -17,7 +17,7 @@ class SMOTE:
         X = data.drop(columns=columns_to_exclude)
         columns_to_exclude.remove("involvementstatus")
 
-        sme = SMOTEENN(random_state=42)
+        sme = SMOTEENN(random_state=42, sampling_strategy={1: 2300, 2: 2000})
         X_res, y_res = sme.fit_resample(X, y)
         final_df = pd.concat([y_res.reset_index(drop=True), X_res.reset_index(drop=True), data[columns_to_exclude]], axis=1)
         print("After SMOTE: ", Counter(y_res))

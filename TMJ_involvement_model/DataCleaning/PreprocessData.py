@@ -7,7 +7,7 @@ from DataCleaning.Visitations import ReadWriteVisitations as v
 def preprocess_data(n_categories):
 
     # Import raw data
-    data = d.import_data("C:/Users/User/Downloads/Master_Excel_Sep4.xlsx", "Sheet1")
+    data = d.import_data("Master_Excel_Sep4.xlsx", "Sheet1")
     print("Data is imported")
 
     # Build and run pipeline to preprocess data (no time)
@@ -26,7 +26,7 @@ def preprocess_data(n_categories):
     data = preprocessing_pipeline.fit_transform(data)
 
     # Save visitations to file
-    d.export_data(data, "C:/Users/User/Downloads/output.xlsx")
+    d.export_data(data, "output.xlsx")
     print("Data exported to file")
 
     return data
