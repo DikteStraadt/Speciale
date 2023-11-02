@@ -8,21 +8,18 @@ class NormalizeData:
         return self
 
     def transform(self, data, y=None):
-
-        excluded_columns = ['Unnamed: 0', 'studyid', 'visitationdate', 'involvementstatus']
-        columns_to_normalize = data.drop(columns=excluded_columns)
+        columns_to_normalize = data
 
         scaler = RobustScaler()  # StandardScaler(), MinMaxScaler()
 
         normalized_columns = pd.DataFrame(scaler.fit_transform(columns_to_normalize), columns=columns_to_normalize.columns)
-        normalized_df = pd.concat([data[excluded_columns], normalized_columns], axis=1)
 
         # Get ranges for each column
-        summary = normalized_df.describe()
+        summary = normalized_columns.describe()
         column_ranges = summary.loc[['min', 'max']]
 
         # print(column_ranges)
 
-        return normalized_df
+        return normalized_columns
 
 

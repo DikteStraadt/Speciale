@@ -67,9 +67,7 @@ class PCATransformer:
         return self
 
     def transform(self, data, y=None):
-
-        columns_to_exclude = ['sex', 'type', 'studyid', 'involvementstatus', 'Unnamed: 0', 'visitationdate']
-        data_no_pca = data.drop(columns=columns_to_exclude)
+        data_no_pca = data
 
         fig, ax = plt.subplots(figsize=(32, 24))
         sns.heatmap(data_no_pca.corr())

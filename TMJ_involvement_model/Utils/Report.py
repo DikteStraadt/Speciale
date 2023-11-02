@@ -5,7 +5,7 @@ from datetime import datetime
 
 def create_empty_report():
 
-    path = "../report_not_completed.json"
+    path = "report_not_completed.json"
 
     with open(path, "w", newline="") as file:
         json.dump({}, file)
@@ -14,7 +14,7 @@ def create_empty_report():
 
 def write_to_report(key, value):
 
-    path = "../report_not_completed.json"
+    path = "report_not_completed.json"
     data_to_append = {key: value}
 
     try:
@@ -33,7 +33,7 @@ def write_to_report(key, value):
 
 def rename_report_file():
 
-    path = "../report_not_completed.json"
+    path = "report_not_completed.json"
 
     with open(path, "r") as file:
         string_data = f"""{file.read()}"""
@@ -41,6 +41,6 @@ def rename_report_file():
     file.close()
 
     json_data = json.loads(string_data)
-    current_filename = "../report_not_completed.json"
+    current_filename = "report_not_completed.json"
     new_filename = f"report (timeliness={json_data['timeliness']}, encoding={json_data['encoding']}, fetures={json_data['feature selection']} {json_data['timestamp']}.json"
     os.rename(current_filename, new_filename)

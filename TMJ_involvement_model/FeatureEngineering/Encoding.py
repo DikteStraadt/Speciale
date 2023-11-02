@@ -32,19 +32,20 @@ class OneHotEncode:
         return new_df
 
 class EntityEmbeddingTransformer:
-    def __init__(self, columns_to_encode, target):
-        self.columns_to_encode = columns_to_encode
+    def __init__(self, target, embeddingList):
         self.target = target
+        self.embeddingList = embeddingList
 
-    def fit(self, data, y=None):
+    def fit(self, data, y: None):
         return self
 
     def transform(self, data, y=None):
-        for idx, x in enumerate(self.columns_to_encode):
+        for idx, x in enumerate(self.embeddingList):
             string = "entityEmbedding_" + str(idx)
             data = doEmbedding(data, x, self.target, string)
 
         return data
+
 
 def doEmbedding(data, featureEm, target, embeddingName):
     print(data.isna().sum())
@@ -80,7 +81,7 @@ def doEmbedding(data, featureEm, target, embeddingName):
     # Embedding Layer
     emb_cat = Embedding(input_dim=n_unique_cat, output_dim=cat_emb_dim, name="embedding_cat")(input_cat)
     # Reshaping
-    emb_cat = Reshape(target_shape=(cat_emb_dim, )) (emb_cat)
+    emb_cat = Reshape(target_shape=(cat_emb_dim,))(emb_cat)
 
     input_data = [input_cat, input_numeric]
     emb_data = [emb_cat, emb_numeric]
@@ -113,10 +114,9 @@ def doEmbedding(data, featureEm, target, embeddingName):
     history = model.fit(
         [X_train[featureEm], X_train[numeric_cols]],
         y_train,
-        validation_data = ([X_test[featureEm], X_test[numeric_cols]], y_test),
-        epochs=1000
+        validation_data=([X_test[featureEm], X_test[numeric_cols]], y_test),
+        epochs=50
     )
-
 
     # Evaluate the model
     _, train_acc = model.evaluate([X_train[featureEm], X_train[numeric_cols]], y_train, verbose=0)
@@ -157,10 +157,10 @@ def doEmbedding(data, featureEm, target, embeddingName):
     # saving embedding results
     cat_emb_df.to_csv(csvName, index=False)
 
-    X_emb = pd.merge(data, cat_emb_df, left_on=featureEm, right_on=featureEm, how='inner').drop(['emb_index', featureEm], axis=1)
+    X_emb = pd.merge(data, cat_emb_df, left_on=featureEm, right_on=featureEm, how='inner').drop(
+        ['emb_index', featureEm], axis=1)
     X_emb[featureEm] = X_emb['emb_0']
     X_emb = X_emb.drop('emb_0', axis=1)
 
     X_emb.to_csv('embeddedFeatures.csv', index=False)
-
     return X_emb
