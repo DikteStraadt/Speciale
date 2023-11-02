@@ -18,7 +18,7 @@ warnings.filterwarnings('ignore')
 N_CATEGORIES = [3]  # [2, 3, 5, 8]
 TIMELINESS = [False]  # True, False
 FEATURES_STATISTICAL = [True]  # True, False
-ENCODING_EMBEDDING = [False]  # True, False
+ENCODING_EMBEDDING = [True]  # True, False
 configs = list(product(N_CATEGORIES, TIMELINESS, FEATURES_STATISTICAL, ENCODING_EMBEDDING))
 
 if __name__ == '__main__':
@@ -44,7 +44,8 @@ if __name__ == '__main__':
             'ENCODING_EMBEDDING': c[3]
         }
 
-        data = imported_data
+        columns_to_exclude = ['sex', 'type', 'studyid', 'tractionright', 'tractionleft', 'Unnamed: 0', 'visitationdate']
+        data = imported_data.drop(columns=columns_to_exclude)
         target = data['involvementstatus']
 
         r.create_empty_report()
@@ -55,13 +56,14 @@ if __name__ == '__main__':
 
         ##################### PROCESS DATA #####################
 
-        columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asymenton', 'asyoccl', 'asyupmid', 'asylowmi',
-                             'profile', 'lowerface', 'spacerelationship', 'sagittalrelationright',
-                             'sagitalrelationleft', 'transversal']
+        #columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asymenton', 'asyoccl', 'asyupmid', 'asylowmi',
+        #                     'profile', 'lowerface', 'spacerelationship', 'sagittalrelationright',
+        #                     'sagitalrelationleft', 'transversal']
+        columns_to_encode = ['asypupilline', 'headache']
+
 
         if config['ENCODING_EMBEDDING']:
-            print("Embedding not working")
-            encoding_method = e.EntityEmbeddingTransformer(columns_to_encode, target)
+            encoding_method = e.EntityEmbeddingTransformer('involvementstatus', columns_to_encode)
         else:
             encoding_method = e.OneHotEncode(columns_to_encode)
 
@@ -74,9 +76,7 @@ if __name__ == '__main__':
         data = feature_engineering_pipeline.fit_transform(data)
 
         ##################### SPLIT DATA #####################
-
-        columns_to_exclude = ['sex', 'type', 'studyid', 'involvementstatus', 'Unnamed: 0', 'visitationdate']
-        data = data.drop(columns=columns_to_exclude)
+        data = data.drop('involvementstatus', axis=1)
 
         X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=123, shuffle=True)
         X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, test_size=0.5, random_state=123, shuffle=True)
