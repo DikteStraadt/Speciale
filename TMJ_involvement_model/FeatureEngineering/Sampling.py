@@ -1,11 +1,15 @@
 # https://elitedatascience.com/imbalanced-classes
 import pandas as pd
 from sklearn.utils import resample
-import Report as r
+from Utils import Report as r
 from imblearn.combine import SMOTEENN
 from collections import Counter
 
 class SMOTE:
+
+    def __init__(self, config):
+        self.config = config
+
     def fit(self, data, y=None):
         return self
 
@@ -17,7 +21,7 @@ class SMOTE:
         X = data.drop(columns=columns_to_exclude)
         columns_to_exclude.remove("involvementstatus")
 
-        sme = SMOTEENN(random_state=42, sampling_strategy={1: 2300, 2: 2000})
+        sme = SMOTEENN(random_state=self.config["random_state"])  #sampling_strategy={1: 2300, 2: 2000}
         X_res, y_res = sme.fit_resample(X, y)
         final_df = pd.concat([y_res.reset_index(drop=True), X_res.reset_index(drop=True), data[columns_to_exclude]], axis=1)
         print("After SMOTE: ", Counter(y_res))
@@ -28,9 +32,10 @@ class SMOTE:
 
 class UpsampleData:
 
-    def __init__(self, n_1, n_2):
+    def __init__(self, n_1, n_2, config):
         self.n_1 = n_1
         self.n_2 = n_2
+        self.config = config
 
     def fit(self, data, y=None):
         return self
@@ -43,8 +48,8 @@ class UpsampleData:
         df_1 = data[data.involvementstatus == 1]
         df_2 = data[data.involvementstatus == 2]
 
-        df_1_upsampled = resample(df_1, replace=True, n_samples=self.n_1, random_state=123)
-        df_2_upsampled = resample(df_2, replace=True, n_samples=self.n_2, random_state=123)
+        df_1_upsampled = resample(df_1, replace=True, n_samples=self.n_1, random_state=self.config["random_state"])
+        df_2_upsampled = resample(df_2, replace=True, n_samples=self.n_2, random_state=self.config["random_state"])
         data_upsampled = pd.concat([df_0, df_1_upsampled, df_2_upsampled])
 
         print(data_upsampled['involvementstatus'].value_counts())
@@ -55,8 +60,9 @@ class UpsampleData:
 
 class DownsampleData:
 
-    def __init__(self, n_0):
+    def __init__(self, n_0, config):
         self.n_0 = n_0
+        self.config = config
 
     def fit(self, data, y=None):
         return self
@@ -69,7 +75,7 @@ class DownsampleData:
         df_1 = data[data.involvementstatus == 1]
         df_2 = data[data.involvementstatus == 2]
 
-        df_0_downsampled = resample(df_0, replace=False, n_samples=self.n_0, random_state=123)
+        df_0_downsampled = resample(df_0, replace=False, n_samples=self.n_0, random_state=self.config["random_state"])
         data_downsampled = pd.concat([df_0_downsampled, df_1, df_2])
 
         print(data_downsampled['involvementstatus'].value_counts())

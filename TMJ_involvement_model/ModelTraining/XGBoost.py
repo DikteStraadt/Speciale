@@ -1,11 +1,11 @@
 from matplotlib import pyplot
-from sklearn.ensemble import RandomForestClassifier
 from FeatureEngineering import FeatureSelection as f
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, make_scorer, f1_score
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.metrics import accuracy_score, make_scorer, f1_score
+from sklearn.model_selection import RandomizedSearchCV
 import xgboost as xgb
-import Report as r
+from Utils import Report as r
+
 
 class XGBoostClassifier:
 
@@ -22,8 +22,8 @@ class XGBoostClassifier:
 
     def transform(self, data, y=None):
 
-        if self.config["FEATURES_STATISTICAL"]:
-            sfs_data = f.ForwardSubsetSelection(xgb.XGBClassifier(), self.target).transform(data)
+        if self.config["feature_statistical"]:
+            sfs_data = f.ForwardSubsetSelection(xgb.XGBClassifier(), self.target, self.config).transform(data)
             self.X_train = self.X_train.loc[:, sfs_data.columns]
             self.X_test = self.X_test.loc[:, sfs_data.columns]
         else:
@@ -51,19 +51,19 @@ class XGBoostClassifier:
             'xgboost__reg_alpha': [0.5, 0.2, 1],
             'xgboost__reg_lambda': [2, 3, 5],
             'xgboost__gamma': [1, 2, 3],
-            'xgboost__random_state': [123]
+            'xgboost__random_state': [self.config["random_state"]]
         }
 
         random_search = RandomizedSearchCV(
             estimator=model,
             param_distributions=param,
-            n_iter=2,
-            cv=2,
+            n_iter=self.config["iterations"],
+            cv=self.config["cv"],
             n_jobs=-1,
-            random_state=123,
+            random_state=self.config["random_state"],
             scoring=scoring,
             refit='f1_weighted',
-            verbose=3
+            verbose=self.config["verbose"]
         )
 
         random_search.fit(self.X_train, self.y_train)

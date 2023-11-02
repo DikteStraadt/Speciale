@@ -1,12 +1,10 @@
-import pandas as pd
-import Report as r
+from Utils import Report as r
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.layers import Input, Embedding, Concatenate, Dense, Flatten, Reshape
-from tensorflow.keras.models import Model, load_model
+from tensorflow.keras.layers import Input, Embedding, Concatenate, Dense, Reshape
+from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import SGD
-from tensorflow.keras.callbacks import EarlyStopping
 from keras.utils import plot_model
 from IPython.display import Image
 from matplotlib import pyplot

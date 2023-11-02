@@ -1,24 +1,17 @@
-import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
-from sklearn.model_selection import StratifiedKFold
 from sklearn.decomposition import PCA
-from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
-from mlxtend.feature_selection import SequentialFeatureSelector as SFS
-from sklearn.feature_selection import SelectKBest
-from sklearn.model_selection import StratifiedKFold
-from sklearn.ensemble import RandomForestClassifier
 from mlxtend.feature_selection import SequentialFeatureSelector as SFS
 from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
-from sklearn.preprocessing import StandardScaler
 
-import Report as r
+from Utils import Report as r
 
 class ForwardSubsetSelection:
-    def __init__(self, estimator, target):
+    def __init__(self, estimator, target, config):
         self.estimator = estimator
         self.target = target
+        self.config = config
 
     def fit(self, data, y=None):
         return self
@@ -28,12 +21,12 @@ class ForwardSubsetSelection:
         data = data.iloc[:, 10:20]
 
         sfs = SFS(estimator=self.estimator,
-                   k_features=2,
+                   k_features=self.config["SFS_n_features"],
                    forward=True,
                    floating=False,
                    scoring='accuracy',
-                   cv=2,
-                   verbose=4)
+                   cv=self.config["cv"],
+                   verbose=self.config["verbose"])
 
         sfs.fit(data, self.target)
 
@@ -54,6 +47,9 @@ class ForwardSubsetSelection:
         sfs_features = sfs_df['Feature'].tolist()
 
         data = data.loc[:, sfs_features].copy()
+
+        if "catboost" in str(self.estimator):
+            self.estimator = "CatBoostClassifier"
 
         r.write_to_report("feature selection", "SFS")
         r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS n_features", len(features))

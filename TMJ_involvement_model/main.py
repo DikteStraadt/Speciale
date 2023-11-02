@@ -1,32 +1,29 @@
 import warnings
-import Report as r
+from Utils import Configuration as c, Report as r
 
 from datetime import datetime
 from sklearn.model_selection import train_test_split
 from DataCleaning.RawData import ImportExportData as d
 from FeatureEngineering import Normalization as n
-from FeatureEngineering import Sampling as s
 from FeatureEngineering import Encoding as e
+from FeatureEngineering import Sampling as s
 from ModelTraining import RandomForest as rf
 from ModelTraining import XGBoost as xg
 from ModelTraining import CatBoost as cat
 from sklearn.pipeline import Pipeline
-from itertools import product
 
 warnings.filterwarnings('ignore')
 
-N_CATEGORIES = [3]  # [2, 3, 5, 8]
-TIMELINESS = [False]  # True, False
-FEATURES_STATISTICAL = [True]  # True, False
-ENCODING_EMBEDDING = [False]  # True, False
-configs = list(product(N_CATEGORIES, TIMELINESS, FEATURES_STATISTICAL, ENCODING_EMBEDDING))
-
 if __name__ == '__main__':
+
+    ##################### IMPORT CONFIGS #####################
+
+    configurations = c.get_configurations()
 
     ##################### PREPROCESS AND SAVE DATA #####################
 
     # Import, preprocess and export data to file
-    # data = p.preprocess_data(N_CATEGORIES)
+    # data = p.preprocess_data(n_categories)
     # print("Data is preprocessed")
 
     ##################### IMPORT DATA #####################
@@ -35,22 +32,15 @@ if __name__ == '__main__':
     imported_data = d.import_data("output.xlsx", "Sheet1")
     print("Data is imported")
 
-    for c in configs:
-
-        config = {
-            'N_CATEGORIES': c[0],
-            'TIMELINESS': c[1],
-            'FEATURES_STATISTICAL': c[2],
-            'ENCODING_EMBEDDING': c[3]
-        }
+    for config in configurations:
 
         data = imported_data
         target = data['involvementstatus']
 
         r.create_empty_report()
         r.write_to_report("timestamp", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
-        r.write_to_report("N_categories", config['N_CATEGORIES'])
-        r.write_to_report("timeliness", config['TIMELINESS'])
+        r.write_to_report("N_categories", config['n_categories'])
+        r.write_to_report("timeliness", config['timeliness'])
         r.write_to_report("original data size", f"{data.shape}")
 
         ##################### PROCESS DATA #####################
@@ -59,14 +49,14 @@ if __name__ == '__main__':
                              'profile', 'lowerface', 'spacerelationship', 'sagittalrelationright',
                              'sagitalrelationleft', 'transversal']
 
-        if config['ENCODING_EMBEDDING']:
+        if config['encoding_embedding']:
             print("Embedding not working")
             encoding_method = e.EntityEmbeddingTransformer(columns_to_encode, target)
         else:
             encoding_method = e.OneHotEncode(columns_to_encode)
 
         feature_engineering_pipeline = Pipeline(steps=[
-            # ("Sampling", s.SMOTE()),
+            # ("Sampling", s.SMOTE(config)),
             ("Encoding", encoding_method),
             ("Normalization", n.NormalizeData()),
         ])
@@ -88,8 +78,8 @@ if __name__ == '__main__':
         ##################### PERFORM FEATURE SELECTION AND TRAIN MODEL #####################
 
         pipeline = Pipeline(steps=[
-            ("randomforest", rf.RandomForest(X_train, X_test, y_train, y_test, target, config)),
-            ("xgboost", xg.XGBoostClassifier(X_train, X_test, y_train, y_test, target, config)),
+            # ("randomforest", rf.RandomForest(X_train, X_test, y_train, y_test, target, config)),
+            # ("xgboost", xg.XGBoostClassifier(X_train, X_test, y_train, y_test, target, config)),
             ("catboost", cat.CatBoost(X_train, X_test, y_train, y_test, target, config))
         ])
 
