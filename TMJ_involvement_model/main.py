@@ -50,12 +50,10 @@ if __name__ == '__main__':
         #columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asymenton', 'asyoccl', 'asyupmid', 'asylowmi',
         #                     'profile', 'lowerface', 'spacerelationship', 'sagittalrelationright',
         #                     'sagitalrelationleft', 'transversal']
-        columns_to_encode = ['asypupilline', 'headache']
+        columns_to_encode = ['asypupilline', 'drug']
 
 
         if config['encoding_embedding']:
-            encoding_method = e.EntityEmbeddingTransformer(columns_to_encode, target)
-        if config['ENCODING_EMBEDDING']:
             encoding_method = e.EntityEmbeddingTransformer('involvementstatus', columns_to_encode)
         else:
             encoding_method = e.OneHotEncode(columns_to_encode)

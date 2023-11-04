@@ -2,7 +2,7 @@
     "n_categories": [3],
     "timeliness": [false],
     "feature_statistical": [true],
-    "encoding_embedding": [false],
+    "encoding_embedding": [true],
     "random_state": 42,
     "SFS_n_features": 5,
     "cv": 2,
