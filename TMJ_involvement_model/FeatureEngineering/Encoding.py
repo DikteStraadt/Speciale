@@ -46,11 +46,11 @@ class EntityEmbeddingTransformer:
 
         return data
 
-
 def doEmbedding(data, featureEm, target, embeddingName):
     print(data.isna().sum())
     embeddingData = data.copy()
     embeddingData[target].replace(2.0, 1.0)
+
     y = embeddingData[target]
     X = embeddingData.drop(target, axis=1).astype(float)
 
@@ -77,7 +77,9 @@ def doEmbedding(data, featureEm, target, embeddingName):
     input_cat = Input(shape=(1,))
     # Output dimension of the categorical entity embedding (here we want 1 for complexity)
     cat_emb_dim = 1
-    n_unique_cat = len(np.unique(X_train[featureEm]))
+    #n_unique_cat = len(np.unique(X_train[featureEm]))
+    test = X_train[featureEm].values.max()
+    n_unique_cat = int(test)+1
     # Embedding Layer
     emb_cat = Embedding(input_dim=n_unique_cat, output_dim=cat_emb_dim, name="embedding_cat")(input_cat)
     # Reshaping
@@ -106,7 +108,7 @@ def doEmbedding(data, featureEm, target, embeddingName):
     string += '.png'
 
     plot_model(model, show_shapes=True, show_layer_names=True, to_file=string)
-    # Image(retina=True, filename=string)
+    Image(retina=True, filename=string)
 
     # Compile the model and set up early stopping
     opt = SGD(learning_rate=0.01)

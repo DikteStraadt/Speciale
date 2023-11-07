@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ea0cc13c-e1b4-4a5b-a6e5-e06bfdf509cc" name="Changes" comment="Flow works except for SMOTE">
-      <change beforePath="$PROJECT_DIR$/Utils/Report.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/Report.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catboost_info/time_left.tsv" beforeDir="false" afterPath="$PROJECT_DIR$/catboost_info/time_left.tsv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/report (timeliness=False, fetures=SFS 02-11-2023 15-09-53.json" beforeDir="false" />
+    <list default="true" id="ea0cc13c-e1b4-4a5b-a6e5-e06bfdf509cc" name="Changes" comment="Merge conflicts">
+      <change afterPath="$PROJECT_DIR$/entityEmbedding_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FeatureEngineering/Encoding.py" beforeDir="false" afterPath="$PROJECT_DIR$/FeatureEngineering/Encoding.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +31,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Merging main",
     "last_opened_file_path": "C:/Users/lenat/OneDrive/Skrivebord/Speciale_ccode/Speciale/TMJ_involvement_model",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -103,7 +104,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699344776819</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Unversioned files">
+      <option name="closed" value="true" />
+      <created>1699344857889</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1699344857889</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -122,13 +131,14 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Save model, feature importance ect." />
-    <MESSAGE value="Merge conflicts" />
     <MESSAGE value="Looping through config parameters" />
     <MESSAGE value="Small changes to SMOTE" />
     <MESSAGE value="Catboost up and running - A small problem with SMOTE" />
     <MESSAGE value="Report and stuff" />
     <MESSAGE value="Flow works except for SMOTE" />
-    <option name="LAST_COMMIT_MESSAGE" value="Flow works except for SMOTE" />
+    <MESSAGE value="Unversioned files" />
+    <MESSAGE value="Merge conflicts" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge conflicts" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
