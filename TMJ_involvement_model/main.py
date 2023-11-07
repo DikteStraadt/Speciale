@@ -4,7 +4,9 @@ from Utils import Configuration as c, Report as r
 from datetime import datetime
 from sklearn.model_selection import train_test_split
 from DataCleaning.RawData import ImportExportData as d
+from DataCleaning.RawData import CleanData as cl
 from FeatureEngineering import Normalization as n
+from DataCleaning import PreprocessData as p
 from FeatureEngineering import Encoding as e
 from FeatureEngineering import Sampling as s
 from ModelTraining import RandomForest as rf
@@ -22,9 +24,8 @@ if __name__ == '__main__':
 
     ##################### PREPROCESS AND SAVE DATA #####################
 
-    # Import, preprocess and export data to file
-    # data = p.preprocess_data(n_categories)
-    # print("Data is preprocessed")
+    # data = p.preprocess_data(configurations[0]['n_categories'])
+    # print("Data is preprocessed and saved")
 
     ##################### IMPORT DATA #####################
 
@@ -35,7 +36,7 @@ if __name__ == '__main__':
     for config in configurations:
 
         data = imported_data
-        columns_to_exclude = ['sex', 'type', 'studyid', 'tractionright', 'tractionleft', 'Unnamed: 0', 'visitationdate']
+        columns_to_exclude = ['sex', 'type', 'studyid', 'Unnamed: 0', 'visitationdate']
         target = data['involvementstatus']
         data = imported_data.drop(columns=columns_to_exclude)
 
@@ -47,11 +48,9 @@ if __name__ == '__main__':
 
         ##################### PROCESS DATA #####################
 
-        #columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asymenton', 'asyoccl', 'asyupmid', 'asylowmi',
-        #                     'profile', 'lowerface', 'spacerelationship', 'sagittalrelationright',
-        #                     'sagitalrelationleft', 'transversal']
-        columns_to_encode = ['asypupilline', 'drug']
+        #columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asyoccl', 'profile', 'lowerface']
 
+        columns_to_encode = ['asypupilline', 'headache']
 
         if config['encoding_embedding']:
             encoding_method = e.EntityEmbeddingTransformer('involvementstatus', columns_to_encode)
