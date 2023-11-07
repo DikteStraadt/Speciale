@@ -42,8 +42,8 @@ class XGBoostClassifier:
         }
 
         param = {
-            'xgboost__max_depth': [3, 7, 10],
-            'xgboost__eta': [0.01, 0.1, 0.2],
+            'xgboost__max_depth': [3, 7, 10, None],
+            'xgboost__eta': [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3],
             'xgboost__objective': ['multi:softmax'],
             'xgboost__min_child_weight': [10, 15, 20, 25],
             'xgboost__colsample_bytree': [0.8, 0.9, 1],
