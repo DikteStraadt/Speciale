@@ -106,7 +106,7 @@ def doEmbedding(data, featureEm, target, embeddingName):
     string += '.png'
 
     plot_model(model, show_shapes=True, show_layer_names=True, to_file=string)
-    Image(retina=True, filename=string)
+    # Image(retina=True, filename=string)
 
     # Compile the model and set up early stopping
     opt = SGD(learning_rate=0.01)
@@ -163,4 +163,6 @@ def doEmbedding(data, featureEm, target, embeddingName):
     X_emb = X_emb.drop('emb_0', axis=1)
 
     X_emb.to_csv('embeddedFeatures.csv', index=False)
+    r.write_to_report("encoding", "entity embedding")
+
     return X_emb

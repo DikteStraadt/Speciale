@@ -1,4 +1,6 @@
+import pandas as pd
 from imblearn.pipeline import Pipeline
+from matplotlib import pyplot
 from sklearn.metrics import make_scorer, accuracy_score, f1_score
 from sklearn.model_selection import RandomizedSearchCV
 from catboost import CatBoostClassifier
@@ -25,8 +27,23 @@ class CatBoost:
             self.X_train = self.X_train.loc[:, sfs_data.columns]
             self.X_test = self.X_test.loc[:, sfs_data.columns]
         else:
-            # Det sæt af features klinikerne kommer med
+            clinical_columns = ['drug', 'painmoveleft', 'painmoveright', 'asybasis', 'asyoccl', 'profile', 'lowerface',
+                                'laterpalpright', 'laterpalpleft', 'translationright', 'translationleft', 'openingmm',
+                                'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm',
+                                'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
+                                'Krepitationright', 'Krepitationleft']
+            X_train_fs = self.X_train.loc[:, clinical_columns]
+            X_test_fs = self.X_test.loc[:, clinical_columns]
+
+            extra = ['asypupilline_0.0', 'asypupilline_1.0', 'asypupilline_2.0', 'asypupilline_3.0', 'asypupilline_4.0']
+
+            for column in extra:
+                if column in self.X_train.columns:
+                    X_train_fs = pd.concat([X_train_fs, self.X_train[column]], axis=1)
+                    X_test_fs = pd.concat([X_test_fs, self.X_train[column]], axis=1)
+
             r.write_to_report("feature selection", "Clinical")
+            r.write_to_report(f"(Clinical) n_features", len(clinical_columns))
 
         model = Pipeline(steps=[
             ("catboost", CatBoostClassifier()),
@@ -70,15 +87,15 @@ class CatBoost:
 
         random_search.fit(self.X_train, self.y_train)
 
-        #importance = random_search.best_estimator_.named_steps["catboost"].feature_importances_
-        #category_names = self.X_train.columns
+        importance = random_search.best_estimator_.named_steps["catboost"].feature_importances_
+        category_names = self.X_train.columns
 
-        # pyplot.figure(figsize=(8, 10))
-        # pyplot.bar(category_names, importance)
-        # pyplot.xlabel('Features')
-        # pyplot.ylabel('Importance')
-        # pyplot.xticks(rotation=45, ha='right')
-        # pyplot.show()
+        pyplot.figure(figsize=(8, 10))
+        pyplot.bar(category_names, importance)
+        pyplot.xlabel('Features')
+        pyplot.ylabel('Importance')
+        pyplot.xticks(rotation=45, ha='right')
+        pyplot.show()
 
         r.write_to_report("(CatBoostClassifier) best model", str(random_search.best_estimator_))
         r.write_to_report("(CatBoostClassifier) best parameters", str(random_search.best_params_))

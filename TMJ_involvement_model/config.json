@@ -1,8 +1,8 @@
 {
     "n_categories": [3],
     "timeliness": [false],
-    "feature_statistical": [true],
-    "encoding_embedding": [false],
+    "feature_statistical": [false, true],
+    "encoding_embedding": [true, false],
     "random_state": 42,
     "SFS_n_features": 5,
     "cv": 2,

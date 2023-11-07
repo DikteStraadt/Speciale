@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score, make_scorer, f1_score
 from sklearn.model_selection import RandomizedSearchCV
 import xgboost as xgb
 from Utils import Report as r
-
+import pandas as pd
 
 class XGBoostClassifier:
 
@@ -27,8 +27,23 @@ class XGBoostClassifier:
             self.X_train = self.X_train.loc[:, sfs_data.columns]
             self.X_test = self.X_test.loc[:, sfs_data.columns]
         else:
-            # Det sæt af features klinikerne kommer med
+            clinical_columns = ['drug', 'painmoveleft', 'painmoveright', 'asybasis', 'asyoccl', 'profile', 'lowerface',
+                                'laterpalpright', 'laterpalpleft', 'translationright', 'translationleft', 'openingmm',
+                                'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm',
+                                'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
+                                'Krepitationright', 'Krepitationleft']
+            X_train_fs = self.X_train.loc[:, clinical_columns]
+            X_test_fs = self.X_test.loc[:, clinical_columns]
+
+            extra = ['asypupilline_0.0', 'asypupilline_1.0', 'asypupilline_2.0', 'asypupilline_3.0', 'asypupilline_4.0']
+
+            for column in extra:
+                if column in self.X_train.columns:
+                    X_train_fs = pd.concat([X_train_fs, self.X_train[column]], axis=1)
+                    X_test_fs = pd.concat([X_test_fs, self.X_train[column]], axis=1)
+
             r.write_to_report("feature selection", "Clinical")
+            r.write_to_report(f"(Clinical) n_features", len(clinical_columns))
 
         model = Pipeline(steps=[
             ("xgboost", xgb.XGBClassifier()),

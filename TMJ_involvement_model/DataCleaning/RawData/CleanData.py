@@ -1,5 +1,10 @@
 from datetime import datetime
 
+import numpy as np
+import pandas as pd
+from dateutil.relativedelta import relativedelta
+
+
 class CleanColumns:
 
     def fit(self, X, y=None):
@@ -98,7 +103,6 @@ class CleanColumns:
         data.rename(columns={'click_lateroleft_left': 'click_laterotrusion_left'}, inplace=True)
 
         print("Columns cleaned")
-        data = data.drop(columns=['traction_right'])
 
         return data
 
@@ -178,9 +182,6 @@ class RemovePatients:
         return self
 
     def transform(self, data, y=None):
-
-        # Patient x with many misregisted data
-        data = data[data['study_id'] != 232]
 
         # Find and remove patients older than 18
         indexes = []
