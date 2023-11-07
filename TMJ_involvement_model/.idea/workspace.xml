@@ -4,23 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ea0cc13c-e1b4-4a5b-a6e5-e06bfdf509cc" name="Changes" comment="Report and stuff">
-      <change afterPath="$PROJECT_DIR$/entityEmbedding_0.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataCleaning/PreprocessData.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataCleaning/PreprocessData.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataCleaning/RawData/CleanData.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataCleaning/RawData/CleanData.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataCleaning/Visitations/CleanVisitations.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataCleaning/Visitations/CleanVisitations.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FeatureEngineering/Encoding.py" beforeDir="false" afterPath="$PROJECT_DIR$/FeatureEngineering/Encoding.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ModelTraining/CatBoost.py" beforeDir="false" afterPath="$PROJECT_DIR$/ModelTraining/CatBoost.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ModelTraining/RandomForest.py" beforeDir="false" afterPath="$PROJECT_DIR$/ModelTraining/RandomForest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ModelTraining/XGBoost.py" beforeDir="false" afterPath="$PROJECT_DIR$/ModelTraining/XGBoost.py" afterDir="false" />
+    <list default="true" id="ea0cc13c-e1b4-4a5b-a6e5-e06bfdf509cc" name="Changes" comment="Flow works except for SMOTE">
       <change beforePath="$PROJECT_DIR$/Utils/Report.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/Report.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catboost_info/catboost_training.json" beforeDir="false" afterPath="$PROJECT_DIR$/catboost_info/catboost_training.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catboost_info/learn/events.out.tfevents" beforeDir="false" afterPath="$PROJECT_DIR$/catboost_info/learn/events.out.tfevents" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/catboost_info/learn_error.tsv" beforeDir="false" afterPath="$PROJECT_DIR$/catboost_info/learn_error.tsv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/catboost_info/time_left.tsv" beforeDir="false" afterPath="$PROJECT_DIR$/catboost_info/time_left.tsv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/report (timeliness=False, fetures=SFS 02-11-2023 15-09-53.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -109,7 +95,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698682376625</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Flow works except for SMOTE">
+      <option name="closed" value="true" />
+      <created>1699344776819</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1699344776819</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,7 +127,8 @@
     <MESSAGE value="Small changes to SMOTE" />
     <MESSAGE value="Catboost up and running - A small problem with SMOTE" />
     <MESSAGE value="Report and stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="Report and stuff" />
+    <MESSAGE value="Flow works except for SMOTE" />
+    <option name="LAST_COMMIT_MESSAGE" value="Flow works except for SMOTE" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -147,11 +142,6 @@
           <url>file://$PROJECT_DIR$/FeatureEngineering/Sampling.py</url>
           <line>26</line>
           <option name="timeStamp" value="204" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/DataCleaning/RawData/CleanData.py</url>
-          <line>242</line>
-          <option name="timeStamp" value="208" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/ModelTraining/RandomForest.py</url>
