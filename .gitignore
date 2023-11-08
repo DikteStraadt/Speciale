@@ -4,4 +4,4 @@ report*.*
 /.idea/
 .idea/workspace.xml
 __pycache__/
-TMJ_involvement_model/.idea/
+*.idea/
