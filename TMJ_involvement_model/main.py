@@ -48,7 +48,7 @@ if __name__ == '__main__':
 
         ##################### PROCESS DATA #####################
 
-        columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asyoccl', 'profile', 'lowerface']
+        columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelationright', 'sagitalrelationleft']
 
         if config['encoding_embedding']:
             encoding_method = e.EntityEmbeddingTransformer('involvementstatus', columns_to_encode)
@@ -69,8 +69,8 @@ if __name__ == '__main__':
         target = data['involvementstatus']
         data = data.drop('involvementstatus', axis=1)
 
-        X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=config['random_state'], shuffle=True)
-        X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, test_size=0.5, random_state=config['random_state'], shuffle=True)
+        X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=42, shuffle=True)
+        X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, test_size=0.5, random_state=42, shuffle=True)
 
         r.write_to_report("train size", f"{X_train.shape} {y_train.shape}")
         r.write_to_report("test size", f"{X_test.shape} {y_test.shape}")

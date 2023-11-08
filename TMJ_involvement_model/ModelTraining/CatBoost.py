@@ -22,30 +22,12 @@ class CatBoost:
 
     def transform(self, data, y=None):
 
-        if self.config["feature_statistical"]:
-            sfs_data = f.ForwardSubsetSelection(CatBoostClassifier(), self.target, self.config).transform(data)
-            self.X_train = self.X_train.loc[:, sfs_data.columns]
-            self.X_test = self.X_test.loc[:, sfs_data.columns]
-        else:
-            clinical_columns = ['drug', 'painmoveleft', 'painmoveright', 'asybasis', 'asyoccl', 'profile', 'lowerface',
-                                'laterpalpright', 'laterpalpleft', 'translationright', 'translationleft', 'openingmm',
-                                'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm',
-                                'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
-                                'Krepitationright', 'Krepitationleft']
-            X_train_fs = self.X_train.loc[:, clinical_columns]
-            X_test_fs = self.X_test.loc[:, clinical_columns]
+        data_fs = f.feature_selection(data, self.X_train, self.X_test, CatBoostClassifier(), self.target, self.config)
 
-            extra = ['asypupilline_0.0', 'asypupilline_1.0', 'asypupilline_2.0', 'asypupilline_3.0', 'asypupilline_4.0']
+        self.X_train = data_fs[0]
+        self.X_test = data_fs[1]
 
-            for column in extra:
-                if column in self.X_train.columns:
-                    X_train_fs = pd.concat([X_train_fs, self.X_train[column]], axis=1)
-                    X_test_fs = pd.concat([X_test_fs, self.X_train[column]], axis=1)
-
-            r.write_to_report("feature selection", "clinical")
-            r.write_to_report(f"n_features", len(clinical_columns))
-
-        non_categorical_columns = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'drug', 'asypupilline', 'asybasis', 'asyoccl', 'profile', 'lowerface']
+        non_categorical_columns = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'drug', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelationright', 'sagitalrelationleft']
         categorical_columns = [col for col in self.X_train.columns if col not in non_categorical_columns]
 
         model = Pipeline(steps=[
@@ -82,7 +64,7 @@ class CatBoost:
             n_iter=self.config["iterations"],
             cv=self.config["cv"],
             n_jobs=-1,
-            random_state=self.config["random_state"],
+            random_state=42,
             scoring=scoring,
             refit='f1_weighted',
             verbose=self.config["verbose"],

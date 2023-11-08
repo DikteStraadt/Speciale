@@ -23,7 +23,7 @@ class SMOTE:
         non_categorical_columns = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
         categorical_columns = [col for col in X.columns if col not in non_categorical_columns]
 
-        smote = SMOTENC(categorical_features=categorical_columns, random_state=self.config["random_state"], sampling_strategy={1: 2300, 2: 2000})
+        smote = SMOTENC(categorical_features=categorical_columns, random_state=42, sampling_strategy={1: 2300, 2: 2000})
         X_res, y_res = smote.fit_resample(X, y)
 
         final_df = pd.concat([y_res.reset_index(drop=True), X_res.reset_index(drop=True)], axis=1)
@@ -51,8 +51,8 @@ class UpsampleData:
         df_1 = data[data.involvementstatus == 1]
         df_2 = data[data.involvementstatus == 2]
 
-        df_1_upsampled = resample(df_1, replace=True, n_samples=self.n_1, random_state=self.config["random_state"])
-        df_2_upsampled = resample(df_2, replace=True, n_samples=self.n_2, random_state=self.config["random_state"])
+        df_1_upsampled = resample(df_1, replace=True, n_samples=self.n_1, random_state=42)
+        df_2_upsampled = resample(df_2, replace=True, n_samples=self.n_2, random_state=42)
         data_upsampled = pd.concat([df_0, df_1_upsampled, df_2_upsampled])
 
         print(data_upsampled['involvementstatus'].value_counts())
@@ -78,7 +78,7 @@ class DownsampleData:
         df_1 = data[data.involvementstatus == 1]
         df_2 = data[data.involvementstatus == 2]
 
-        df_0_downsampled = resample(df_0, replace=False, n_samples=self.n_0, random_state=self.config["random_state"])
+        df_0_downsampled = resample(df_0, replace=False, n_samples=self.n_0, random_state=42)
         data_downsampled = pd.concat([df_0_downsampled, df_1, df_2])
 
         print(data_downsampled['involvementstatus'].value_counts())
