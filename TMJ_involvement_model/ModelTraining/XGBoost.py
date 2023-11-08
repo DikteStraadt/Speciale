@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score, make_scorer, f1_score, classificatio
 from sklearn.model_selection import RandomizedSearchCV
 import xgboost as xgb
 from Utils import Report as r
-import pandas as pd
+from ModelEvaluation import Evaluation as e
 
 class XGBoostClassifier:
 
@@ -64,29 +64,8 @@ class XGBoostClassifier:
             verbose=self.config["verbose"]
         )
 
-        random_search.fit(self.X_train, self.y_train)
+        random_search_model = random_search.fit(self.X_train, self.y_train)
 
-        importance = random_search.best_estimator_.named_steps["xgboost"].feature_importances_
-        category_names = self.X_train.columns
-
-        pyplot.figure(figsize=(8, 10))
-        pyplot.bar(category_names, importance)
-        pyplot.xlabel('Features')
-        pyplot.ylabel('Importance')
-        pyplot.xticks(rotation=45, ha='right')
-        pyplot.show()
-
-        y_preds = random_search.predict(self.X_test)
-
-        print("\nConfusion Matrix : ")
-        print(confusion_matrix(self.y_test, y_preds))
-
-        print("\nClassification Report : ")
-        print(classification_report(self.y_test, y_preds))
-
-        r.write_to_report("(XGBClassifier) confusion matrix", confusion_matrix(self.y_test, y_preds).tolist())
-        r.write_to_report("(XGBClassifier) best model", str(random_search.best_estimator_))
-        r.write_to_report("(XGBClassifier) best parameters", str(random_search.best_params_))
-        r.write_to_report("(XGBClassifier) accuracy", random_search.best_estimator_.score(self.X_test, self.y_test))
+        e.evaluation("catboost", random_search_model, self.X_train, self.X_test, self.y_test)
 
         return data

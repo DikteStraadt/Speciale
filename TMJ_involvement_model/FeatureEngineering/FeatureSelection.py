@@ -21,8 +21,7 @@ def feature_selection(data, X_train, X_test, estimator, target, config):
     elif config["feature_selection"] == "clinical":
 
         clinical_columns = ['painmoveleft', 'painmoveright', 'laterpalpright', 'laterpalpleft', 'translationright', 'translationleft', 'openingmm',
-                            'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm',
-                            'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
+                            'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
                             'Krepitationright', 'Krepitationleft']
 
         X_train_fs = X_train.loc[:, clinical_columns]
@@ -53,8 +52,7 @@ def feature_selection(data, X_train, X_test, estimator, target, config):
         X_test_fs = X_test.loc[:, clinical_columns]
 
         extra = ['asybasis', 'asybasis_0', 'asybasis_1', 'asybasis_2', 'asybasis_3', 'asybasis_4',
-                 'asypupilline', 'asypupilline_0', 'asypupilline_1', 'asypupilline_2', 'asypupilline_3',
-                 'asypupilline_4',
+                 'asypupilline', 'asypupilline_0', 'asypupilline_1', 'asypupilline_2', 'asypupilline_3', 'asypupilline_4',
                  'drug', 'drug_1', 'drug_2', 'drug_3', 'drug_4', 'drug_5', 'drug_6', 'drug_7', 'drug_8', 'drug_9',
                  'drug_10', 'drug_11', 'drug_12', 'drug_13', 'drug_14', 'drug_15', 'drug_16', 'drug_17', 'drug_18',
                  'drug_19', 'drug_20', 'drug_21', 'drug_22', 'drug_23', 'drug_24', 'drug_25', 'drug_26', 'drug_27',
