@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import Input, Embedding, Concatenate, Dense, Reshape
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import SGD
-from keras.utils.vis_utils import plot_model
+from tensorflow.keras.utils import plot_model
 from IPython.display import Image
 from matplotlib import pyplot
 
@@ -78,7 +78,7 @@ def doEmbedding(data, featureEm, target, embeddingName):
     # Output dimension of the categorical entity embedding (here we want 1 for complexity)
     cat_emb_dim = 1
     #n_unique_cat = len(np.unique(X_train[featureEm]))
-    test = X_train[featureEm].values.max()
+    test = 53  # X_train[featureEm].values.max()
     n_unique_cat = int(test)+1
     # Embedding Layer
     emb_cat = Embedding(input_dim=n_unique_cat, output_dim=cat_emb_dim, name="embedding_cat")(input_cat)
