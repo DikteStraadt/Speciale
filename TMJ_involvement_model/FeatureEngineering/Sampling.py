@@ -23,7 +23,14 @@ class SMOTE:
         non_categorical_columns = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
         categorical_columns = [col for col in X.columns if col not in non_categorical_columns]
 
-        smote = SMOTENC(categorical_features=categorical_columns, random_state=42, sampling_strategy={1: 2300, 2: 2000})
+        if self.config['n_categories'] == 2:
+            sampling_strategy = {1: 3000}
+        elif self.config['n_categories'] == 3:
+            sampling_strategy = {1: 2300, 2: 2000}  # 2000
+        else:
+            sampling_strategy = {}
+
+        smote = SMOTENC(categorical_features=categorical_columns, random_state=42, sampling_strategy=sampling_strategy)
         X_res, y_res = smote.fit_resample(X, y)
 
         final_df = pd.concat([y_res.reset_index(drop=True), X_res.reset_index(drop=True)], axis=1)
@@ -34,6 +41,8 @@ class SMOTE:
         return final_df
 
 class UpsampleData:
+
+    # DEPRECATED
 
     def __init__(self, n_1, n_2, config):
         self.n_1 = n_1
@@ -62,6 +71,8 @@ class UpsampleData:
         return data_upsampled.reset_index(drop=True)
 
 class DownsampleData:
+
+    # DEPRECATED
 
     def __init__(self, n_0, config):
         self.n_0 = n_0

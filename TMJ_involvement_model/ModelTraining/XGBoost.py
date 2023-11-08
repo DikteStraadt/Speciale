@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score, make_scorer, f1_score, classificatio
 from sklearn.model_selection import RandomizedSearchCV
 import xgboost as xgb
 from Utils import Report as r
-import pandas as pd
+from ModelEvaluation import Evaluation as e
 
 class XGBoostClassifier:
 
@@ -27,6 +27,11 @@ class XGBoostClassifier:
         self.X_train = data_fs[0]
         self.X_test = data_fs[1]
 
+        if self.config['n_categories'] == 2:
+            xgboost_objective = 'binary:logistic'
+        elif self.config['n_categories'] == 3:
+            xgboost_objective = 'multi:softmax'
+
         model = Pipeline(steps=[
             ("xgboost", xgb.XGBClassifier()),
         ])
@@ -44,7 +49,7 @@ class XGBoostClassifier:
             'xgboost__enable_categorical': [True],
             'xgboost__max_depth': [3, 7, 10],
             'xgboost__eta': [0.01, 0.1, 0.2],
-            'xgboost__objective': ['multi:softmax'],
+            'xgboost__objective': [xgboost_objective],
             'xgboost__min_child_weight': [1, 5, 15, 30, 100, 200],
             'xgboost__colsample_bytree': [0.8, 0.9, 1],
             'xgboost__n_estimators': [100, 200, 300, 500, 700, 1000],
@@ -57,9 +62,9 @@ class XGBoostClassifier:
         random_search = RandomizedSearchCV(
             estimator=model,
             param_distributions=param,
-            num_boost_round=100000,
+            #num_boost_round=100000,
             n_iter=self.config["iterations"],
-            fit_params=fit_params,
+            #fit_params=fit_params,
             cv=self.config["cv"],
             n_jobs=-1,
             random_state=42,
@@ -68,29 +73,8 @@ class XGBoostClassifier:
             verbose=self.config["verbose"]
         )
 
-        random_search.fit(self.X_train, self.y_train)
+        random_search_model = random_search.fit(self.X_train, self.y_train)
 
-        importance = random_search.best_estimator_.named_steps["xgboost"].feature_importances_
-        category_names = self.X_train.columns
-
-        pyplot.figure(figsize=(8, 10))
-        pyplot.bar(category_names, importance)
-        pyplot.xlabel('Features')
-        pyplot.ylabel('Importance')
-        pyplot.xticks(rotation=45, ha='right')
-        pyplot.show()
-
-        y_preds = random_search.predict(self.X_test)
-
-        print("\nConfusion Matrix : ")
-        print(confusion_matrix(self.y_test, y_preds))
-
-        print("\nClassification Report : ")
-        print(classification_report(self.y_test, y_preds))
-
-        r.write_to_report("(XGBClassifier) confusion matrix", confusion_matrix(self.y_test, y_preds).tolist())
-        r.write_to_report("(XGBClassifier) best model", str(random_search.best_estimator_))
-        r.write_to_report("(XGBClassifier) best parameters", str(random_search.best_params_))
-        r.write_to_report("(XGBClassifier) accuracy", random_search.best_estimator_.score(self.X_test, self.y_test))
+        e.evaluation("xgboost", random_search_model, self.X_train, self.X_test, self.y_test)
 
         return data

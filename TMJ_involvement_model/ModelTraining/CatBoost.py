@@ -6,6 +6,7 @@ from sklearn.model_selection import RandomizedSearchCV
 from catboost import CatBoostClassifier
 from FeatureEngineering import FeatureSelection as f
 from Utils import Report as r
+from ModelEvaluation import Evaluation as e
 
 class CatBoost:
 
@@ -67,32 +68,11 @@ class CatBoost:
             random_state=42,
             scoring=scoring,
             refit='f1_weighted',
-            verbose=self.config["verbose"],
+            verbose=self.config["verbose"]
         )
 
-        random_search.fit(self.X_train, self.y_train)
+        random_search_model = random_search.fit(self.X_train, self.y_train)
 
-        importance = random_search.best_estimator_.named_steps["catboost"].feature_importances_
-        category_names = self.X_train.columns
-
-        pyplot.figure(figsize=(8, 10))
-        pyplot.bar(category_names, importance)
-        pyplot.xlabel('Features')
-        pyplot.ylabel('Importance')
-        pyplot.xticks(rotation=45, ha='right')
-        pyplot.show()
-
-        y_preds = random_search.predict(self.X_test)
-
-        print("\nConfusion Matrix : ")
-        print(confusion_matrix(self.y_test, y_preds))
-
-        print("\nClassification Report : ")
-        print(classification_report(self.y_test, y_preds))
-
-        r.write_to_report("(CatBoostClassifier) confusion matrix", confusion_matrix(self.y_test, y_preds).tolist())
-        r.write_to_report("(CatBoostClassifier) best model", str(random_search.best_estimator_))
-        r.write_to_report("(CatBoostClassifier) best parameters", str(random_search.best_params_))
-        r.write_to_report("(CatBoostClassifier) accuracy", random_search.best_estimator_.score(self.X_test, self.y_test))
+        e.evaluation("catboost", random_search_model, self.X_train, self.X_test, self.y_test)
 
         return data

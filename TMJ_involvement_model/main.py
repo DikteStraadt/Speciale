@@ -32,8 +32,7 @@ if __name__ == '__main__':
 
     ##################### IMPORT DATA #####################
 
-    # Import formatted visitation data
-    imported_data = d.import_data("output.xlsx", "Sheet1")
+    imported_data = d.import_data(f"output_{configurations[0]['n_categories']}_cat.xlsx", "Sheet1")
     print("Data is imported")
 
     for config in configurations:
@@ -42,8 +41,9 @@ if __name__ == '__main__':
         data = imported_data.drop(columns=columns_to_exclude)
 
         r.create_empty_report()
-        r.write_to_report("timestamp", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
-        r.write_to_report("N_categories", config['n_categories'])
+        r.write_to_report("timestamp start", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
+        r.write_to_report("timestamp end", "")  # placeholder
+        r.write_to_report("n_categories", config['n_categories'])
         r.write_to_report("timeliness", config['timeliness'])
         r.write_to_report("original data size", f"{data.shape}")
 
@@ -61,7 +61,7 @@ if __name__ == '__main__':
             ("Convert type", tc.ConvertToCategories()),
             ("Sampling", s.SMOTE(config)),
             ("Encoding", encoding_method),
-            ("Normalization", n.NormalizeData()),
+            ("Normalization", n.NormalizeData(config)),
         ])
 
         data = feature_engineering_pipeline.fit_transform(data)
@@ -87,6 +87,8 @@ if __name__ == '__main__':
         ])
 
         pipeline.transform(data)
+
+        r.write_to_report("timestamp end", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
 
         r.rename_report_file()
 
