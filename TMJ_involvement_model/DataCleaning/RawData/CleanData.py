@@ -172,6 +172,59 @@ class EditData:
         data.at[1029, 'type'] = 0  # Patient 1030
         data.at[1048, 'type'] = 1  # Patient 1049
 
+        # asy_basis
+        data.at[756, 'asy_basis5'] = 1  # Patient 757 (6018z)
+        data.at[828, 'asy_basis2'] = 2  # Patient 829 (2957a)
+        data.at[1051, 'asy_basis'] = 3  # Patient 1052 (7269b)
+
+        # asy_menton
+        data.at[756, 'asy_menton5'] = 1  # Patient 757 (6018z)
+        data.at[828, 'asy_menton2'] = 2  # Patient 829 (2957a)
+        data.at[1051, 'asy_menton'] = 3  # Patient 1052 (7269b)
+
+        # asy_occl
+        data.at[756, 'asy_occl5'] = 1  # Patient 757 (6018z)
+        data.at[55, 'asy_occl10'] = 1  # Patient 56 (5617u)
+
+        # asy_low_mi
+        data.at[871, 'asy_low_mi6'] = 3  # Patient 872 (2551z)
+        data.at[347, 'asy_low_mi'] = 4  # Patient 348 (3804A)
+
+        # profile
+        data.at[90, 'profile9'] = 2  # Patient 91 (1129z)
+
+        # lower_face
+        data.at[865, 'lower_face2'] = 1  # Patient 866 (2273y)
+
+        # space_relationship
+        data.at[465, 'space_relationship2'] = 0  # Patient 466 (9051u)
+        data.at[750, 'space_relationship1'] = 0  # Patient 751 (8795b)
+        data.at[721, 'space_relationship1'] = 0  # Patient 722 (9297b)
+        data.at[639, 'space_relationship5'] = 3  # Patient 640 (6371u)
+        data.at[763, 'space_relationship'] = 2  # Patient 764 (9130u)
+        data.at[53, 'space_relationship'] = 1  # Patient 54 (7624y)
+        data.at[124, 'space_relationship'] = 2  # Patient 125 (7062y)
+        data.at[699, 'space_relationship'] = 2  # Patient 700 (7766y)
+        data.at[47, 'space_relationship'] = 2  # Patient 48 (7249y)
+        data.at[763, 'space_relationship'] = 0  # Patient 764 (9251u)
+
+        data.at[91, 'space_relationship'] = 0  # Patient 92 (4934a)
+        data.at[8, 'space_relationship'] = 3  # Patient 9 (2188b)
+        data.at[385, 'space_relationship'] = 2  # Patient 386 (7300y)
+        data.at[263, 'space_relationship'] = 0  # Patient 264 (6781y)
+        data.at[477, 'space_relationship'] = 1  # Patient 478 (1989a)
+        data.at[305, 'space_relationship'] = 3  # Patient 306 (3203y)
+        data.at[828, 'space_relationship'] = 4  # Patient 829 (2957a)
+        data.at[853, 'space_relationship'] = 0  # Patient 854 (0049T)
+        data.at[219, 'space_relationship'] = 0  # Patient 220 (4056b)
+        data.at[713, 'space_relationship'] = 0  # Patient 714 (9080b)
+
+        # opening
+        data.at[219, 'opening2'] = 55  # Patient 220 (4056b)
+
+        # protrusion
+        data.at[219, 'protrusion2'] = 8  # Patient 220 (4056b)
+
         print("Misregistered data edited")
 
         return data

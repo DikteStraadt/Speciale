@@ -41,7 +41,7 @@ class ReadVisitations:
             start_index = data.columns.get_loc(visitation[0])
             end_index = data.columns.get_loc(visitation[1])
             list_visitations = data.iloc[:, start_index: end_index + 1]
-            # list_visitations.insert(0, 'type', data['type'])
+            list_visitations.insert(0, 'type', data['type'])
             list_visitations.insert(0, 'sex', data['sex'])
             list_visitations.insert(0, 'study_id', data['study_id'])
             list_list_visitations.append(list_visitations)

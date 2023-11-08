@@ -1,7 +1,7 @@
 from matplotlib import pyplot
 from FeatureEngineering import FeatureSelection as f
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import accuracy_score, make_scorer, f1_score
+from sklearn.metrics import accuracy_score, make_scorer, f1_score, classification_report, confusion_matrix
 from sklearn.model_selection import RandomizedSearchCV
 import xgboost as xgb
 from Utils import Report as r
@@ -22,28 +22,10 @@ class XGBoostClassifier:
 
     def transform(self, data, y=None):
 
-        if self.config["feature_statistical"]:
-            sfs_data = f.ForwardSubsetSelection(xgb.XGBClassifier(), self.target, self.config).transform(data)
-            self.X_train = self.X_train.loc[:, sfs_data.columns]
-            self.X_test = self.X_test.loc[:, sfs_data.columns]
-        else:
-            clinical_columns = ['drug', 'painmoveleft', 'painmoveright', 'asybasis', 'asyoccl', 'profile', 'lowerface',
-                                'laterpalpright', 'laterpalpleft', 'translationright', 'translationleft', 'openingmm',
-                                'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm',
-                                'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
-                                'Krepitationright', 'Krepitationleft']
-            X_train_fs = self.X_train.loc[:, clinical_columns]
-            X_test_fs = self.X_test.loc[:, clinical_columns]
+        data_fs = f.feature_selection(data, self.X_train, self.X_test, xgb.XGBClassifier(), self.target, self.config)
 
-            extra = ['asypupilline_0.0', 'asypupilline_1.0', 'asypupilline_2.0', 'asypupilline_3.0', 'asypupilline_4.0']
-
-            for column in extra:
-                if column in self.X_train.columns:
-                    X_train_fs = pd.concat([X_train_fs, self.X_train[column]], axis=1)
-                    X_test_fs = pd.concat([X_test_fs, self.X_train[column]], axis=1)
-
-            r.write_to_report("feature selection", "Clinical")
-            r.write_to_report(f"(Clinical) n_features", len(clinical_columns))
+        self.X_train = data_fs[0]
+        self.X_test = data_fs[1]
 
         model = Pipeline(steps=[
             ("xgboost", xgb.XGBClassifier()),
@@ -59,8 +41,9 @@ class XGBoostClassifier:
         fit_params = {"early_stopping_rounds": 50}
 
         param = {
-            'xgboost__max_depth': [3, 7, 10, None],
-            'xgboost__eta': [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3],
+            'xgboost__enable_categorical': [True],
+            'xgboost__max_depth': [3, 7, 10],
+            'xgboost__eta': [0.01, 0.1, 0.2],
             'xgboost__objective': ['multi:softmax'],
             'xgboost__min_child_weight': [1, 5, 15, 30, 100, 200],
             'xgboost__colsample_bytree': [0.8, 0.9, 1],
@@ -68,7 +51,7 @@ class XGBoostClassifier:
             'xgboost__reg_alpha': [0.5, 0.2, 1],
             'xgboost__reg_lambda': [2, 3, 5],
             'xgboost__gamma': [1, 2, 3],
-            'xgboost__random_state': [self.config["random_state"]]
+            'xgboost__random_state': [42]
         }
 
         random_search = RandomizedSearchCV(
@@ -79,7 +62,7 @@ class XGBoostClassifier:
             fit_params=fit_params,
             cv=self.config["cv"],
             n_jobs=-1,
-            random_state=self.config["random_state"],
+            random_state=42,
             scoring=scoring,
             refit='f1_weighted',
             verbose=self.config["verbose"]
@@ -97,6 +80,15 @@ class XGBoostClassifier:
         pyplot.xticks(rotation=45, ha='right')
         pyplot.show()
 
+        y_preds = random_search.predict(self.X_test)
+
+        print("\nConfusion Matrix : ")
+        print(confusion_matrix(self.y_test, y_preds))
+
+        print("\nClassification Report : ")
+        print(classification_report(self.y_test, y_preds))
+
+        r.write_to_report("(XGBClassifier) confusion matrix", confusion_matrix(self.y_test, y_preds).tolist())
         r.write_to_report("(XGBClassifier) best model", str(random_search.best_estimator_))
         r.write_to_report("(XGBClassifier) best parameters", str(random_search.best_params_))
         r.write_to_report("(XGBClassifier) accuracy", random_search.best_estimator_.score(self.X_test, self.y_test))
