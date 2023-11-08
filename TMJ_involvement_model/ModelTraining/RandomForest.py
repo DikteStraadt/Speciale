@@ -40,11 +40,11 @@ class RandomForest:
         }
 
         param = {
-            'random forest__n_estimators': [100, 200, 300, 400, 500, 600, 700],
+            'random forest__n_estimators': [100, 200, 300, 500, 700, 1000],
             'random forest__max_depth': [None, 3, 7, 10],
             'random forest__min_samples_split': [2, 5, 10],
             'random forest__min_samples_leaf': [1, 2, 4],
-            'random forest__max_features': ['sqrt', 'log2', 'int'],
+            'random forest__max_features': ['sqrt', 'log2'],
             'random forest__bootstrap': [True, False],
             'random forest__class_weight': [None, 'balanced'],
             'random forest__random_state': [42],

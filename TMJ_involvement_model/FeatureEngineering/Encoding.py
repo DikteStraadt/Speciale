@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import Input, Embedding, Concatenate, Dense, Reshape
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.utils import plot_model
 from IPython.display import Image
 from matplotlib import pyplot
@@ -107,17 +108,19 @@ def doEmbedding(data, featureEm, target, embeddingName):
     string = embeddingName
     string += '.png'
 
-    # plot_model(model, show_shapes=True, show_layer_names=True, to_file=string)
-    # Image(retina=True, filename=string)
+    #plot_model(model, show_shapes=True, show_layer_names=True, to_file="Embeddings/"+string)
+    #Image(retina=True, filename="Embeddings/"+string)
 
     # Compile the model and set up early stopping
     opt = SGD(learning_rate=0.01)
     model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy'])
+    es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=50, restore_best_weights=True)
     history = model.fit(
         [X_train[featureEm], X_train[numeric_cols]],
         y_train,
         validation_data=([X_test[featureEm], X_test[numeric_cols]], y_test),
-        epochs=2
+        epochs=50,
+        callbacks=[es]
     )
 
     # Evaluate the model
