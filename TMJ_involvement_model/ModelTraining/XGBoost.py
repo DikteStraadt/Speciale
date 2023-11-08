@@ -1,7 +1,7 @@
 from matplotlib import pyplot
 from FeatureEngineering import FeatureSelection as f
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import accuracy_score, make_scorer, f1_score
+from sklearn.metrics import accuracy_score, make_scorer, f1_score, classification_report, confusion_matrix
 from sklearn.model_selection import RandomizedSearchCV
 import xgboost as xgb
 from Utils import Report as r
@@ -43,7 +43,7 @@ class XGBoostClassifier:
                     X_test_fs = pd.concat([X_test_fs, self.X_train[column]], axis=1)
 
             r.write_to_report("feature selection", "Clinical")
-            r.write_to_report(f"(Clinical) n_features", len(clinical_columns))
+            r.write_to_report(f"n_features", len(clinical_columns))
 
         model = Pipeline(steps=[
             ("xgboost", xgb.XGBClassifier()),
@@ -57,6 +57,7 @@ class XGBoostClassifier:
         }
 
         param = {
+            'xgboost__enable_categorical': [True],
             'xgboost__max_depth': [3, 7, 10],
             'xgboost__eta': [0.01, 0.1, 0.2],
             'xgboost__objective': ['multi:softmax'],
@@ -93,6 +94,15 @@ class XGBoostClassifier:
         pyplot.xticks(rotation=45, ha='right')
         pyplot.show()
 
+        y_preds = random_search.predict(self.X_test)
+
+        print("\nConfusion Matrix : ")
+        print(confusion_matrix(self.y_test, y_preds))
+
+        print("\nClassification Report : ")
+        print(classification_report(self.y_test, y_preds))
+
+        r.write_to_report("(XGBClassifier) confusion matrix", confusion_matrix(self.y_test, y_preds).tolist())
         r.write_to_report("(XGBClassifier) best model", str(random_search.best_estimator_))
         r.write_to_report("(XGBClassifier) best parameters", str(random_search.best_params_))
         r.write_to_report("(XGBClassifier) accuracy", random_search.best_estimator_.score(self.X_test, self.y_test))

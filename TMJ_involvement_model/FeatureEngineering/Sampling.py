@@ -1,5 +1,6 @@
 # https://elitedatascience.com/imbalanced-classes
 import pandas as pd
+from imblearn.over_sampling import SMOTENC
 from sklearn.utils import resample
 from Utils import Report as r
 from imblearn.combine import SMOTEENN
@@ -15,18 +16,20 @@ class SMOTE:
 
     def transform(self, data, y=None):
 
-        columns_to_exclude = ['sex', 'type', 'studyid', 'involvementstatus', 'Unnamed: 0', 'visitationdate']
         y = data["involvementstatus"]
+        X = data.drop(columns=["involvementstatus"])
         print("Before SMOTE: ", Counter(y))
-        X = data.drop(columns=columns_to_exclude)
-        columns_to_exclude.remove("involvementstatus")
 
-        sme = SMOTEENN(random_state=self.config["random_state"])  #sampling_strategy={1: 2300, 2: 2000}
-        X_res, y_res = sme.fit_resample(X, y)
-        final_df = pd.concat([y_res.reset_index(drop=True), X_res.reset_index(drop=True), data[columns_to_exclude]], axis=1)
+        non_categorical_columns = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
+        categorical_columns = [col for col in X.columns if col not in non_categorical_columns]
+
+        smote = SMOTENC(categorical_features=categorical_columns, random_state=self.config["random_state"], sampling_strategy={1: 2300, 2: 2000})
+        X_res, y_res = smote.fit_resample(X, y)
+
+        final_df = pd.concat([y_res.reset_index(drop=True), X_res.reset_index(drop=True)], axis=1)
         print("After SMOTE: ", Counter(y_res))
 
-        r.write_to_report("smote size", final_df.shape)
+        r.write_to_report("smote size", f"{final_df.shape}")
 
         return final_df
 

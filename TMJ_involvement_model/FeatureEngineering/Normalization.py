@@ -8,18 +8,14 @@ class NormalizeData:
         return self
 
     def transform(self, data, y=None):
-        columns_to_normalize = data
 
-        scaler = RobustScaler()  # StandardScaler(), MinMaxScaler()
-
-        normalized_columns = pd.DataFrame(scaler.fit_transform(columns_to_normalize), columns=columns_to_normalize.columns)
+        columns_to_normalize = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
+        scaler = StandardScaler()  # StandardScaler(), MinMaxScaler(), RobustScaler()
+        data[columns_to_normalize] = scaler.fit_transform(data[columns_to_normalize])
 
         # Get ranges for each column
-        summary = normalized_columns.describe()
-        column_ranges = summary.loc[['min', 'max']]
+        # column_ranges = data.describe().loc[['min', 'max']]
 
-        # print(column_ranges)
-
-        return normalized_columns
+        return data
 
 

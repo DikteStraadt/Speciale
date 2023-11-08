@@ -1,18 +1,19 @@
 import warnings
+
 from Utils import Configuration as c, Report as r
 
 from datetime import datetime
 from sklearn.model_selection import train_test_split
 from DataCleaning.RawData import ImportExportData as d
-from DataCleaning.RawData import CleanData as cl
 from FeatureEngineering import Normalization as n
-from DataCleaning import PreprocessData as p
 from FeatureEngineering import Encoding as e
 from FeatureEngineering import Sampling as s
 from ModelTraining import RandomForest as rf
 from ModelTraining import XGBoost as xg
 from ModelTraining import CatBoost as cat
 from sklearn.pipeline import Pipeline
+from FeatureEngineering import TypeConverter as tc
+from DataCleaning import PreprocessData as p
 
 warnings.filterwarnings('ignore')
 
@@ -24,7 +25,8 @@ if __name__ == '__main__':
 
     ##################### PREPROCESS AND SAVE DATA #####################
 
-    # data = p.preprocess_data(configurations[0]['n_categories'])
+    # n_categories = configurations[0]['n_categories']
+    # data = p.preprocess_data(n_categories)
     # print("Data is preprocessed and saved")
 
     ##################### IMPORT DATA #####################
@@ -35,9 +37,7 @@ if __name__ == '__main__':
 
     for config in configurations:
 
-        data = imported_data
         columns_to_exclude = ['sex', 'type', 'studyid', 'Unnamed: 0', 'visitationdate']
-        target = data['involvementstatus']
         data = imported_data.drop(columns=columns_to_exclude)
 
         r.create_empty_report()
@@ -48,9 +48,7 @@ if __name__ == '__main__':
 
         ##################### PROCESS DATA #####################
 
-        #columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asyoccl', 'profile', 'lowerface']
-
-        columns_to_encode = ['asypupilline', 'headache']
+        columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asyoccl', 'profile', 'lowerface']
 
         if config['encoding_embedding']:
             encoding_method = e.EntityEmbeddingTransformer('involvementstatus', columns_to_encode)
@@ -58,7 +56,8 @@ if __name__ == '__main__':
             encoding_method = e.OneHotEncode(columns_to_encode)
 
         feature_engineering_pipeline = Pipeline(steps=[
-            # ("Sampling", s.SMOTE(config)),
+            ("Convert type", tc.ConvertToCategories()),
+            ("Sampling", s.SMOTE(config)),
             ("Encoding", encoding_method),
             ("Normalization", n.NormalizeData()),
         ])
@@ -66,10 +65,12 @@ if __name__ == '__main__':
         data = feature_engineering_pipeline.fit_transform(data)
 
         ##################### SPLIT DATA #####################
+
+        target = data['involvementstatus']
         data = data.drop('involvementstatus', axis=1)
 
-        X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=123, shuffle=True)
-        X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, test_size=0.5, random_state=123, shuffle=True)
+        X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=config['random_state'], shuffle=True)
+        X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, test_size=0.5, random_state=config['random_state'], shuffle=True)
 
         r.write_to_report("train size", f"{X_train.shape} {y_train.shape}")
         r.write_to_report("test size", f"{X_test.shape} {y_test.shape}")

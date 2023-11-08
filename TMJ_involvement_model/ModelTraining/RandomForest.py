@@ -1,7 +1,7 @@
 import pandas as pd
 from matplotlib import pyplot
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import make_scorer, accuracy_score, f1_score
+from sklearn.metrics import make_scorer, accuracy_score, f1_score, confusion_matrix, classification_report
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.pipeline import Pipeline
 from FeatureEngineering import FeatureSelection as f
@@ -26,12 +26,14 @@ class RandomForest:
             sfs_data = f.ForwardSubsetSelection(RandomForestClassifier(), self.target, self.config).transform(data)
             X_train_fs = self.X_train.loc[:, sfs_data.columns]
             X_test_fs = self.X_test.loc[:, sfs_data.columns]
+
         else:
             clinical_columns = ['drug', 'painmoveleft', 'painmoveright', 'asybasis', 'asyoccl', 'profile', 'lowerface',
                                 'laterpalpright', 'laterpalpleft', 'translationright', 'translationleft', 'openingmm',
                                 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm',
                                 'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
                                 'Krepitationright', 'Krepitationleft']
+
             X_train_fs = self.X_train.loc[:, clinical_columns]
             X_test_fs = self.X_test.loc[:, clinical_columns]
 
@@ -43,7 +45,7 @@ class RandomForest:
                     X_test_fs = pd.concat([X_test_fs, self.X_train[column]], axis=1)
 
             r.write_to_report("feature selection", "Clinical")
-            r.write_to_report(f"(Clinical) n_features", len(clinical_columns))
+            r.write_to_report(f"n_features", len(self.X_train.columns))
 
         model = Pipeline(steps=[
             ("randomforest", RandomForestClassifier()),
@@ -91,6 +93,15 @@ class RandomForest:
         pyplot.xticks(rotation=45, ha='right')
         pyplot.show()
 
+        y_preds = random_search.predict(self.X_test)
+
+        print("\nConfusion Matrix: ")
+        print(confusion_matrix(self.y_test, y_preds))
+
+        print("\nClassification Report: ")
+        print(classification_report(self.y_test, y_preds))
+
+        r.write_to_report("(RandomForestClassifier) confusion matrix", confusion_matrix(self.y_test, y_preds).tolist())
         r.write_to_report("(RandomForestClassifier) best model", str(random_search.best_estimator_))
         r.write_to_report("(RandomForestClassifier) best parameters", str(random_search.best_params_))
         r.write_to_report("(RandomForestClassifier) accuracy", random_search.best_estimator_.score(self.X_test, self.y_test))

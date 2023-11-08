@@ -3,6 +3,7 @@ from sklearn.pipeline import Pipeline
 from DataCleaning.RawData import CleanData as cd, ImportExportData as d
 from DataCleaning.Visitations import CleanVisitations as cv
 from DataCleaning.Visitations import ReadWriteVisitations as v
+from FeatureEngineering import TypeConverter as tc
 
 def preprocess_data(n_categories):
 
