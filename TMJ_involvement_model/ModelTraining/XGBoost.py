@@ -56,13 +56,15 @@ class XGBoostClassifier:
             'f1_weighted': make_scorer(f1_score, average='weighted'),
         }
 
+        fit_params = {"early_stopping_rounds": 50}
+
         param = {
             'xgboost__max_depth': [3, 7, 10, None],
             'xgboost__eta': [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3],
             'xgboost__objective': ['multi:softmax'],
-            'xgboost__min_child_weight': [10, 15, 20, 25],
+            'xgboost__min_child_weight': [1, 5, 15, 30, 100, 200],
             'xgboost__colsample_bytree': [0.8, 0.9, 1],
-            'xgboost__n_estimators': [300, 400, 500, 600],
+            'xgboost__n_estimators': [100, 200, 300, 500, 700, 1000],
             'xgboost__reg_alpha': [0.5, 0.2, 1],
             'xgboost__reg_lambda': [2, 3, 5],
             'xgboost__gamma': [1, 2, 3],
@@ -72,7 +74,9 @@ class XGBoostClassifier:
         random_search = RandomizedSearchCV(
             estimator=model,
             param_distributions=param,
+            num_boost_round=100000,
             n_iter=self.config["iterations"],
+            fit_params=fit_params,
             cv=self.config["cv"],
             n_jobs=-1,
             random_state=self.config["random_state"],
