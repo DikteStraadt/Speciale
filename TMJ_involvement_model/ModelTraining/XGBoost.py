@@ -27,6 +27,11 @@ class XGBoostClassifier:
         self.X_train = data_fs[0]
         self.X_test = data_fs[1]
 
+        if self.config['n_categories'] == 2:
+            xgboost_objective = 'binary:logistic'
+        elif self.config['n_categories'] == 3:
+            xgboost_objective = 'multi:softmax'
+
         model = Pipeline(steps=[
             ("xgboost", xgb.XGBClassifier()),
         ])
@@ -42,7 +47,7 @@ class XGBoostClassifier:
             'xgboost__enable_categorical': [True],
             'xgboost__max_depth': [3, 7, 10],
             'xgboost__eta': [0.01, 0.1, 0.2],
-            'xgboost__objective': ['multi:softmax'],
+            'xgboost__objective': [xgboost_objective],
             'xgboost__min_child_weight': [10, 15, 20, 25],
             'xgboost__colsample_bytree': [0.8, 0.9, 1],
             'xgboost__n_estimators': [300, 400, 500, 600],
@@ -66,6 +71,6 @@ class XGBoostClassifier:
 
         random_search_model = random_search.fit(self.X_train, self.y_train)
 
-        e.evaluation("catboost", random_search_model, self.X_train, self.X_test, self.y_test)
+        e.evaluation("xgboost", random_search_model, self.X_train, self.X_test, self.y_test)
 
         return data

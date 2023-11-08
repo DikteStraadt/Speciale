@@ -107,8 +107,8 @@ def doEmbedding(data, featureEm, target, embeddingName):
     string = embeddingName
     string += '.png'
 
-    plot_model(model, show_shapes=True, show_layer_names=True, to_file=string)
-    Image(retina=True, filename=string)
+    # plot_model(model, show_shapes=True, show_layer_names=True, to_file=string)
+    # Image(retina=True, filename=string)
 
     # Compile the model and set up early stopping
     opt = SGD(learning_rate=0.01)
@@ -117,7 +117,7 @@ def doEmbedding(data, featureEm, target, embeddingName):
         [X_train[featureEm], X_train[numeric_cols]],
         y_train,
         validation_data=([X_test[featureEm], X_test[numeric_cols]], y_test),
-        epochs=1000
+        epochs=2
     )
 
     # Evaluate the model

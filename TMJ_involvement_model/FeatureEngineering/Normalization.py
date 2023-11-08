@@ -4,12 +4,19 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
 
 class NormalizeData:
 
+    def __init__(self, config):
+        self.config = config
+
     def fit(self, data, y=None):
         return self
 
     def transform(self, data, y=None):
 
-        columns_to_normalize = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
+        if self.config['encoding_embedding']:
+            columns_to_normalize = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'drug', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelationright', 'sagitalrelationleft']
+        elif not self.config['encoding_embedding']:
+            columns_to_normalize = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
+
         scaler = StandardScaler()  # StandardScaler(), MinMaxScaler(), RobustScaler()
         data[columns_to_normalize] = scaler.fit_transform(data[columns_to_normalize])
 

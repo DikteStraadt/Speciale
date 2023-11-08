@@ -51,16 +51,19 @@ def feature_selection(data, X_train, X_test, estimator, target, config):
         X_train_fs = X_train.loc[:, clinical_columns]
         X_test_fs = X_test.loc[:, clinical_columns]
 
-        extra = ['asybasis', 'asybasis_0', 'asybasis_1', 'asybasis_2', 'asybasis_3', 'asybasis_4',
-                 'asypupilline', 'asypupilline_0', 'asypupilline_1', 'asypupilline_2', 'asypupilline_3', 'asypupilline_4',
-                 'drug', 'drug_1', 'drug_2', 'drug_3', 'drug_4', 'drug_5', 'drug_6', 'drug_7', 'drug_8', 'drug_9',
-                 'drug_10', 'drug_11', 'drug_12', 'drug_13', 'drug_14', 'drug_15', 'drug_16', 'drug_17', 'drug_18',
-                 'drug_19', 'drug_20', 'drug_21', 'drug_22', 'drug_23', 'drug_24', 'drug_25', 'drug_26', 'drug_27',
+        extra = ['asybasis_0', 'asybasis_1', 'asybasis_2', 'asybasis_3', 'asybasis_4',
+                 'asypupilline_0', 'asypupilline_1', 'asypupilline_2', 'asypupilline_3', 'asypupilline_4',
+                 'drug_1', 'drug_2', 'drug_3', 'drug_4', 'drug_5', 'drug_6', 'drug_7', 'drug_8', 'drug_9',
+                 'drug_10', 'drug_11', 'drug_12', 'drug_13', 'drug_14','drug_15','drug_16','drug_17','drug_18',
+                 'drug_19', 'drug_20', 'drug_21', 'drug_22','drug_23','drug_24','drug_25','drug_26','drug_27',
                  'drug_28', 'drug_29', 'drug_30', 'drug_31',
-                 'asyoccl', 'asyoccl_0', 'asyoccl_1', 'asyoccl_2', 'asyoccl_3', 'asyoccl_4',
-                 'profile', 'profile_0', 'profile_1', 'profile_2', 'profile_3',
-                 'lowerface', 'lowerface_0', 'lowerface_1', 'lowerface_2', 'lowerface_3',
-                 'asymenton', 'asyupmid', 'asylowmi', 'sagittalrelationright', 'sagitalrelationleft']
+                 'profile_0', 'profile_1', 'profile_2', 'profile_3',
+                 'lowerface_0', 'lowerface_1', 'lowerface_2', 'lowerface_3',
+                 'asymenton_0', 'asymenton_1', 'asymenton_2', 'asymenton_3','asymenton_4','asymenton_5','asymenton_6','asymenton_7',
+                 'asyoccl_0', 'asyoccl_1', 'asyoccl_2','asyoccl_3', 'asyoccl_4',
+                 'asylowmi_0', 'asylowmi_1', 'asylowmi_2','asylowmi_3', 'asylowmi_4','asylowmi_5',
+                 'sagittalrelationright_0', 'sagittalrelationright_1', 'sagittalrelationright_2', 'sagittalrelationright_3', 'sagittalrelationright_4', 'sagittalrelationright_5','sagittalrelationright_6',
+                 'sagitalrelationleft_0', 'sagitalrelationleft_1', 'sagitalrelationleft_2', 'sagitalrelationleft_3', 'sagitalrelationleft_4', 'sagitalrelationleft_5', 'sagitalrelationleft_6','sagitalrelationleft_7','sagitalrelationleft_8']
 
         for column in extra:
             if column in X_train.columns:
@@ -82,8 +85,6 @@ class ForwardSubsetSelection:
         return self
 
     def transform(self, data, y=None):
-
-        data = data.iloc[:, 10:20]
 
         sfs = SFS(estimator=self.estimator,
                    k_features= (1, self.config["SFS_n_features"]),
@@ -124,6 +125,8 @@ class ForwardSubsetSelection:
         return data
 
 class PCATransformer:
+
+    # DEPRECATED
 
     def __init__(self, n_components):
         self.n_components = n_components
