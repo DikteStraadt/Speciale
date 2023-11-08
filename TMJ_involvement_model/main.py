@@ -14,6 +14,7 @@ from ModelTraining import CatBoost as cat
 from sklearn.pipeline import Pipeline
 from FeatureEngineering import TypeConverter as tc
 from DataCleaning import PreprocessData as p
+from FeatureEngineering import FeatureMerging as fm
 
 warnings.filterwarnings('ignore')
 
@@ -56,6 +57,7 @@ if __name__ == '__main__':
             encoding_method = e.OneHotEncode(columns_to_encode)
 
         feature_engineering_pipeline = Pipeline(steps=[
+            ("Merging features", fm.MergeFeatures()),
             ("Convert type", tc.ConvertToCategories()),
             ("Sampling", s.SMOTE(config)),
             ("Encoding", encoding_method),
