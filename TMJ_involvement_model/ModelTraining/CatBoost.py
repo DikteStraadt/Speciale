@@ -65,7 +65,7 @@ class CatBoost:
         param = {
             'catboost__iterations': [100, 500],
             'catboost__learning_rate': [0.1, 0.2, 1],
-            'catboost__depth': [3, 6, 10],
+            'catboost__depth': [3, 7, 10, None],
             'catboost__l2_leaf_reg': [3],
             'catboost__border_count': [254],
             'catboost__thread_count': [4],

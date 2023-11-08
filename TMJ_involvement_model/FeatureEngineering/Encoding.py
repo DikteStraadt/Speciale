@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import Input, Embedding, Concatenate, Dense, Reshape
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import SGD
-from keras.utils import plot_model
+from keras.utils.vis_utils import plot_model
 from IPython.display import Image
 from matplotlib import pyplot
 
@@ -117,7 +117,7 @@ def doEmbedding(data, featureEm, target, embeddingName):
         [X_train[featureEm], X_train[numeric_cols]],
         y_train,
         validation_data=([X_test[featureEm], X_test[numeric_cols]], y_test),
-        epochs=50
+        epochs=1000
     )
 
     # Evaluate the model

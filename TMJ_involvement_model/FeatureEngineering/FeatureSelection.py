@@ -21,7 +21,7 @@ class ForwardSubsetSelection:
         data = data.iloc[:, 10:20]
 
         sfs = SFS(estimator=self.estimator,
-                   k_features=self.config["SFS_n_features"],
+                   k_features= (1, self.config["SFS_n_features"]),
                    forward=True,
                    floating=False,
                    scoring='accuracy',
