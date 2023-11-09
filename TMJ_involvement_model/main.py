@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
         ##################### PROCESS DATA #####################
 
-        columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelationright', 'sagitalrelationleft']
+        columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
 
         if config['encoding_embedding']:
             encoding_method = e.EntityEmbeddingTransformer('involvementstatus', columns_to_encode)
@@ -57,8 +57,8 @@ if __name__ == '__main__':
             encoding_method = e.OneHotEncode(columns_to_encode)
 
         feature_engineering_pipeline = Pipeline(steps=[
-            ("Merging features", fm.MergeFeatures()),
             ("Convert type", tc.ConvertToCategories()),
+            ("Merging features", fm.MergeFeatures()),
             ("Sampling", s.SMOTE(config)),
             ("Encoding", encoding_method),
             ("Normalization", n.NormalizeData(config)),

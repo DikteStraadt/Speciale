@@ -20,9 +20,9 @@ def feature_selection(data, X_train, X_test, estimator, target, config):
 
     elif config["feature_selection"] == "clinical":
 
-        clinical_columns = ['painmoveleft', 'painmoveright', 'laterpalpright', 'laterpalpleft', 'translationright', 'translationleft', 'openingmm',
+        clinical_columns = ['painmove', 'laterpalp', 'translation', 'openingmm',
                             'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
-                            'Krepitationright', 'Krepitationleft']
+                            'Krepitation']
 
         X_train_fs = X_train.loc[:, clinical_columns]
         X_test_fs = X_test.loc[:, clinical_columns]
@@ -46,7 +46,7 @@ def feature_selection(data, X_train, X_test, estimator, target, config):
 
     elif config["feature_selection"] == "short":
 
-        clinical_columns = ['painright', 'painleft', 'painmoveright', 'morningstiffness', 'muscularpainright', 'muscularpainleft', 'headache', 'openingfunction', 'neckpain', 'neckpalpation', 'laterpalpright', 'laterpalpleft', 'postpalpright', 'postpalpleft', 'translationright', 'translationleft', 'masseterright', 'masseterleft', 'temporalisright', 'temporalisleft', 'ptextright', 'ptextleft', 'ptintright', 'ptintleft', 'tempsenright', 'tempsenleft', 'sternoright', 'sternoleft', 'stylomandibularligamentright', 'stylomandibularligamentleft', 'asymmetrymasseterright', 'asymmetrymasseterleft', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite']
+        clinical_columns = ['pain', 'painmove', 'morningstiffness', 'muscularpain', 'headache', 'openingfunction', 'neckpain', 'neckpalpation', 'laterpalp', 'postpalp', 'translation', 'masseter', 'temporalis', 'ptext', 'ptint', 'tempsen', 'sterno', 'stylomandibularligament', 'asymmetrymasseter', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite']
 
         X_train_fs = X_train.loc[:, clinical_columns]
         X_test_fs = X_test.loc[:, clinical_columns]
@@ -62,9 +62,7 @@ def feature_selection(data, X_train, X_test, estimator, target, config):
                  'asymenton_0', 'asymenton_1', 'asymenton_2', 'asymenton_3','asymenton_4','asymenton_5','asymenton_6','asymenton_7',
                  'asyoccl_0', 'asyoccl_1', 'asyoccl_2','asyoccl_3', 'asyoccl_4',
                  'asylowmi_0', 'asylowmi_1', 'asylowmi_2','asylowmi_3', 'asylowmi_4','asylowmi_5',
-                 'sagittalrelationright_0', 'sagittalrelationright_1', 'sagittalrelationright_2', 'sagittalrelationright_3', 'sagittalrelationright_4', 'sagittalrelationright_5','sagittalrelationright_6',
-                 'sagitalrelationleft_0', 'sagitalrelationleft_1', 'sagitalrelationleft_2', 'sagitalrelationleft_3', 'sagitalrelationleft_4', 'sagitalrelationleft_5', 'sagitalrelationleft_6','sagitalrelationleft_7','sagitalrelationleft_8']
-
+                 'sagittalrelation_0', 'sagittalrelation_1', 'sagittalrelation_2', 'sagittalrelation_3', 'sagittalrelation_4', 'sagittalrelation_5','sagittalrelation_6']
         for column in extra:
             if column in X_train.columns:
                 X_train_fs = pd.concat([X_train_fs, X_train[column]], axis=1)
