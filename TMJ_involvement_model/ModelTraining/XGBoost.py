@@ -47,10 +47,11 @@ class XGBoostClassifier:
 
         param = {
             'xgboost__enable_categorical': [True],
-            'xgboost__max_depth': [3, 7, 10],
-            'xgboost__eta': [0.01, 0.1, 0.2],
+            'xgboost__max_depth': [3,5,7,10,20],
+            'xgboost__eta': [0.01, 0.1, 0.2, 0.3],
             'xgboost__objective': [xgboost_objective],
             'xgboost__min_child_weight': [1, 5, 15, 30, 100, 200],
+            'xgboost__subsample': [],
             'xgboost__colsample_bytree': [0.8, 0.9, 1],
             'xgboost__n_estimators': [100, 200, 300, 500, 700, 1000],
             'xgboost__reg_alpha': [0.5, 0.2, 1],
