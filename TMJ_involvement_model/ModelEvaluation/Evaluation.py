@@ -1,6 +1,7 @@
 from matplotlib import pyplot
 from sklearn.metrics import confusion_matrix, classification_report
 from Utils import Report as r
+from Utils import SaveLoadModel as s
 
 def evaluation(ml_type, model, X_train, X_test, y_test):
 
@@ -25,3 +26,5 @@ def evaluation(ml_type, model, X_train, X_test, y_test):
     r.write_to_report(f"({ml_type}) best model", str(model.best_estimator_))
     r.write_to_report(f"({ml_type}) best parameters", str(model.best_params_))
     r.write_to_report(f"({ml_type}) accuracy", model.best_estimator_.score(X_test, y_test))
+
+    s.save_model(model, ml_type)

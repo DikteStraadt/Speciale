@@ -33,24 +33,36 @@ class OneHotEncode:
         return new_df
 
 class EntityEmbeddingTransformer:
-    def __init__(self, target, embeddingList):
+    def __init__(self, target, embeddingList,config):
         self.target = target
         self.embeddingList = embeddingList
+        self.config = config
 
     def fit(self, data, y: None):
         return self
 
     def transform(self, data, y=None):
-        for idx, x in enumerate(self.embeddingList):
-            string = "entityEmbedding_" + str(idx)
-            data = doEmbedding(data, x, self.target, string)
+
+        if self.config['do_embedding']:
+
+            for idx, featureEm in enumerate(self.embeddingList):
+                string = "entityEmbedding_" + str(idx)
+                data = doEmbedding(data, featureEm, self.target, string, self.config['n_categories'])
+
+        else:
+            path = "Embeddings/embeddedFeatures.csv"
+            data = pd.read_csv(path)
+
+        r.write_to_report("encoding", "entity embedding")
 
         return data
 
-def doEmbedding(data, featureEm, target, embeddingName):
+def doEmbedding(data, featureEm, target, embeddingName, n_categories):
     print(data.isna().sum())
     embeddingData = data.copy()
-    embeddingData[target].replace(2.0, 1.0)
+
+    if n_categories == 3:
+        embeddingData[target].replace(2.0, 1.0)
 
     y = embeddingData[target]
     X = embeddingData.drop(target, axis=1).astype(float)
@@ -79,7 +91,7 @@ def doEmbedding(data, featureEm, target, embeddingName):
     # Output dimension of the categorical entity embedding (here we want 1 for complexity)
     cat_emb_dim = 1
     #n_unique_cat = len(np.unique(X_train[featureEm]))
-    test = 53  # X_train[featureEm].values.max()
+    test = X[featureEm].values.max()
     n_unique_cat = int(test)+1
     # Embedding Layer
     emb_cat = Embedding(input_dim=n_unique_cat, output_dim=cat_emb_dim, name="embedding_cat")(input_cat)
@@ -128,18 +140,18 @@ def doEmbedding(data, featureEm, target, embeddingName):
     _, test_acc = model.evaluate([X_test[featureEm], X_test[numeric_cols]], y_test, verbose=0)
     print('Train: %.3f, Test: %.3f' % (train_acc, test_acc))
     # Plot loss during training
-    pyplot.subplot(211)
-    pyplot.title('Loss')
-    pyplot.plot(history.history['loss'], label='train')
-    pyplot.plot(history.history['val_loss'], label='test')
-    pyplot.legend()
+    # pyplot.subplot(211)
+    # pyplot.title('Loss')
+    # pyplot.plot(history.history['loss'], label='train')
+    # pyplot.plot(history.history['val_loss'], label='test')
+    # pyplot.legend()
     # plot accuracy during training
-    pyplot.subplot(212)
-    pyplot.title('Accuracy')
-    pyplot.plot(history.history['accuracy'], label='train')
-    pyplot.plot(history.history['val_accuracy'], label='test')
-    pyplot.legend()
-    pyplot.show()
+    # pyplot.subplot(212)
+    # pyplot.title('Accuracy')
+    # pyplot.plot(history.history['accuracy'], label='train')
+    # pyplot.plot(history.history['val_accuracy'], label='test')
+    # pyplot.legend()
+    # pyplot.show()
 
     cat_encoder = {}
     unique_cat = np.unique(data[featureEm])
@@ -156,7 +168,8 @@ def doEmbedding(data, featureEm, target, embeddingName):
     cat_emb_df = pd.merge(cat_encoder_df, cat_emb_df, how='inner', on='emb_index')
     print(cat_emb_df.head())
 
-    csvName = embeddingName
+    csvName = 'Embeddings/'
+    csvName += embeddingName
     csvName += '.csv'
 
     # saving embedding results
@@ -167,7 +180,6 @@ def doEmbedding(data, featureEm, target, embeddingName):
     X_emb[featureEm] = X_emb['emb_0']
     X_emb = X_emb.drop('emb_0', axis=1)
 
-    X_emb.to_csv('embeddedFeatures.csv', index=False)
-    r.write_to_report("encoding", "entity embedding")
+    X_emb.to_csv('Embeddings/embeddedFeatures.csv', index=False)
 
     return X_emb

@@ -27,7 +27,7 @@ def preprocess_data(n_categories):
     data = preprocessing_pipeline.fit_transform(data)
 
     # Save visitations to file
-    d.export_data(data, f"output_{n_categories}_cat.xlsx")
+    d.export_data(data, f"Data/output_{n_categories}_cat.xlsx")
     print("Data exported to file")
 
     return data

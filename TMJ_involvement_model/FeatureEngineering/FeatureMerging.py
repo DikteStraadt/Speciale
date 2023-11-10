@@ -55,7 +55,7 @@ class MergeFeatures:
 
             new_df.drop([featurepair[0], featurepair[1]], axis=1, inplace=True)
 
-        print("Merging of features done!!")
+        print("Merging of features is done")
 
         return new_df
 

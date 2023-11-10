@@ -1,9 +1,10 @@
 {
+    "n_categories": [3],
     "timeliness": [false],
     "feature_selection": ["short", "clinical", "SFS"],
-    "encoding_embedding": [false, true],
-    "n_categories": 3,
-    "SFS_n_features": 10,
+    "encoding_embedding": [true, false],
+    "do_embedding": [true, false],
+    "SFS_n_features": 5,
     "cv": 5,
     "iterations": 10,
     "verbose": 3

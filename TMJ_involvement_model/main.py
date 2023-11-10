@@ -1,6 +1,8 @@
+import string
 import warnings
+import random
 
-from Utils import Configuration as c, Report as r
+from Utils import Configuration as c, Report as r, SaveLoadModel as sl
 
 from datetime import datetime
 from sklearn.model_selection import train_test_split
@@ -20,27 +22,39 @@ warnings.filterwarnings('ignore')
 
 if __name__ == '__main__':
 
+    sl.remove_models()
+
     ##################### IMPORT CONFIGS #####################
 
     configurations = c.get_configurations()
 
     ##################### PREPROCESS AND SAVE DATA #####################
 
-    # n_categories = configurations[0]['n_categories']
-    # data = p.preprocess_data(n_categories)
+    # p.preprocess_data(2)  # Two categories
+    # p.preprocess_data(3)  # Three categories
     # print("Data is preprocessed and saved")
 
     ##################### IMPORT DATA #####################
 
-    imported_data = d.import_data(f"output_{configurations[0]['n_categories']}_cat.xlsx", "Sheet1")
-    print("Data is imported")
+    print("Starting data import")
+    # imported_data_2_cat = d.import_data("Data/output_2_cat.xlsx", "Sheet1")
+    # print("Data with two categories is imported")
+    imported_data_3_cat = d.import_data("Data/output_3_cat.xlsx", "Sheet1")
+    print("Data with three categories is imported")
 
     for config in configurations:
 
         columns_to_exclude = ['sex', 'type', 'studyid', 'Unnamed: 0', 'visitationdate']
-        data = imported_data.drop(columns=columns_to_exclude)
+
+        if config['n_categories'] == 2:
+            print()
+            #data = imported_data_2_cat.drop(columns=columns_to_exclude)
+        elif config['n_categories'] == 3:
+            data = imported_data_3_cat.drop(columns=columns_to_exclude)
 
         r.create_empty_report()
+
+        r.write_to_report("id", ''.join(random.choices(string.ascii_uppercase + string.digits, k=4)))
         r.write_to_report("timestamp start", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
         r.write_to_report("timestamp end", "")  # placeholder
         r.write_to_report("n_categories", config['n_categories'])
@@ -52,7 +66,7 @@ if __name__ == '__main__':
         columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
 
         if config['encoding_embedding']:
-            encoding_method = e.EntityEmbeddingTransformer('involvementstatus', columns_to_encode)
+            encoding_method = e.EntityEmbeddingTransformer('involvementstatus', columns_to_encode, config)
         else:
             encoding_method = e.OneHotEncode(columns_to_encode)
 
@@ -90,6 +104,10 @@ if __name__ == '__main__':
 
         r.write_to_report("timestamp end", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
 
+        report = r.read_report()
+        best_model = r.find_best_model()
+        sl.rename_model(best_model, report)
+        sl.remove_models()
         r.rename_report_file()
 
     print("Done!")
