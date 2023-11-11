@@ -48,14 +48,21 @@ class CatBoost:
         param = {
             'catboost__iterations': [100, 200, 300, 500, 700, 1000, 100000],
             'catboost__learning_rate': [0.01, 0.1, 0.2, 0.3],
-            'catboost__depth': [3, 7, 10, None],
-            'catboost__l2_leaf_reg': [3],
-            'catboost__border_count': [254],
+            'catboost__depth': [3, 5, 7, 10, None],
+            'catboost__l2_leaf_reg': [1, 3, 5, 10],
+            'catboost__border_count': [32, 64, 128],
             'catboost__thread_count': [4],
-            'catboost__one_hot_max_size': [20],
-            'catboost__bagging_temperature': [1.0],
+            'catboost__subsample': [0.3, 0.5, 0.8, 1.0],
+            'catboost__bagging_temperature': [1.0, 1.5, 2.0],
+            'catboost__colsample_bylevel': [0.3,0.5,0.8,1.0],
+            'catboost__random_strenght': [0.1,0.5, 1.0],
+            'catboost__scale_pos_weight': [1,2,3],
+            'catboost__grow_policy': ['SymmetricTree', 'Depthwise', 'Lossguide'],
+            'catboost__min_data_in_leaf': [1,5,10,20,50],
+            'catboost__class_weights': [[1, 2, 0.5], 'balanced', [0.5, 2, 1]],
             'catboost__early_stopping_rounds': [50],
             'catboost__loss_function': ['MultiClass'],
+            'catboost__random_seed':[42],
             'catboost__verbose': [False]
         }
 

@@ -47,16 +47,17 @@ class XGBoostClassifier:
 
         param = {
             'xgboost__enable_categorical': [True],
-            'xgboost__max_depth': [3,5,7,10,20],
+            'xgboost__max_depth': [3,5,7,10,None],
             'xgboost__eta': [0.01, 0.1, 0.2, 0.3],
             'xgboost__objective': [xgboost_objective],
             'xgboost__min_child_weight': [1, 5, 15, 30, 100, 200],
-            'xgboost__subsample': [0.3, 0.5, 0.8, 1],
+            'xgboost__subsample': [0.3, 0.5, 0.8, 1.0],
             'xgboost__colsample_bytree': [0.3, 0.5, 0.8, 1],
             'xgboost__n_estimators': [100, 200, 300, 500, 700, 1000],
-            'xgboost__reg_alpha': [0, 0.01, 0.5, 1, 10, 1000],
+            'xgboost__reg_alpha': [0, 0.01, 0.5, 1, 10],
             'xgboost__reg_lambda': [0, 0.01, 5],
-            'xgboost__gamma': [0.0, 0.1, 0.3, 1, 5, 10, 1000],
+            'xgboost__gamma': [0.0, 0.05, 0.1, 0.3],
+            'xgboost__scale_pos_weight': [1, 2, 3],
             'xgboost__random_state': [42]
         }
 
