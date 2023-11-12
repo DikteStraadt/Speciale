@@ -23,6 +23,11 @@ class RandomForest:
 
     def transform(self, data, y=None):
 
+        self.X_train = self.X_train.drop(columns=['ID'])
+        self.X_test = self.X_train.drop(columns=['ID'])
+        self.y_train = self.X_train.drop(columns=['ID'])
+        self.y_test = self.X_train.drop(columns=['ID'])
+
         data_fs = f.feature_selection(data, self.X_train, self.X_test, RandomForestClassifier(), self.target, self.config)
 
         self.X_train = data_fs[0]

@@ -100,6 +100,8 @@ if __name__ == '__main__':
             ("catboost", cat.CatBoost(X_train, X_test, y_train, y_test, target, config))
         ])
 
+        d.export_data(data, f"Data/processed_data.xlsx")
+
         pipeline.transform(data)
 
         r.write_to_report("timestamp end", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))

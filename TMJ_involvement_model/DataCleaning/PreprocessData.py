@@ -8,7 +8,7 @@ from FeatureEngineering import TypeConverter as tc
 def preprocess_data(n_categories):
 
     # Import raw data
-    data = d.import_data("Master_Excel_Sep4.xlsx", "Sheet1")
+    data = d.import_data("Data/Master_Excel_Sep4.xlsx", "Sheet1")
     print("Data is imported")
 
     # Build and run pipeline to preprocess data (no time)
