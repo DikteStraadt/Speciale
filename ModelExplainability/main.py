@@ -5,7 +5,8 @@ from Utils import LoadFile as lf
 from sklearn.model_selection import train_test_split
 from Utils import ImportExportData as d
 from Utils import Configuration as c
-from ShapMultiClassifier import multiclass_forceplot
+from ShapMultiClassifier import multiclass_forceplot, waterfallplot
+from ShapBinaryClassifier import forceplot_binary
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -14,7 +15,7 @@ if __name__ == '__main__':
     configurations = c.get_configurations()
     columns_to_exclude = ['sex', 'type', 'studyid', 'Unnamed: 0', 'visitationdate', 'tractionright', 'tractionleft']
     data = d.import_data(f"output_{configurations[0]['n_categories']}_cat.xlsx", "Sheet1")
-    #data = data.drop(columns=columns_to_exclude)
+    data = data.drop(columns=columns_to_exclude)
     featurename_cols = ['painmoveright', 'openingfunction']
     y = data['involvementstatus']
     X = data[featurename_cols]
@@ -35,7 +36,10 @@ if __name__ == '__main__':
     multi_shap_values = multi_explainer.shap_values(X_train)
     print(len(multi_shap_values))   # prints out '3'
 
-    multiclass_forceplot(multi_est, 'randomforest', 2, X_train, y_train, multi_explainer, multi_shap_values, classes='all')
+    waterfallplot(multi_explainer, X_train, "TMJ involvement", 7)
+
+    #multiclass_forceplot(multi_est, 'randomforest', 7, X_train, y_train, multi_explainer, multi_shap_values, classes='all')
+    #forceplot_binary(multi_est, 'randomforest', 7, X_train, y_train, multi_explainer, multi_shap_values)
 
 
 
