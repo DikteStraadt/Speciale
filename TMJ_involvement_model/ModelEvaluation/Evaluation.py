@@ -23,6 +23,7 @@ def evaluation(ml_type, model, X_train, X_test, y_test):
     print(classification_report(y_test, y_preds))
 
     r.write_to_report(f"({ml_type}) confusion matrix", confusion_matrix(y_test, y_preds).tolist())
+    r.write_to_report(f"({ml_type}) classification report", classification_report(y_test, y_preds))
     r.write_to_report(f"({ml_type}) best model", str(model.best_estimator_))
     r.write_to_report(f"({ml_type}) best parameters", str(model.best_params_))
     r.write_to_report(f"({ml_type}) accuracy", model.best_estimator_.score(X_test, y_test))

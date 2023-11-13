@@ -23,6 +23,8 @@ class NormalizeData:
         # Get ranges for each column
         # column_ranges = data.describe().loc[['min', 'max']]
 
+        print("Data normalized")
+
         return data
 
 

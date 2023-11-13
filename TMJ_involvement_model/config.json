@@ -7,5 +7,8 @@
     "SFS_n_features": 10,
     "cv": 5,
     "iterations": 10,
-    "verbose": 3
+    "verbose": 3,
+    "smote_2_cat_class_1": 3000,
+    "smote_3_cat_class_1": 3000,
+    "smote_3_cat_class_2": 1500
 }

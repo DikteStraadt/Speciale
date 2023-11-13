@@ -24,9 +24,7 @@ class CatBoost:
     def transform(self, data, y=None):
 
         self.X_train = self.X_train.drop(columns=['ID'])
-        self.X_test = self.X_train.drop(columns=['ID'])
-        self.y_train = self.X_train.drop(columns=['ID'])
-        self.y_test = self.X_train.drop(columns=['ID'])
+        self.X_test = self.X_test.drop(columns=['ID'])
 
         data_fs = f.feature_selection(data, self.X_train, self.X_test, CatBoostClassifier(), self.target, self.config)
 
@@ -67,7 +65,7 @@ class CatBoost:
             'catboost__class_weights': [[1, 2, 0.5], 'balanced', [0.5, 2, 1]],
             'catboost__early_stopping_rounds': [50],
             'catboost__loss_function': ['MultiClass'],
-            'catboost__random_seed':[42],
+            'catboost__random_seed': [42],
             'catboost__verbose': [False]
         }
 

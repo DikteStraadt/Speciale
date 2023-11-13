@@ -23,9 +23,7 @@ class XGBoostClassifier:
     def transform(self, data, y=None):
 
         self.X_train = self.X_train.drop(columns=['ID'])
-        self.X_test = self.X_train.drop(columns=['ID'])
-        self.y_train = self.X_train.drop(columns=['ID'])
-        self.y_test = self.X_train.drop(columns=['ID'])
+        self.X_test = self.X_test.drop(columns=['ID'])
 
         data_fs = f.feature_selection(data, self.X_train, self.X_test, xgb.XGBClassifier(), self.target, self.config)
 
@@ -62,7 +60,7 @@ class XGBoostClassifier:
             'xgboost__reg_alpha': [0, 0.01, 0.5, 1, 10],
             'xgboost__reg_lambda': [0, 0.01, 5],
             'xgboost__gamma': [0.0, 0.05, 0.1, 0.3],
-            'xgboost__scale_pos_weight': [1, 2, 3],
+            # 'xgboost__scale_pos_weight': [1, 2, 3],
             'xgboost__random_state': [42]
         }
 

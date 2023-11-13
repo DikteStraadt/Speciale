@@ -24,9 +24,7 @@ class RandomForest:
     def transform(self, data, y=None):
 
         self.X_train = self.X_train.drop(columns=['ID'])
-        self.X_test = self.X_train.drop(columns=['ID'])
-        self.y_train = self.X_train.drop(columns=['ID'])
-        self.y_test = self.X_train.drop(columns=['ID'])
+        self.X_test = self.X_test.drop(columns=['ID'])
 
         data_fs = f.feature_selection(data, self.X_train, self.X_test, RandomForestClassifier(), self.target, self.config)
 
@@ -48,7 +46,7 @@ class RandomForest:
             'random forest__n_estimators': [100, 200, 300, 500, 700, 1000, 100000],
             'random forest__max_depth': [None, 3, 7, 10],
             'random forest__min_samples_split': [2, 5, 10],
-            'random forest__min_samples_leaf': [1,5,10,20,50],
+            'random forest__min_samples_leaf': [1, 5, 10, 20, 50],
             'random forest__max_features': ['sqrt', 'log2', 0.5],
             'random forest__bootstrap': [True, False],
             'random forest__class_weight': [[1, 2, 0.5], 'balanced', [0.5, 2, 1]],
