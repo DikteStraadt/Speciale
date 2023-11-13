@@ -37,7 +37,7 @@ class SMOTE:
         final_df = pd.concat([ids, y_res.reset_index(drop=True), X_res.reset_index(drop=True)], axis=1)
         print("After SMOTE: ", Counter(y_res))
 
-        r.write_to_report("smote size", f"{final_df.shape}")
+        r.write_to_report("smote data size", f"{final_df.shape}")
 
         return final_df
 

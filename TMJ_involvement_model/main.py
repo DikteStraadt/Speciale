@@ -41,11 +41,11 @@ if __name__ == '__main__':
     ##################### IMPORT DATA #####################
 
     print("Starting data import")
-    if 2 in configurations[0]['n_categories']:
+    if any(obj['n_categories'] == 2 for obj in configurations):
         imported_data_2_cat = d.import_data("Data/output_2_cat.xlsx", "Sheet1")
         print("Data with two categories is imported")
 
-    if 3 in configurations[0]['n_categories']:
+    if any(obj['n_categories'] == 3 for obj in configurations):
         imported_data_3_cat = d.import_data("Data/output_3_cat.xlsx", "Sheet1")
         print("Data with three categories is imported")
 
@@ -54,8 +54,7 @@ if __name__ == '__main__':
         columns_to_exclude = ['sex', 'type', 'studyid', 'Unnamed: 0', 'visitationdate']
 
         if config['n_categories'] == 2:
-            print()
-            #data = imported_data_2_cat.drop(columns=columns_to_exclude)
+            data = imported_data_2_cat.drop(columns=columns_to_exclude)
         elif config['n_categories'] == 3:
             data = imported_data_3_cat.drop(columns=columns_to_exclude)
 
