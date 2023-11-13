@@ -80,7 +80,7 @@ class CatBoost:
             random_state=42,
             scoring=scoring,
             refit='f1_weighted',
-            verbose=False
+            verbose=self.config["verbose"]
         )
 
         random_search_model = random_search.fit(self.X_train, self.y_train)
