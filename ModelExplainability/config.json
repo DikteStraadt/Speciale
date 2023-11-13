@@ -1,3 +1,4 @@
 {
-  "n_categories": 3
+  "n_categories": 3,
+  "encoding": "entity embedding"
 }
