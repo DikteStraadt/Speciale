@@ -10,12 +10,11 @@ from Utils import Report as r
 
 class RandomForest:
 
-    def __init__(self, X_train, X_test, y_train, y_test, target, config):
+    def __init__(self, X_train, X_test, y_train, y_test, config):
         self.X_train = X_train
         self.X_test = X_test
         self.y_train = y_train
         self.y_test = y_test
-        self.target = target
         self.config = config
 
     def fit(self, data, y=None):
@@ -23,10 +22,12 @@ class RandomForest:
 
     def transform(self, data, y=None):
 
+        # ids_X_train = self.X_train["ID"]
+        # ids_X_test = self.X_test["ID"]
         self.X_train = self.X_train.drop(columns=['ID'])
         self.X_test = self.X_test.drop(columns=['ID'])
 
-        data_fs = f.feature_selection(data, self.X_train, self.X_test, RandomForestClassifier(), self.target, self.config)
+        data_fs = f.feature_selection(self.X_train, self.y_train, self.X_test, RandomForestClassifier(), self.config)
 
         self.X_train = data_fs[0]
         self.X_test = data_fs[1]
@@ -70,6 +71,9 @@ class RandomForest:
 
         random_search_model = random_search.fit(self.X_train, self.y_train)
 
-        e.evaluation("random forest", random_search_model, self.X_train, self.X_test, self.y_test)
+        # self.X_train = pd.concat([ids_X_train, data], axis=1)
+        # self.X_test = pd.concat([ids_X_test, data], axis=1)
+
+        e.evaluation("random forest", random_search_model, self.X_test, self.y_test)
 
         return data

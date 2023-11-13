@@ -1,3 +1,4 @@
+import pandas as pd
 from matplotlib import pyplot
 from FeatureEngineering import FeatureSelection as f
 from sklearn.pipeline import Pipeline
@@ -9,12 +10,11 @@ from ModelEvaluation import Evaluation as e
 
 class XGBoostClassifier:
 
-    def __init__(self, X_train, X_test, y_train, y_test, target, config):
+    def __init__(self, X_train, X_test, y_train, y_test, config):
         self.X_train = X_train
         self.X_test = X_test
         self.y_train = y_train
         self.y_test = y_test
-        self.target = target
         self.config = config
 
     def fit(self, data, y=None):
@@ -22,10 +22,12 @@ class XGBoostClassifier:
 
     def transform(self, data, y=None):
 
+        # ids_X_train = self.X_train["ID"]
+        # ids_X_test = self.X_test["ID"]
         self.X_train = self.X_train.drop(columns=['ID'])
         self.X_test = self.X_test.drop(columns=['ID'])
 
-        data_fs = f.feature_selection(data, self.X_train, self.X_test, xgb.XGBClassifier(), self.target, self.config)
+        data_fs = f.feature_selection(self.X_train, self.y_train, self.X_test, xgb.XGBClassifier(), self.config)
 
         self.X_train = data_fs[0]
         self.X_test = data_fs[1]
@@ -49,19 +51,8 @@ class XGBoostClassifier:
         fit_params = {"early_stopping_rounds": 50}
 
         param = {
-            'xgboost__enable_categorical': [True],
-            'xgboost__max_depth': [3,5,7,10,None],
-            'xgboost__eta': [0.01, 0.1, 0.2, 0.3],
-            'xgboost__objective': [xgboost_objective],
-            'xgboost__min_child_weight': [1, 5, 15, 30, 100, 200],
-            'xgboost__subsample': [0.3, 0.5, 0.8, 1.0],
-            'xgboost__colsample_bytree': [0.3, 0.5, 0.8, 1],
-            'xgboost__n_estimators': [100, 200, 300, 500, 700, 1000],
-            'xgboost__reg_alpha': [0, 0.01, 0.5, 1, 10],
-            'xgboost__reg_lambda': [0, 0.01, 5],
-            'xgboost__gamma': [0.0, 0.05, 0.1, 0.3],
-            # 'xgboost__scale_pos_weight': [1, 2, 3],
-            'xgboost__random_state': [42]
+            'xgboost__max_depth': [3],
+            'xgboost__eta': [0.2],
         }
 
         random_search = RandomizedSearchCV(
@@ -80,6 +71,9 @@ class XGBoostClassifier:
 
         random_search_model = random_search.fit(self.X_train, self.y_train)
 
-        e.evaluation("xgboost", random_search_model, self.X_train, self.X_test, self.y_test)
+        # self.X_train = pd.concat([ids_X_train, data], axis=1)
+        # self.X_test = pd.concat([ids_X_test, data], axis=1)
+
+        e.evaluation("xgboost", random_search_model, self.X_test, self.y_test)
 
         return data

@@ -57,18 +57,3 @@ def read_report():
         existing_data = {}
         file.close()
         return existing_data
-
-def find_best_model():
-
-    report = read_report()
-    models = [report['(random forest) accuracy'], report['(xgboost) accuracy'], report['(catboost) accuracy']]
-    index = models.index(max(models))
-
-    if index == 0:
-        return "random forest"
-    elif index == 1:
-        return "xgboost"
-    elif index == 2:
-        return "catboost"
-    else:
-        return "ERROR"

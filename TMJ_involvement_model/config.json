@@ -13,5 +13,7 @@
     "smote_2_cat_class_1": 3000,
     "smote_3_cat_class_1": 3000,
     "smote_3_cat_class_2": 1500,
-    "embedding_epochs": 50
+    "embedding_epochs": 50,
+    "time_slice_start": 0,
+    "time_slice_end": 2
 }

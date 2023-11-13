@@ -7,11 +7,11 @@ from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
 
 from Utils import Report as r
 
-def feature_selection(data, X_train, X_test, estimator, target, config):
+def feature_selection(X_train, y_train, X_test, estimator, config):
 
     if config["feature_selection"] == "SFS":
 
-        sfs_data = ForwardSubsetSelection(estimator, target, config).transform(data)
+        sfs_data = ForwardSubsetSelection(estimator, y_train, config).transform(X_train)
 
         X_train_fs = X_train.loc[:, sfs_data.columns]
         X_test_fs = X_test.loc[:, sfs_data.columns]
@@ -63,6 +63,7 @@ def feature_selection(data, X_train, X_test, estimator, target, config):
                  'asyoccl_0', 'asyoccl_1', 'asyoccl_2','asyoccl_3', 'asyoccl_4',
                  'asylowmi_0', 'asylowmi_1', 'asylowmi_2','asylowmi_3', 'asylowmi_4','asylowmi_5',
                  'sagittalrelation_0', 'sagittalrelation_1', 'sagittalrelation_2', 'sagittalrelation_3', 'sagittalrelation_4', 'sagittalrelation_5','sagittalrelation_6']
+
         for column in extra:
             if column in X_train.columns:
                 X_train_fs = pd.concat([X_train_fs, X_train[column]], axis=1)
@@ -84,10 +85,8 @@ class ForwardSubsetSelection:
 
     def transform(self, data, y=None):
 
-        data = data.drop(columns=['ID'])
-
         sfs = SFS(estimator=self.estimator,
-                   k_features= (1, self.config["SFS_n_features"]),
+                   k_features=(1, self.config["SFS_n_features"]),
                    forward=True,
                    floating=False,
                    scoring='accuracy',

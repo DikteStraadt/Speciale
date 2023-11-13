@@ -45,14 +45,9 @@ class EntityEmbeddingTransformer:
 
         if self.config['do_embedding']:
 
-            ids = data["ID"]
-            data = data.drop("ID", axis=1)
-
             for idx, featureEm in enumerate(self.embeddingList):
                 string = "entityEmbedding_" + str(idx)
                 data = doEmbedding(data, featureEm, self.target, string, self.config['n_categories'], self.config['embedding_epochs'])
-
-            data = pd.concat([ids, data], axis=1)
 
         else:
             path = "Embeddings/embeddedFeatures.csv"
@@ -70,7 +65,7 @@ def doEmbedding(data, featureEm, target, embeddingName, n_categories, epochs):
         embeddingData[target].replace(2.0, 1.0)
 
     y = embeddingData[target]
-    X = embeddingData.drop(target, axis=1).astype(float)
+    X = embeddingData.drop(columns=[target, "ID"], axis=1).astype(float)
 
     # evt. noget stratify på
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=11)
@@ -82,7 +77,7 @@ def doEmbedding(data, featureEm, target, embeddingName, n_categories, epochs):
     print(y_train.head())
 
     # remaining cols
-    remainfeatures = data.drop(columns=[featureEm, target], axis=1)
+    remainfeatures = data.drop(columns=[featureEm, target, "ID"], axis=1)
     numeric_cols = remainfeatures.columns
     X_train[numeric_cols] = X_train[numeric_cols].astype(np.float32)
     X_test[numeric_cols] = X_test[numeric_cols].astype(np.float32)

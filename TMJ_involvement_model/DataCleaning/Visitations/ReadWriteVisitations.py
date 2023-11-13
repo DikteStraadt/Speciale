@@ -29,13 +29,15 @@ class ReadVisitations:
         headers_patient_info_first = ('ID', 'overall TMJ involvement')
         headers_patient_info_last = ('Dec-11', 'DysfTMJ_Pain_during_palpation')
 
-        visitation_headers.extend(
-            [headers_visitation_0, headers_visitation_1, headers_visitation_2, headers_visitation_3,
-             headers_visitation_4,
-             headers_visitation_5, headers_visitation_6, headers_visitation_7, headers_visitation_8,
-             headers_visitation_9,
-             headers_visitation_10, headers_visitation_11, headers_visitation_12, headers_visitation_13,
-             headers_visitation_14, headers_visitation_15, headers_visitation_16])
+        visitation_headers.extend([headers_visitation_0, headers_visitation_1])
+
+        # visitation_headers.extend(
+        #     [headers_visitation_0, headers_visitation_1, headers_visitation_2, headers_visitation_3,
+        #     headers_visitation_4,
+        #     headers_visitation_5, headers_visitation_6, headers_visitation_7, headers_visitation_8,
+        #     headers_visitation_9,
+        #     headers_visitation_10, headers_visitation_11, headers_visitation_12, headers_visitation_13,
+        #     headers_visitation_14, headers_visitation_15, headers_visitation_16])
 
         i = 0
 
@@ -70,13 +72,16 @@ class CombineToDataFrame:
         result_df = pd.concat(data_frames, axis=0, ignore_index=True)
 
         columns_to_merge = {}
-        columns_to_merge['visitationdate'] = ['first_visitation', 'second_US', 'third_US', 'fourth_US', 'fifth_US',
-                                              'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
-                                              'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US',
-                                              'fifteenth_US', 'sixteenth_US', 'seventeenth_US']
-        column_names = ['firstvisitation', 'secondUS', 'thirdUS', 'fourthUS', 'fifthUS', 'sixthUS', 'seventhUS',
-                        'eighthUS', 'ninthUS', 'tenthUS', 'eleventhUS', 'twelfthUS', 'thirteenthUS', 'fourteenthUS',
-                        'fifteenthUS', 'sixteenthUS', 'seventeenthUS']
+        columns_to_merge['visitationdate'] = ['first_visitation', 'second_US']
+        column_names = ['firstvisitation', 'secondUS']
+
+        # columns_to_merge['visitationdate'] = ['first_visitation', 'second_US', 'third_US', 'fourth_US', 'fifth_US',
+        #                                       'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
+        #                                       'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US',
+        #                                       'fifteenth_US', 'sixteenth_US', 'seventeenth_US']
+        # column_names = ['firstvisitation', 'secondUS', 'thirdUS', 'fourthUS', 'fifthUS', 'sixthUS', 'seventhUS',
+        #                 'eighthUS', 'ninthUS', 'tenthUS', 'eleventhUS', 'twelfthUS', 'thirteenthUS', 'fourteenthUS',
+        #                 'fifteenthUS', 'sixteenthUS', 'seventeenthUS']
 
         for col in result_df.columns:
             prefix = ''.join(filter(str.isalpha, col))

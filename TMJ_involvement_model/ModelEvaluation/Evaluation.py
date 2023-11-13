@@ -3,7 +3,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 from Utils import Report as r
 from Utils import SaveLoadModel as s
 
-def evaluation(ml_type, model, X_train, X_test, y_test):
+def evaluation(ml_type, model, X_test, y_test):
 
     # importance = model.best_estimator_.named_steps[ml_type].feature_importances_
     # category_names = X_train.columns
@@ -29,3 +29,18 @@ def evaluation(ml_type, model, X_train, X_test, y_test):
     r.write_to_report(f"({ml_type}) accuracy", model.best_estimator_.score(X_test, y_test))
 
     s.save_model(model, ml_type)
+
+def find_best_model(X_valid, y_valid):
+
+    report = r.read_report()
+    models = [report['(random forest) accuracy'], report['(xgboost) accuracy'], report['(catboost) accuracy']]
+    index = models.index(max(models))
+
+    if index == 0:
+        return "random forest"
+    elif index == 1:
+        return "xgboost"
+    elif index == 2:
+        return "catboost"
+    else:
+        return "ERROR"

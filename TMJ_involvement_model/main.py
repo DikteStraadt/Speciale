@@ -1,6 +1,7 @@
 import string
 import warnings
 import random
+import pandas as pd
 
 from Utils import Configuration as c, Report as r, SaveLoadModel as sl
 
@@ -17,6 +18,7 @@ from sklearn.pipeline import Pipeline
 from FeatureEngineering import TypeConverter as tc
 from DataCleaning import PreprocessData as p
 from FeatureEngineering import TransformFeatures as fm
+from ModelEvaluation import Evaluation as ev
 
 warnings.filterwarnings('ignore')
 
@@ -79,41 +81,52 @@ if __name__ == '__main__':
         feature_engineering_pipeline = Pipeline(steps=[
             ("Convert type", tc.ConvertToCategories()),
             ("Merging features", fm.MergeFeatures()),
-            ("Sampling", s.SMOTE(config)),
             ("Encoding", encoding_method),
             ("Normalization", n.NormalizeData(config)),
         ])
 
-        data = feature_engineering_pipeline.fit_transform(data)
+        data = feature_engineering_pipeline.transform(data)
 
         ##################### SPLIT DATA #####################
 
         target = data['involvementstatus']
         data = data.drop('involvementstatus', axis=1)
 
-        X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=42, shuffle=True)
-        X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, test_size=0.5, random_state=42, shuffle=True)
+        X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.7, random_state=42, shuffle=True)
+        X_valid, X_rem_2, y_valid, y_rem_2 = train_test_split(X_rem, y_rem, train_size=(1/3), random_state=42, shuffle=True)
+        X_uncertainty, X_test, y_uncertainty, y_test = train_test_split(X_rem_2, y_rem_2, train_size=0.5, random_state=42, shuffle=True)
 
         r.write_to_report("train size", f"{X_train.shape} {y_train.shape}")
         r.write_to_report("test size", f"{X_test.shape} {y_test.shape}")
         r.write_to_report("validation size", f"{X_valid.shape} {y_valid.shape}")
 
+        ##################### UPSAMPLE DATA #####################
+
+        smote_pipeline = Pipeline(steps=[
+            ("Sampling", s.SMOTE(config))
+        ])
+
+        data_train = pd.concat([y_train, X_train], axis=1)
+        data_train = smote_pipeline.transform(data_train)
+        d.export_data(data_train, f"Data/processed_data.xlsx")
+
+        y_train = data_train['involvementstatus']
+        X_train = data_train.drop('involvementstatus', axis=1)
+
         ##################### PERFORM FEATURE SELECTION AND TRAIN MODEL #####################
 
         pipeline = Pipeline(steps=[
-            ("randomforest", rf.RandomForest(X_train, X_test, y_train, y_test, target, config)),
-            ("xgboost", xg.XGBoostClassifier(X_train, X_test, y_train, y_test, target, config)),
-            ("catboost", cat.CatBoost(X_train, X_test, y_train, y_test, target, config))
+            ("randomforest", rf.RandomForest(X_train, X_test, y_train, y_test, config)),
+            ("xgboost", xg.XGBoostClassifier(X_train, X_test, y_train, y_test, config)),
+            ("catboost", cat.CatBoost(X_train, X_test, y_train, y_test, config))
         ])
-
-        d.export_data(data, f"Data/processed_data.xlsx")
 
         pipeline.transform(data)
 
         r.write_to_report("timestamp end", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
 
         report = r.read_report()
-        best_model = r.find_best_model()
+        best_model = ev.find_best_model(X_valid, y_valid)
         sl.rename_model(best_model, report)
         sl.remove_models()
         r.rename_report_file()
