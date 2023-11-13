@@ -16,27 +16,28 @@ class SMOTE:
 
     def transform(self, data, y=None):
 
+        ids = data["ID"]
         y = data["involvementstatus"]
-        X = data.drop(columns=["involvementstatus"])
+        X = data.drop(columns=["involvementstatus", "ID"])
         print("Before SMOTE: ", Counter(y))
 
         non_categorical_columns = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
         categorical_columns = [col for col in X.columns if col not in non_categorical_columns]
 
         if self.config['n_categories'] == 2:
-            sampling_strategy = {1: 3000}
+            sampling_strategy = {1: self.config['smote_2_cat_class_1']}
         elif self.config['n_categories'] == 3:
-            sampling_strategy = {1: 2300, 2: 2000}  # 2000
+            sampling_strategy = {1: self.config['smote_3_cat_class_1'], 2: self.config['smote_3_cat_class_2']}
         else:
             sampling_strategy = {}
 
         smote = SMOTENC(categorical_features=categorical_columns, random_state=42, sampling_strategy=sampling_strategy)
         X_res, y_res = smote.fit_resample(X, y)
 
-        final_df = pd.concat([y_res.reset_index(drop=True), X_res.reset_index(drop=True)], axis=1)
+        final_df = pd.concat([ids, y_res.reset_index(drop=True), X_res.reset_index(drop=True)], axis=1)
         print("After SMOTE: ", Counter(y_res))
 
-        r.write_to_report("smote size", f"{final_df.shape}")
+        r.write_to_report("smote data size", f"{final_df.shape}")
 
         return final_df
 

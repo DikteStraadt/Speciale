@@ -100,7 +100,7 @@ class ConvertToCategories:
 
         data = data.astype(column_categories)
 
-        non_categorical_columns = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
+        non_categorical_columns = ['ID', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
         categorical_columns = [col for col in data.columns if col not in non_categorical_columns]
         for col in categorical_columns:
             data[col] = data[col].astype('category').cat.codes

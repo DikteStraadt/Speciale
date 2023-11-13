@@ -33,7 +33,7 @@ class OneHotEncode:
         return new_df
 
 class EntityEmbeddingTransformer:
-    def __init__(self, target, embeddingList,config):
+    def __init__(self, target, embeddingList, config):
         self.target = target
         self.embeddingList = embeddingList
         self.config = config
@@ -45,9 +45,14 @@ class EntityEmbeddingTransformer:
 
         if self.config['do_embedding']:
 
+            ids = data["ID"]
+            data = data.drop("ID", axis=1)
+
             for idx, featureEm in enumerate(self.embeddingList):
                 string = "entityEmbedding_" + str(idx)
-                data = doEmbedding(data, featureEm, self.target, string, self.config['n_categories'])
+                data = doEmbedding(data, featureEm, self.target, string, self.config['n_categories'], self.config['embedding_epochs'])
+
+            data = pd.concat([ids, data], axis=1)
 
         else:
             path = "Embeddings/embeddedFeatures.csv"
@@ -57,7 +62,7 @@ class EntityEmbeddingTransformer:
 
         return data
 
-def doEmbedding(data, featureEm, target, embeddingName, n_categories):
+def doEmbedding(data, featureEm, target, embeddingName, n_categories, epochs):
     print(data.isna().sum())
     embeddingData = data.copy()
 
@@ -131,7 +136,7 @@ def doEmbedding(data, featureEm, target, embeddingName, n_categories):
         [X_train[featureEm], X_train[numeric_cols]],
         y_train,
         validation_data=([X_test[featureEm], X_test[numeric_cols]], y_test),
-        epochs=50,
+        epochs=epochs,
         callbacks=[es]
     )
 

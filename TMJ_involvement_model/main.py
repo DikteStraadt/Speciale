@@ -16,7 +16,7 @@ from ModelTraining import CatBoost as cat
 from sklearn.pipeline import Pipeline
 from FeatureEngineering import TypeConverter as tc
 from DataCleaning import PreprocessData as p
-from FeatureEngineering import FeatureMerging as fm
+from FeatureEngineering import TransformFeatures as fm
 
 warnings.filterwarnings('ignore')
 
@@ -30,25 +30,31 @@ if __name__ == '__main__':
 
     ##################### PREPROCESS AND SAVE DATA #####################
 
-    # p.preprocess_data(2)  # Two categories
-    # p.preprocess_data(3)  # Three categories
-    # print("Data is preprocessed and saved")
+    if configurations[0]['preprocess_data_2_cat']:
+        p.preprocess_data(2)  # Two categories
+        print("Data with 2 categories is preprocessed and saved")
+
+    if configurations[0]['preprocess_data_3_cat']:
+        p.preprocess_data(3)  # Three categories
+        print("Data with 3 categories is preprocessed and saved")
 
     ##################### IMPORT DATA #####################
 
     print("Starting data import")
-    # imported_data_2_cat = d.import_data("Data/output_2_cat.xlsx", "Sheet1")
-    # print("Data with two categories is imported")
-    imported_data_3_cat = d.import_data("Data/output_3_cat.xlsx", "Sheet1")
-    print("Data with three categories is imported")
+    if any(obj['n_categories'] == 2 for obj in configurations):
+        imported_data_2_cat = d.import_data("Data/output_2_cat.xlsx", "Sheet1")
+        print("Data with two categories is imported")
+
+    if any(obj['n_categories'] == 3 for obj in configurations):
+        imported_data_3_cat = d.import_data("Data/output_3_cat.xlsx", "Sheet1")
+        print("Data with three categories is imported")
 
     for config in configurations:
 
         columns_to_exclude = ['sex', 'type', 'studyid', 'Unnamed: 0', 'visitationdate']
 
         if config['n_categories'] == 2:
-            print()
-            #data = imported_data_2_cat.drop(columns=columns_to_exclude)
+            data = imported_data_2_cat.drop(columns=columns_to_exclude)
         elif config['n_categories'] == 3:
             data = imported_data_3_cat.drop(columns=columns_to_exclude)
 
@@ -99,6 +105,8 @@ if __name__ == '__main__':
             ("xgboost", xg.XGBoostClassifier(X_train, X_test, y_train, y_test, target, config)),
             ("catboost", cat.CatBoost(X_train, X_test, y_train, y_test, target, config))
         ])
+
+        d.export_data(data, f"Data/processed_data.xlsx")
 
         pipeline.transform(data)
 
