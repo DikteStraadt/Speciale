@@ -28,7 +28,7 @@ class CatBoost:
         self.X_test = self.X_test.drop(columns=['ID'])
 
         self.X_train = self.X_train.loc[:, self.X_train.nunique() > 1]
-        data_fs = f.feature_selection(self.X_train, self.y_train, self.X_test, CatBoostClassifier(iterations=10, allow_const_label=True), self.config)
+        data_fs = f.feature_selection(self.X_train, self.y_train, self.X_test, CatBoostClassifier(iterations=self.config['catboost_SFS_iterations'], allow_const_label=True), self.config)
 
         self.X_train = data_fs[0]
         self.X_test = data_fs[1]
