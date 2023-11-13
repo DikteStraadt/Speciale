@@ -30,17 +30,24 @@ if __name__ == '__main__':
 
     ##################### PREPROCESS AND SAVE DATA #####################
 
-    # p.preprocess_data(2)  # Two categories
-    # p.preprocess_data(3)  # Three categories
-    # print("Data is preprocessed and saved")
+    if configurations[0]['preprocess_data_2_cat']:
+        p.preprocess_data(2)  # Two categories
+        print("Data with 2 categories is preprocessed and saved")
+
+    if configurations[0]['preprocess_data_3_cat']:
+        p.preprocess_data(3)  # Three categories
+        print("Data with 3 categories is preprocessed and saved")
 
     ##################### IMPORT DATA #####################
 
     print("Starting data import")
-    # imported_data_2_cat = d.import_data("Data/output_2_cat.xlsx", "Sheet1")
-    # print("Data with two categories is imported")
-    imported_data_3_cat = d.import_data("Data/output_3_cat.xlsx", "Sheet1")
-    print("Data with three categories is imported")
+    if 2 in configurations[0]['n_categories']:
+        imported_data_2_cat = d.import_data("Data/output_2_cat.xlsx", "Sheet1")
+        print("Data with two categories is imported")
+
+    if 3 in configurations[0]['n_categories']:
+        imported_data_3_cat = d.import_data("Data/output_3_cat.xlsx", "Sheet1")
+        print("Data with three categories is imported")
 
     for config in configurations:
 

@@ -1,4 +1,6 @@
 {
+    "preprocess_data_2_cat": false,
+    "preprocess_data_3_cat": true,
     "n_categories": [3],
     "timeliness": [false],
     "feature_selection": ["short", "clinical", "SFS"],
