@@ -16,7 +16,7 @@ from ModelTraining import CatBoost as cat
 from sklearn.pipeline import Pipeline
 from FeatureEngineering import TypeConverter as tc
 from DataCleaning import PreprocessData as p
-from FeatureEngineering import FeatureMerging as fm
+from FeatureEngineering import TransformFeatures as fm
 
 warnings.filterwarnings('ignore')
 
