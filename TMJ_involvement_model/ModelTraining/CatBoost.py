@@ -68,7 +68,6 @@ class CatBoost:
             'catboost__early_stopping_rounds': [50],
             'catboost__loss_function': ['MultiClass'],
             'catboost__random_seed': [42],
-            'catboost__verbose': False
         }
 
         random_search = RandomizedSearchCV(
