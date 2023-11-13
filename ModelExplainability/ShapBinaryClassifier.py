@@ -7,6 +7,8 @@ import shap
 import matplotlib.pyplot as plt
 shap.initjs()
 
+
+# forceplot_binary(multi_est, 'randomforest', 7, X_train, y_train, multi_explainer, multi_shap_values)
 def forceplot_binary(clf, clf_pipe_name, index, X_train, y_train, explainer, shap_values):
     """
     Takes in a fitted classifier and the pipeline it comes from,
