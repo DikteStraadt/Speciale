@@ -19,6 +19,7 @@ from FeatureEngineering import TypeConverter as tc
 from DataCleaning import PreprocessData as p
 from FeatureEngineering import TransformFeatures as fm
 from ModelEvaluation import Evaluation as ev
+from ModelEvaluation import ConformancePrediction as cp
 
 warnings.filterwarnings('ignore')
 
@@ -127,6 +128,14 @@ if __name__ == '__main__':
 
         report = r.read_report()
         best_model = ev.find_best_model(X_valid, y_valid)
+
+        ##################### PERFORM CONFORMANCE PREDICTION #####################
+        test_model = sl.load_model("Tester/best_model.pkl")
+        test_est = test_model.best_estimator_
+        test_model = test_est.named_steps['catboost'] # here needs to be name of best_model
+        cp.conformancePrediction(test_model, X_uncertainty, y_uncertainty, X_test, y_test)
+
+
         sl.rename_model(best_model, report)
         sl.remove_models()
         r.rename_report_file()

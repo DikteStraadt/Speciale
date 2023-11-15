@@ -68,7 +68,7 @@ class CatBoost:
             'catboost__early_stopping_rounds': [50],
             'catboost__loss_function': ['MultiClass'],
             'catboost__random_seed': [42],
-            'catboost__verbose': False
+            #'catboost__verbose': False
         }
 
         random_search = RandomizedSearchCV(
@@ -80,7 +80,7 @@ class CatBoost:
             random_state=42,
             scoring=scoring,
             refit='f1_weighted',
-            verbose=self.config["verbose"]
+            #verbose=self.config["verbose"]
         )
 
         random_search_model = random_search.fit(self.X_train, self.y_train)
