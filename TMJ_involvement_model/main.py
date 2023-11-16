@@ -30,6 +30,7 @@ if __name__ == '__main__':
     ##################### IMPORT CONFIGS #####################
 
     configurations = c.get_configurations()
+    configurations = [combo for combo in configurations if not (combo["feature_selection"] == "SFS" and combo["encoding_embedding"] == False)]
 
     ##################### PREPROCESS AND SAVE DATA #####################
 
