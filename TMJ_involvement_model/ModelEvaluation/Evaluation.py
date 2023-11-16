@@ -30,7 +30,7 @@ def evaluation(ml_type, model, X_test, y_test):
 
     s.save_model(model, ml_type)
 
-def find_best_model(X_valid, y_valid):
+def find_best_model():
 
     report = r.read_report()
     models = [report['(random forest) accuracy'], report['(xgboost) accuracy'], report['(catboost) accuracy']]

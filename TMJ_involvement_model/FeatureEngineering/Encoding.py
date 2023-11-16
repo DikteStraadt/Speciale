@@ -28,6 +28,7 @@ class OneHotEncode:
             new_df = new_df.join(nominal_encoded_column)
 
         r.write_to_report("encoding", "one hot")
+        r.write_to_report("encoded data size", f"{new_df.shape}")
         print("Data encoded")
 
         return new_df
@@ -54,6 +55,7 @@ class EntityEmbeddingTransformer:
             data = pd.read_csv(path)
 
         r.write_to_report("encoding", "entity embedding")
+        r.write_to_report("encoded data size", f"{data.shape}")
 
         return data
 

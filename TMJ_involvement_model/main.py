@@ -7,7 +7,7 @@ from Utils import Configuration as c, Report as r, SaveLoadModel as sl
 
 from datetime import datetime
 from sklearn.model_selection import train_test_split
-from DataCleaning.RawData import ImportExportData as d
+from DataCleaning.RawData import ImportExportData as d, TimeSliceData as f
 from FeatureEngineering import Normalization as n
 from FeatureEngineering import Encoding as e
 from FeatureEngineering import Sampling as s
@@ -58,8 +58,10 @@ if __name__ == '__main__':
 
         if config['n_categories'] == 2:
             data = imported_data_2_cat.drop(columns=columns_to_exclude)
+            data = f.filter_visitations(data, config['time_slice'])
         elif config['n_categories'] == 3:
             data = imported_data_3_cat.drop(columns=columns_to_exclude)
+            data = f.filter_visitations(data, config['time_slice'])
 
         r.create_empty_report()
 
@@ -127,7 +129,7 @@ if __name__ == '__main__':
         r.write_to_report("timestamp end", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
 
         report = r.read_report()
-        best_model = ev.find_best_model(X_valid, y_valid)
+        best_model = ev.find_best_model()
 
         ##################### PERFORM CONFORMANCE PREDICTION #####################
         test_model = sl.load_model("Tester/best_model.pkl")
