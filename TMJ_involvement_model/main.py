@@ -31,6 +31,8 @@ if __name__ == '__main__':
 
     configurations = c.get_configurations()
     configurations = [combo for combo in configurations if not (combo["feature_selection"] == "SFS" and combo["encoding_embedding"] == False)]
+    if len(configurations) == 0:
+        exit()
 
     ##################### PREPROCESS AND SAVE DATA #####################
 
