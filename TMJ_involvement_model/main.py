@@ -113,11 +113,12 @@ if __name__ == '__main__':
         ])
 
         data_train = pd.concat([y_train, X_train], axis=1)
+        data_train = data_train.drop('index', axis=1)
         data_train = smote_pipeline.transform(data_train)
         d.export_data(data_train, f"Data/processed_data.xlsx")
 
         y_train = data_train['involvementstatus']
-        X_train = data_train.drop('involvementstatus', axis=1)
+        X_train = data_train.drop(columns=['involvementstatus'], axis=1)
 
         ##################### PERFORM FEATURE SELECTION AND TRAIN MODEL #####################
 
