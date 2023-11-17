@@ -139,7 +139,7 @@ if __name__ == '__main__':
         test_model = sl.load_model("Tester/best_model.pkl")
         test_est = test_model.best_estimator_
         test_model = test_est.named_steps['catboost'] # here needs to be name of best_model
-        cp.conformancePrediction(test_model, X_uncertainty, y_uncertainty, X_test, y_test)
+        cp.conformalPrediction(test_model, X_uncertainty, y_uncertainty, X_test, y_test)
 
 
         sl.rename_model(best_model, report)
