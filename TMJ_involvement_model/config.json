@@ -1,20 +1,19 @@
 {
     "preprocess_data_2_cat": false,
-    "preprocess_data_3_cat": true,
+    "preprocess_data_3_cat": false,
+    "time_slice": [["diff", 0, 2]],
     "n_categories": [3],
     "timeliness": [false],
     "feature_selection": ["short", "clinical", "SFS"],
-    "encoding_embedding": [false, false],
-    "do_embedding": [false, false],
-    "SFS_n_features": 2,
-    "cv": 3,
-    "iterations": 1,
+    "encoding_embedding": [true, false],
+    "do_embedding": [true, false],
+    "SFS_n_features": 10,
+    "cv": 5,
+    "iterations": 10,
     "verbose": 3,
     "smote_2_cat_class_1": 3000,
     "smote_3_cat_class_1": 3000,
     "smote_3_cat_class_2": 1500,
     "embedding_epochs": 50,
-    "catboost_SFS_iterations": 3,
-    "time_slice_start": 0,
-    "time_slice_end": 2
+    "catboost_SFS_iterations": 10
 }

@@ -25,7 +25,11 @@ class CatBoost:
         # ids_X_train = self.X_train["ID"]
         # ids_X_test = self.X_test["ID"]
         self.X_train = self.X_train.drop(columns=['ID'])
+        self.X_train = self.X_train.drop(columns=['ageatvisitation'])
+        self.X_train = self.X_train.drop(columns=['difftdate'])
         self.X_test = self.X_test.drop(columns=['ID'])
+        self.X_test = self.X_test.drop(columns=['ageatvisitation'])
+        self.X_test = self.X_test.drop(columns=['difftdate'])
 
         self.X_train = self.X_train.loc[:, self.X_train.nunique() > 1]
         data_fs = f.feature_selection(self.X_train, self.y_train, self.X_test, CatBoostClassifier(iterations=self.config['catboost_SFS_iterations'], allow_const_label=True), self.config)
@@ -80,7 +84,7 @@ class CatBoost:
             random_state=42,
             scoring=scoring,
             refit='f1_weighted',
-            #verbose=self.config["verbose"]
+            verbose=self.config["verbose"]
         )
 
         random_search_model = random_search.fit(self.X_train, self.y_train)

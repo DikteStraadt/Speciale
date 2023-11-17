@@ -34,7 +34,7 @@ featureList = [
 def getHighestSeverity(right, left):
     mergedList = []
     for i in range(len(right)):
-        highVal = max (right[i], left[i])
+        highVal = max(right[i], left[i])
         mergedList.append(highVal)
 
     return mergedList

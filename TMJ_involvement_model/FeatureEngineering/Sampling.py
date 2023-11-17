@@ -16,9 +16,11 @@ class SMOTE:
 
     def transform(self, data, y=None):
 
-        ids = data["ID"]
+        id_column = data["ID"]
+        age_column = data["ageatvisitation"]
+        diff_column = data["difftdate"]
         y = data["involvementstatus"]
-        X = data.drop(columns=["involvementstatus", "ID"])
+        X = data.drop(columns=["involvementstatus", "ID", "ageatvisitation", "difftdate"])
         print("Before SMOTE: ", Counter(y))
 
         non_categorical_columns = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
@@ -34,7 +36,7 @@ class SMOTE:
         smote = SMOTENC(categorical_features=categorical_columns, random_state=42, sampling_strategy=sampling_strategy)
         X_res, y_res = smote.fit_resample(X, y)
 
-        final_df = pd.concat([ids, y_res.reset_index(drop=True), X_res.reset_index(drop=True)], axis=1)
+        final_df = pd.concat([id_column, age_column, diff_column, y_res.reset_index(drop=True), X_res.reset_index(drop=True)], axis=1)
         print("After SMOTE: ", Counter(y_res))
 
         r.write_to_report("smote data size", f"{final_df.shape}")
