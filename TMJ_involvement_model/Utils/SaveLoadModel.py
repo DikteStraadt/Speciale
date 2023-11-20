@@ -39,15 +39,15 @@ def rename_model(model_name, report):
     file_list = os.listdir(path)
 
     if model_name == "random forest":
-        accuracy = report['(random forest) accuracy']
+        metric = report['(random forest) f1 macro']
     elif model_name == "xgboost":
-        accuracy = report['(xgboost) accuracy']
+        metric = report['(xgboost) f1 macro']
     elif model_name == "catboost":
-        accuracy = report['(catboost) accuracy']
+        metric = report['(catboost) f1 macro']
     else:
-        accuracy = "ERROR"
+        metric = "ERROR"
 
-    new_model_name = f"Results/{report['id']} model (ml={model_name}, accuracy={round(accuracy, 4)}, categories={report['n_categories']}, timeliness={report['timeliness']}, encoding={report['encoding']}, features={report['feature selection']} {report['timestamp end']}.pkl"
+    new_model_name = f"Results/{report['id']} model (ml={model_name}, f1 macro={round(metric, 4)}, categories={report['n_categories']}, timeliness={report['timeliness']}, encoding={report['encoding']}, features={report['feature selection']} {report['timestamp end']}.pkl"
 
     for filename in file_list:
         if filename.startswith(f"model-{model_name}"):

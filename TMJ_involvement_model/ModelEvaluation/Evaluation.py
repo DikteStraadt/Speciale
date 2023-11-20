@@ -26,14 +26,14 @@ def evaluation(ml_type, model, X_test, y_test):
     r.write_to_report(f"({ml_type}) classification report", classification_report(y_test, y_preds))
     r.write_to_report(f"({ml_type}) best model", str(model.best_estimator_))
     r.write_to_report(f"({ml_type}) best parameters", str(model.best_params_))
-    r.write_to_report(f"({ml_type}) accuracy", model.best_estimator_.score(X_test, y_test))
+    r.write_to_report(f"({ml_type}) f1 macro", model.best_estimator_.score(X_test, y_test))
 
     s.save_model(model, ml_type)
 
 def find_best_model():
 
     report = r.read_report()
-    models = [report['(random forest) accuracy'], report['(xgboost) accuracy'], report['(catboost) accuracy']]
+    models = [report['(random forest) f1 macro'], report['(xgboost) f1 macro'], report['(catboost) f1 macro']]
     index = models.index(max(models))
 
     if index == 0:
