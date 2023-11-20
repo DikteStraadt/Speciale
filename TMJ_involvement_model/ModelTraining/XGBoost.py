@@ -65,7 +65,7 @@ class XGBoostClassifier:
             'xgboost__random_state': [42]
         }
 
-        random_search = RandomizedSearchCV(
+        xgboost = RandomizedSearchCV(
             estimator=model,
             param_distributions=param,
             #num_boost_round=100000,
@@ -79,8 +79,8 @@ class XGBoostClassifier:
             verbose=self.config["verbose"]
         )
 
-        random_search_model = random_search.fit(self.X_train, self.y_train)
+        xgboost.fit(self.X_train, self.y_train)
 
-        e.evaluation("xgboost", random_search_model, self.X_test, self.y_test)
+        e.evaluation("xgboost", xgboost, self.X_test, self.y_test)
 
         return data

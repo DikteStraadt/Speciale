@@ -26,7 +26,7 @@ def evaluation(ml_type, model, X_test, y_test):
     r.write_to_report(f"({ml_type}) classification report", classification_report(y_test, y_preds))
     r.write_to_report(f"({ml_type}) best model", str(model.best_estimator_))
     r.write_to_report(f"({ml_type}) best parameters", str(model.best_params_))
-    r.write_to_report(f"({ml_type}) f1 macro", model.best_estimator_.score(X_test, y_test))
+    r.write_to_report(f"({ml_type}) f1 macro", model.best_score_)
 
     s.save_model(model, ml_type)
 

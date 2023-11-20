@@ -68,8 +68,8 @@ class RandomForest:
             verbose=self.config["verbose"]
         )
 
-        random_search_model = random_search.fit(self.X_train, self.y_train)
+        random_search.fit(self.X_train, self.y_train)
 
-        e.evaluation("random forest", random_search_model, self.X_test, self.y_test)
+        e.evaluation("random forest", random_search, self.X_test, self.y_test)
 
         return data

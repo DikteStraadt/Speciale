@@ -70,7 +70,7 @@ class CatBoost:
             #'catboost__verbose': False
         }
 
-        random_search = RandomizedSearchCV(
+        catboost = RandomizedSearchCV(
             estimator=model,
             param_distributions=param,
             n_iter=self.config["iterations"],
@@ -82,8 +82,8 @@ class CatBoost:
             verbose=self.config["verbose"]
         )
 
-        random_search_model = random_search.fit(self.X_train, self.y_train)
+        catboost.fit(self.X_train, self.y_train)
 
-        e.evaluation("catboost", random_search_model, self.X_test, self.y_test)
+        e.evaluation("catboost", catboost, self.X_test, self.y_test)
 
         return data
