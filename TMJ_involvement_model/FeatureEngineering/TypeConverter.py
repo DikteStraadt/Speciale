@@ -1,3 +1,4 @@
+import pandas as pd
 from pandas import CategoricalDtype
 
 class ConvertToCategories:
@@ -96,14 +97,32 @@ class ConvertToCategories:
             #'openbite': CategoricalDtype(ordered=True),
             #'deepbite': CategoricalDtype(ordered=True),
             'transversal': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation0': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation1': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation2': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation3': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation4': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation5': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation6': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation7': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation8': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation9': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation10': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation11': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation12': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation13': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation14': CategoricalDtype(ordered=False),
+            'previousinvolvementstatusvisitation15': CategoricalDtype(ordered=False),
         }
 
         data = data.astype(column_categories)
 
         non_categorical_columns = ['ID', 'ageatvisitation', 'difftdate', 'overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
         categorical_columns = [col for col in data.columns if col not in non_categorical_columns]
+
         for col in categorical_columns:
-            data[col] = data[col].astype('category').cat.codes
+            data[col] = data[col].astype('category')
+
+        data[categorical_columns] = data[categorical_columns].apply(pd.to_numeric, errors='coerce', downcast='integer')
 
         return data
-

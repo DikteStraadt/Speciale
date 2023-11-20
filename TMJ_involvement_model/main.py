@@ -48,11 +48,11 @@ if __name__ == '__main__':
 
     print("Starting data import")
     if any(obj['n_categories'] == 2 for obj in configurations):
-        imported_data_2_cat = d.import_data("Data/output_2_cat.xlsx", "Sheet1")
+        imported_data_2_cat = d.import_data("Data/cleaned_data_2_cat.xlsx", "Sheet1")
         print("Data with two categories is imported")
 
     if any(obj['n_categories'] == 3 for obj in configurations):
-        imported_data_3_cat = d.import_data("Data/output_3_cat.xlsx", "Sheet1")
+        imported_data_3_cat = d.import_data("Data/cleaned_data_3_cat.xlsx", "Sheet1")
         print("Data with three categories is imported")
 
     for config in configurations:
@@ -73,6 +73,7 @@ if __name__ == '__main__':
         r.write_to_report("timestamp end", "")  # placeholder
         r.write_to_report("n_categories", config['n_categories'])
         r.write_to_report("timeliness", config['timeliness'])
+        r.write_to_report("time_slice", config['time_slice'])
         r.write_to_report("original data size", f"{data.shape}")
 
         ##################### PROCESS DATA #####################
@@ -96,10 +97,20 @@ if __name__ == '__main__':
         ##################### SPLIT DATA #####################
 
         target = data['involvementstatus']
+        previous_status = data[['previousstatus', 'previousinvolvementstatusvisitation0', 'previousinvolvementstatusvisitation1',
+                          'previousinvolvementstatusvisitation2', 'previousinvolvementstatusvisitation3',
+                          'previousinvolvementstatusvisitation4', 'previousinvolvementstatusvisitation5',
+                          'previousinvolvementstatusvisitation6', 'previousinvolvementstatusvisitation7',
+                          'previousinvolvementstatusvisitation8', 'previousinvolvementstatusvisitation9',
+                          'previousinvolvementstatusvisitation10', 'previousinvolvementstatusvisitation11',
+                          'previousinvolvementstatusvisitation12', 'previousinvolvementstatusvisitation13',
+                          'previousinvolvementstatusvisitation14', 'previousinvolvementstatusvisitation15']]
+
         data = data.drop('involvementstatus', axis=1)
+        data = data.drop(previous_status.columns, axis=1)
 
         X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=42, shuffle=True)
-        X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, train_size=(0.5), random_state=42, shuffle=True)
+        X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, train_size=0.5, random_state=42, shuffle=True)
 
         r.write_to_report("train size", f"{X_train.shape} {y_train.shape}")
         r.write_to_report("test size", f"{X_test.shape} {y_test.shape}")
@@ -139,7 +150,6 @@ if __name__ == '__main__':
         test_est = test_model.best_estimator_
         test_model = test_est.named_steps['catboost'] # here needs to be name of best_model
         cp.conformancePrediction(test_model, X_valid, y_valid, X_test, y_test)
-
 
         sl.rename_model(best_model, report)
         sl.remove_models()

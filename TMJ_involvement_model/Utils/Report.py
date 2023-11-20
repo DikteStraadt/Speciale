@@ -41,7 +41,7 @@ def rename_report_file():
     file.close()
 
     json_data = json.loads(string_data)
-    new_filename = f"Results/{json_data['id']} report (categories={json_data['n_categories']}, timeliness={json_data['timeliness']}, encoding={json_data['encoding']}, features={json_data['feature selection']} {json_data['timestamp end']}.json"
+    new_filename = f"Results/{json_data['id']} report (categories={json_data['n_categories']}, timeliness={json_data['timeliness']}, slicing={str(json_data['time_slice'])}, encoding={json_data['encoding']}, features={json_data['feature selection']} {json_data['timestamp end']}.json"
     os.rename(path, new_filename)
 
 def read_report():

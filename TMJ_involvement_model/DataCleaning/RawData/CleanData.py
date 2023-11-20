@@ -253,7 +253,25 @@ class RemovePatients:
         print(f'Indexes to be removed: {indexes}')
         print("Old patients removed")
 
-        return data.reset_index(drop=True)
+        # Drop duplicate patients (7867z, 6475a, 7023a, 8228a, 8417b, 8624a, 8937a, 6593a, 1965q, 6248z)
+        index_to_remove = []
+        index_to_remove.append(data[data['ID'] == '7867z'].index[0])
+        index_to_remove.append(data[data['ID'] == '6475a'].index[0])
+        index_to_remove.append(data[data['ID'] == '7023a'].index[0])
+        index_to_remove.append(data[data['ID'] == '8228a'].index[0])
+        index_to_remove.append(data[data['ID'] == '8417b'].index[0])
+        index_to_remove.append(data[data['ID'] == '8624a'].index[0])
+        index_to_remove.append(data[data['ID'] == '8937a'].index[0])
+        index_to_remove.append(data[data['ID'] == '6593a'].index[0])
+        index_to_remove.append(data[data['ID'] == '1965q'].index[0])
+        index_to_remove.append(data[data['ID'] == '6248z'].index[0])
+
+        data = data.drop(index=index_to_remove)
+        data.reset_index(drop=True, inplace=True)
+
+        print("Duplicate patients removed")
+
+        return data
 
 class ConvertTimestamps:
 

@@ -13,9 +13,9 @@ class NormalizeData:
     def transform(self, data, y=None):
 
         if self.config['encoding_embedding']:
-            columns_to_normalize = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'drug', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
+            columns_to_normalize = ['overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'drug', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
         elif not self.config['encoding_embedding']:
-            columns_to_normalize = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
+            columns_to_normalize = ['overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
 
         scaler = StandardScaler()  # StandardScaler(), MinMaxScaler(), RobustScaler()
         data[columns_to_normalize] = scaler.fit_transform(data[columns_to_normalize])

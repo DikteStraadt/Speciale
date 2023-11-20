@@ -22,8 +22,6 @@ class CatBoost:
 
     def transform(self, data, y=None):
 
-        # ids_X_train = self.X_train["ID"]
-        # ids_X_test = self.X_test["ID"]
         self.X_train = self.X_train.drop(columns=['ID'])
         self.X_train = self.X_train.drop(columns=['ageatvisitation'])
         self.X_train = self.X_train.drop(columns=['difftdate'])
@@ -37,7 +35,7 @@ class CatBoost:
         self.X_train = data_fs[0]
         self.X_test = data_fs[1]
 
-        non_categorical_columns = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'drug', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
+        non_categorical_columns = ['overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'drug', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
         categorical_columns = [col for col in self.X_train.columns if col not in non_categorical_columns]
 
         model = Pipeline(steps=[
@@ -48,10 +46,7 @@ class CatBoost:
         model.named_steps['catboost'].set_feature_names(feature_names)
 
         scoring = {
-            'accuracy': make_scorer(accuracy_score),
-            'f1_micro': make_scorer(f1_score, average='micro'),
             'f1_macro': make_scorer(f1_score, average='macro'),
-            'f1_weighted': make_scorer(f1_score, average='weighted'),
         }
 
         param = {
@@ -83,14 +78,11 @@ class CatBoost:
             n_jobs=-1,
             random_state=42,
             scoring=scoring,
-            refit='f1_weighted',
+            refit='f1_macro',
             verbose=self.config["verbose"]
         )
 
         random_search_model = random_search.fit(self.X_train, self.y_train)
-
-        # self.X_train = pd.concat([ids_X_train, data], axis=1)
-        # self.X_test = pd.concat([ids_X_test, data], axis=1)
 
         e.evaluation("catboost", random_search_model, self.X_test, self.y_test)
 

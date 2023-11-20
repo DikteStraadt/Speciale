@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 class ReadVisitations:
@@ -82,7 +83,12 @@ class CombineToDataFrame:
                         'eighthUS', 'ninthUS', 'tenthUS', 'eleventhUS', 'twelfthUS', 'thirteenthUS', 'fourteenthUS', 'fifteenthUS', 'sixteenthUS', 'seventeenthUS']
 
         for col in result_df.columns:
-            prefix = ''.join(filter(str.isalpha, col))
+
+            if not col.startswith("previous_involvement_status_"):
+                prefix = ''.join(filter(str.isalpha, col))
+            else:
+                prefix = col.replace("_", "")
+
             if prefix not in columns_to_merge:
                 columns_to_merge[prefix] = []
             columns_to_merge[prefix].append(col)
@@ -94,6 +100,8 @@ class CombineToDataFrame:
 
         for prefix, cols in columns_to_merge.items():
             new_df[prefix] = result_df[cols].apply(lambda row: ', '.join(row.dropna().astype(str)), axis=1)
+
+        new_df.replace(to_replace='', value=np.nan, inplace=True)
 
         print("Visitations combined to single data frame")
 
