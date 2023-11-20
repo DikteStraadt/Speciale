@@ -19,7 +19,7 @@ from FeatureEngineering import TypeConverter as tc
 from DataCleaning import PreprocessData as p
 from FeatureEngineering import TransformFeatures as fm
 from ModelEvaluation import Evaluation as ev
-from ModelEvaluation import ConformancePrediction as cp
+from ModelEvaluation import ConformalPrediction as cp
 
 warnings.filterwarnings('ignore')
 

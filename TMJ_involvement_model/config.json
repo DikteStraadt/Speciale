@@ -1,7 +1,7 @@
 {
     "preprocess_data_2_cat": false,
     "preprocess_data_3_cat": false,
-    "time_slice": [["diff", 0, 2]],
+    "time_slice": [["diff", 0, 100]],
     "n_categories": [3],
     "timeliness": [false],
     "feature_selection": ["short", "clinical", "SFS"],
