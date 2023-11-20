@@ -91,16 +91,16 @@ class ConvertToCategories:
             'aplasia': CategoricalDtype(ordered=True),
             'sagittalrelationright': CategoricalDtype(ordered=False),
             'sagitalrelationleft': CategoricalDtype(ordered=False),
-            'overjet': CategoricalDtype(ordered=True),
-            'overbite': CategoricalDtype(ordered=True),
-            'openbite': CategoricalDtype(ordered=True),
-            'deepbite': CategoricalDtype(ordered=True),
+            #'overjet': CategoricalDtype(ordered=True),
+            #'overbite': CategoricalDtype(ordered=True),
+            #'openbite': CategoricalDtype(ordered=True),
+            #'deepbite': CategoricalDtype(ordered=True),
             'transversal': CategoricalDtype(ordered=False),
         }
 
         data = data.astype(column_categories)
 
-        non_categorical_columns = ['ID', 'ageatvisitation', 'difftdate', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
+        non_categorical_columns = ['ID', 'ageatvisitation', 'difftdate', 'overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
         categorical_columns = [col for col in data.columns if col not in non_categorical_columns]
         for col in categorical_columns:
             data[col] = data[col].astype('category').cat.codes

@@ -98,9 +98,8 @@ if __name__ == '__main__':
         target = data['involvementstatus']
         data = data.drop('involvementstatus', axis=1)
 
-        X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.7, random_state=42, shuffle=True)
-        X_valid, X_rem_2, y_valid, y_rem_2 = train_test_split(X_rem, y_rem, train_size=(1/3), random_state=42, shuffle=True)
-        X_uncertainty, X_test, y_uncertainty, y_test = train_test_split(X_rem_2, y_rem_2, train_size=0.5, random_state=42, shuffle=True)
+        X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=42, shuffle=True)
+        X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, train_size=(0.5), random_state=42, shuffle=True)
 
         r.write_to_report("train size", f"{X_train.shape} {y_train.shape}")
         r.write_to_report("test size", f"{X_test.shape} {y_test.shape}")
@@ -139,7 +138,7 @@ if __name__ == '__main__':
         test_model = sl.load_model("Tester/best_model.pkl")
         test_est = test_model.best_estimator_
         test_model = test_est.named_steps['catboost'] # here needs to be name of best_model
-        cp.conformancePrediction(test_model, X_uncertainty, y_uncertainty, X_test, y_test)
+        cp.conformancePrediction(test_model, X_valid, y_valid, X_test, y_test)
 
 
         sl.rename_model(best_model, report)

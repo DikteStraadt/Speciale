@@ -23,7 +23,7 @@ class SMOTE:
         X = data.drop(columns=["involvementstatus", "ID", "ageatvisitation", "difftdate"])
         print("Before SMOTE: ", Counter(y))
 
-        non_categorical_columns = ['openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
+        non_categorical_columns = ['overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
         categorical_columns = [col for col in X.columns if col not in non_categorical_columns]
 
         if self.config['n_categories'] == 2:
@@ -36,7 +36,7 @@ class SMOTE:
         smote = SMOTENC(categorical_features=categorical_columns, random_state=42, sampling_strategy=sampling_strategy)
         X_res, y_res = smote.fit_resample(X, y)
 
-        final_df = pd.concat([id_column, age_column, diff_column, y_res.reset_index(drop=True), X_res.reset_index(drop=True)], axis=1)
+        final_df = pd.concat([id_column.reset_index(drop=True), age_column.reset_index(drop=True), diff_column.reset_index(drop=True), y_res.reset_index(drop=True), X_res.reset_index(drop=True)], axis=1)  #".reset_index(drop=True)
         print("After SMOTE: ", Counter(y_res))
 
         r.write_to_report("smote data size", f"{final_df.shape}")
