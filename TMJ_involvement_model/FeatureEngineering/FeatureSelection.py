@@ -29,7 +29,7 @@ def feature_selection(X_train, y_train, X_test, estimator, config):
 
         extra = ['asybasis', 'asybasis_0', 'asybasis_1', 'asybasis_2', 'asybasis_3', 'asybasis_4',
                  'asypupilline', 'asypupilline_0', 'asypupilline_1', 'asypupilline_2', 'asypupilline_3', 'asypupilline_4',
-                 'drug', 'drug_1', 'drug_2', 'drug_3', 'drug_4', 'drug_5', 'drug_6', 'drug_7', 'drug_8', 'drug_9', 'drug_10', 'drug_11', 'drug_12', 'drug_13', 'drug_14', 'drug_15', 'drug_16', 'drug_17', 'drug_18', 'drug_19', 'drug_20', 'drug_21', 'drug_22', 'drug_23', 'drug_24', 'drug_25', 'drug_26', 'drug_27', 'drug_28', 'drug_29', 'drug_30', 'drug_31',
+                 'Biologics', 'Conventional', 'Eye medicine', 'NSAID', 'Corticosteroids',
                  'asyoccl', 'asyoccl_0', 'asyoccl_1', 'asyoccl_2', 'asyoccl_3', 'asyoccl_4',
                  'profile', 'profile_0', 'profile_1', 'profile_2', 'profile_3',
                  'lowerface', 'lowerface_0', 'lowerface_1', 'lowerface_2', 'lowerface_3']
@@ -53,10 +53,7 @@ def feature_selection(X_train, y_train, X_test, estimator, config):
 
         extra = ['asybasis_0', 'asybasis_1', 'asybasis_2', 'asybasis_3', 'asybasis_4',
                  'asypupilline_0', 'asypupilline_1', 'asypupilline_2', 'asypupilline_3', 'asypupilline_4',
-                 'drug_1', 'drug_2', 'drug_3', 'drug_4', 'drug_5', 'drug_6', 'drug_7', 'drug_8', 'drug_9',
-                 'drug_10', 'drug_11', 'drug_12', 'drug_13', 'drug_14','drug_15','drug_16','drug_17','drug_18',
-                 'drug_19', 'drug_20', 'drug_21', 'drug_22','drug_23','drug_24','drug_25','drug_26','drug_27',
-                 'drug_28', 'drug_29', 'drug_30', 'drug_31',
+                 'Biologics', 'Conventional', 'Eye medicine', 'NSAID', 'Corticosteroids',
                  'profile_0', 'profile_1', 'profile_2', 'profile_3',
                  'lowerface_0', 'lowerface_1', 'lowerface_2', 'lowerface_3',
                  'asymenton_0', 'asymenton_1', 'asymenton_2', 'asymenton_3','asymenton_4','asymenton_5','asymenton_6','asymenton_7',

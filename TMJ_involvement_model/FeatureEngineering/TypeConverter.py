@@ -11,7 +11,11 @@ class ConvertToCategories:
         column_categories = {
             'activity': CategoricalDtype(ordered=False),
             'involvementstatus': CategoricalDtype(ordered=False),
-            'drug': CategoricalDtype(ordered=False),
+            'Biologics': CategoricalDtype(ordered=True),
+            'Conventional': CategoricalDtype(ordered=True),
+            'Eye medicine': CategoricalDtype(ordered=True),
+            'NSAID': CategoricalDtype(ordered=True),
+            'Corticosteroids': CategoricalDtype(ordered=True),
             'swallenright': CategoricalDtype(ordered=True),
             'swallenleft': CategoricalDtype(ordered=True),
             'clickright': CategoricalDtype(ordered=True),

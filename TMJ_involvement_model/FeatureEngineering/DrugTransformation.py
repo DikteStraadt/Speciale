@@ -9,7 +9,6 @@ class DrugTransformer:
         new_data = transform_drug_categories(data)
         return new_data
 
-
 def transform_drug_categories(data):
     data["drug"] = data["drug"].astype(int)
     for new_category, original_category in dm.DrugMapper.drug_dict.items():
