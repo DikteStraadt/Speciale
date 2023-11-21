@@ -75,7 +75,6 @@ if __name__ == '__main__':
         r.write_to_report("timestamp start", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
         r.write_to_report("timestamp end", "")  # placeholder
         r.write_to_report("n_categories", config['n_categories'])
-        r.write_to_report("timeliness", config['timeliness'])
         r.write_to_report("time_slice", config['time_slice'])
         r.write_to_report("original data size", f"{data.shape}")
 
