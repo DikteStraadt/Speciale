@@ -20,6 +20,7 @@ from DataCleaning import PreprocessData as p
 from FeatureEngineering import TransformFeatures as fm
 from ModelEvaluation import Evaluation as ev
 from ModelEvaluation import ConformalPrediction as cp
+from FeatureEngineering import DrugTransformation as dt
 
 warnings.filterwarnings('ignore')
 
@@ -88,6 +89,7 @@ if __name__ == '__main__':
             encoding_method = e.OneHotEncode(columns_to_encode)
 
         feature_engineering_pipeline = Pipeline(steps=[
+            ("New drug categories",dt.DrugTransformer()),
             ("Convert type", tc.ConvertToCategories()),
             ("Merging features", fm.MergeFeatures()),
             ("Encoding", encoding_method),
@@ -151,7 +153,7 @@ if __name__ == '__main__':
         test_model = sl.load_model("Tester/best_model.pkl")
         test_est = test_model.best_estimator_
         test_model = test_est.named_steps['catboost'] # here needs to be name of best_model
-        cp.conformancePrediction(test_model, X_valid, y_valid, X_test, y_test)
+        cp.conformalPrediction(test_model, X_valid, y_valid, X_test, y_test)
 
         sl.rename_model(best_model, report)
         sl.remove_models()

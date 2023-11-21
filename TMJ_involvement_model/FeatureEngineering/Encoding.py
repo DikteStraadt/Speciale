@@ -127,7 +127,7 @@ def doEmbedding(data, featureEm, target, embeddingName, n_categories, epochs):
 
     # Compile the model and set up early stopping
     opt = SGD(learning_rate=0.01)
-    model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy'])
+    model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['f1score'])
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=50, restore_best_weights=True)
     history = model.fit(
         [X_train[featureEm], X_train[numeric_cols]],
