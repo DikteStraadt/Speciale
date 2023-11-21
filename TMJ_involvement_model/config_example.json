@@ -3,7 +3,6 @@
     "preprocess_data_3_cat": [false, true],
     "time_slice": [["diff", 0, 100], ["age", 0, 100]],
     "n_categories": [3, 2],
-    "timeliness": [false, true],
     "feature_selection": ["short", "clinical", "SFS"],
     "encoding_embedding": [true, false],
     "do_embedding": [true, false],
