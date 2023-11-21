@@ -4,7 +4,7 @@ from mapie.classification import MapieClassifier
 from mapie.metrics import classification_coverage_score
 from mapie.metrics import classification_mean_width_score
 
-def conformalPrediction(model, featurenames ,X_calib, y_calib, X_new, y_new):
+def conformalPrediction(model, featurenames, X_calib, y_calib, X_new, y_new):
     X_calib = X_calib[featurenames]
     X_new = X_new[featurenames]
     y_calib = y_calib.astype(int)

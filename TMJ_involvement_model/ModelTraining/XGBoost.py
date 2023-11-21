@@ -57,7 +57,7 @@ class XGBoostClassifier:
             'xgboost__min_child_weight': [1, 5, 15, 30, 100, 200],
             'xgboost__subsample': [0.3, 0.5, 0.8, 1.0],
             'xgboost__colsample_bytree': [0.3, 0.5, 0.8, 1],
-            'xgboost__n_estimators': [100, 200, 300, 500, 700, 1000],
+            'xgboost__n_estimators': [100, 300, 700, 1000],
             'xgboost__reg_alpha': [0, 0.01, 0.5, 1, 10],
             'xgboost__reg_lambda': [0, 0.01, 5],
             'xgboost__gamma': [0.0, 0.05, 0.1, 0.3],

@@ -129,7 +129,7 @@ if __name__ == '__main__':
         data_train = pd.concat([y_train, X_train], axis=1)
         data_train = data_train.drop('index', axis=1)
         data_train = smote_pipeline.transform(data_train)
-        d.export_data(data_train, f"Data/{id}_x_train_data.xlsx")
+        d.export_data(data_train, f"Temp/{id}_data.xlsx")
 
         y_train = data_train['involvementstatus']
         X_train = data_train.drop(columns=['involvementstatus'], axis=1)
@@ -148,15 +148,14 @@ if __name__ == '__main__':
 
         report = r.read_report()
         best_model = ev.find_best_model()
-
-        ##################### PERFORM CONFORMANCE PREDICTION #####################
-        test_model = sl.load_model("Tester/best_model.pkl")
-        test_est = test_model.best_estimator_
-        test_model = test_est.named_steps['catboost'] # here needs to be name of best_model
-        cp.conformalPrediction(test_model, X_valid, y_valid, X_test, y_test)
-
-        sl.rename_model(best_model, report)
+        best_model_name = sl.rename_model(best_model, report)
         sl.remove_models()
         r.rename_report_file()
+
+        ##################### PERFORM CONFORMANCE PREDICTION #####################
+        test_model = sl.load_model(best_model_name)
+        #test_est = test_model.best_estimator_
+        #test_model = test_est.named_steps['catboost']  # here needs to be name of best_model
+        #cp.conformalPrediction(test_model, X_valid, y_valid, X_test, y_test)
 
     print("Done!")

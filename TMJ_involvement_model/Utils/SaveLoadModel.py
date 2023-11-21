@@ -57,3 +57,5 @@ def rename_model(model_name, report):
                 print(f"Renamed: {filename} to {new_model_name}")
             except Exception as e:
                 print(f"Error renaming {filename}: {e}")
+
+    return new_model_name
