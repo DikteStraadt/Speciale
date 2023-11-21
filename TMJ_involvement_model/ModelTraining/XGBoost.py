@@ -47,11 +47,9 @@ class XGBoostClassifier:
             'f1_macro': make_scorer(f1_score, average='macro'),
         }
 
-        fit_params = {"early_stopping_rounds": 50}
-
         param = {
             'xgboost__enable_categorical': [True],
-            'xgboost__max_depth': [3, 5, 7, 10, None],
+            'xgboost__max_depth': [3, 5, 7, 10],
             'xgboost__eta': [0.01, 0.1, 0.2, 0.3],
             'xgboost__objective': [xgboost_objective],
             'xgboost__min_child_weight': [1, 5, 15, 30, 100, 200],
@@ -61,16 +59,13 @@ class XGBoostClassifier:
             'xgboost__reg_alpha': [0, 0.01, 0.5, 1, 10],
             'xgboost__reg_lambda': [0, 0.01, 5],
             'xgboost__gamma': [0.0, 0.05, 0.1, 0.3],
-            'xgboost__scale_pos_weight': [1, 2, 3],
             'xgboost__random_state': [42]
         }
 
         xgboost = RandomizedSearchCV(
             estimator=model,
             param_distributions=param,
-            #num_boost_round=100000,
             n_iter=self.config["iterations"],
-            #fit_params=fit_params,
             cv=self.config["cv"],
             n_jobs=-1,
             random_state=42,
