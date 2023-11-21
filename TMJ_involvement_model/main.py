@@ -68,7 +68,9 @@ if __name__ == '__main__':
 
         r.create_empty_report()
 
-        r.write_to_report("id", ''.join(random.choices(string.ascii_uppercase + string.digits, k=4)))
+        id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+
+        r.write_to_report("id", id)
         r.write_to_report("timestamp start", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
         r.write_to_report("timestamp end", "")  # placeholder
         r.write_to_report("n_categories", config['n_categories'])
@@ -125,7 +127,7 @@ if __name__ == '__main__':
         data_train = pd.concat([y_train, X_train], axis=1)
         data_train = data_train.drop('index', axis=1)
         data_train = smote_pipeline.transform(data_train)
-        d.export_data(data_train, f"Data/processed_data.xlsx")
+        d.export_data(data_train, f"Data/{id}_x_train_data.xlsx")
 
         y_train = data_train['involvementstatus']
         X_train = data_train.drop(columns=['involvementstatus'], axis=1)

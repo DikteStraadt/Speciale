@@ -43,7 +43,7 @@ class RandomForest:
         }
 
         param = {
-            'random forest__n_estimators': [100, 200, 300, 500, 700, 1000, 100000],
+            'random forest__n_estimators': [100, 200, 300, 500, 700, 1000, 10000],
             'random forest__max_depth': [None, 3, 7, 10],
             'random forest__min_samples_split': [2, 5, 10],
             'random forest__min_samples_leaf': [1, 5, 10, 20, 50],
