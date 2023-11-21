@@ -129,7 +129,7 @@ if __name__ == '__main__':
         data_train = pd.concat([y_train, X_train], axis=1)
         data_train = data_train.drop('index', axis=1)
         data_train = smote_pipeline.transform(data_train)
-        d.export_data(data_train, f"Temp/{id}_data.xlsx")
+        d.export_data(data_train, f"Temp/{id} data.xlsx")
 
         y_train = data_train['involvementstatus']
         X_train = data_train.drop(columns=['involvementstatus'], axis=1)
@@ -149,8 +149,9 @@ if __name__ == '__main__':
         report = r.read_report()
         best_model = ev.find_best_model()
         best_model_name = sl.rename_model(best_model, report)
-        sl.remove_models()
         r.rename_report_file()
+        sl.remove_models()
+
 
         ##################### PERFORM CONFORMANCE PREDICTION #####################
         test_model = sl.load_model(best_model_name)
