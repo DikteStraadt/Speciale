@@ -89,7 +89,7 @@ class ForwardSubsetSelection:
                    k_features=(1, self.config["SFS_n_features"]),
                    forward=True,
                    floating=False,
-                   scoring='accuracy',
+                   scoring='f1',
                    cv=self.config["cv"],
                    verbose=self.config["verbose"])
 
@@ -119,7 +119,7 @@ class ForwardSubsetSelection:
         r.write_to_report("feature selection", "SFS")
         r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS n_features", len(features))
         r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS features names ({str(self.estimator).split('(')[0]})", features)
-        r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS accuracy ({str(self.estimator).split('(')[0]})", sfs.k_score_)
+        r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS cv score ({str(self.estimator).split('(')[0]})", sfs.k_score_)
 
         return data
 

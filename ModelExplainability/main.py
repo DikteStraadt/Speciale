@@ -51,20 +51,20 @@ def getModel(path, model):
 
 
 def prepareTrainTestSplit(feature_names, columns_to_encode, catBoostFlag):
-    configurations = c.get_configurations()
+    #configurations = c.get_configurations()
     #columns_to_exclude = ['sex', 'type', 'studyid', 'Unnamed: 0', 'visitationdate']
     columns_to_exclude = ['Unnamed: 0']
 
-    data = d.import_data(f"output_{configurations[0]['n_categories']}_cat_test.xlsx", "Sheet1")
+    data = d.import_data("TestData/processed_data.xlsx", "Sheet1")
     data = data.drop(columns=columns_to_exclude)
     #data = fm.mergeFeatures(data)
 
     y = data['involvementstatus']
     X = data.drop('involvementstatus', axis=1)
 
-    if configurations[0]['encoding'] == 'one hot':
-       X = ohe.doOneHotEncoding(columns_to_encode, X)
-
+    # if configurations[0]['encoding'] == 'one hot':
+    #    X = ohe.doOneHotEncoding(columns_to_encode, X)
+    #
     X = X[feature_names]
     if catBoostFlag == True:
         for feat in columns_to_encode:
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     columns_to_encode = ['drug', 'asypupilline', 'asybasis', 'asyoccl', 'profile',
                          'lowerface']
 
-    clf_explainer, clf_est, feature_names = getModel("Tester/test_cb_simple.pkl", "catboost")
+    clf_explainer, clf_est, feature_names = getModel("TestData/testmodel.pkl", "catboost")
     X_train, X_test, y_train, y_test = prepareTrainTestSplit(feature_names, columns_to_encode, True)
 
 
