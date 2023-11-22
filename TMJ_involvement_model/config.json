@@ -3,7 +3,7 @@
     "preprocess_data_3_cat": false,
     "time_slice": [["diff", 0, 100]],
     "n_categories": [3],
-    "feature_selection": ["SFS"],
+    "feature_selection": ["short", "clinical","SFS"],
     "encoding_embedding": [true, false],
     "do_embedding": [true, false],
     "SFS_n_features": 10,
