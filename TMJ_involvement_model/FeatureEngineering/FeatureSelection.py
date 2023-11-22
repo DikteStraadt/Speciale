@@ -86,7 +86,7 @@ class ForwardSubsetSelection:
                    k_features=(1, self.config["SFS_n_features"]),
                    forward=True,
                    floating=False,
-                   scoring='f1',
+                   scoring='f1_weighted',
                    cv=self.config["cv"],
                    verbose=self.config["verbose"])
 

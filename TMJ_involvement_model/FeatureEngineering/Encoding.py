@@ -9,6 +9,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.utils import plot_model
 from IPython.display import Image
 from matplotlib import pyplot
+from keras import backend as K
 
 class OneHotEncode:
 
@@ -66,6 +67,8 @@ def doEmbedding(data, featureEm, target, embeddingName, n_categories, epochs):
     if n_categories == 3:
         embeddingData[target].replace(2.0, 1.0)
 
+    embeddingData = embeddingData.fillna(0)
+
     y = embeddingData[target]
     X = embeddingData.drop(columns=[target, "ID"], axis=1).astype(float)
 
@@ -92,7 +95,6 @@ def doEmbedding(data, featureEm, target, embeddingName, n_categories, epochs):
     input_cat = Input(shape=(1,))
     # Output dimension of the categorical entity embedding (here we want 1 for complexity)
     cat_emb_dim = 1
-    #n_unique_cat = len(np.unique(X_train[featureEm]))
     test = X[featureEm].values.max()
     n_unique_cat = int(test)+1
     # Embedding Layer
@@ -127,7 +129,7 @@ def doEmbedding(data, featureEm, target, embeddingName, n_categories, epochs):
 
     # Compile the model and set up early stopping
     opt = SGD(learning_rate=0.01)
-    model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['f1score'])
+    model.compile(loss='binary_crossentropy', optimizer=opt, metrics=[f1_score])   # or 'accuracy'
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=50, restore_best_weights=True)
     history = model.fit(
         [X_train[featureEm], X_train[numeric_cols]],
@@ -185,3 +187,18 @@ def doEmbedding(data, featureEm, target, embeddingName, n_categories, epochs):
     X_emb.to_csv('Embeddings/embeddedFeatures.csv', index=False)
 
     return X_emb
+
+
+"""
+Method implemented based on this thread: https://datascience.stackexchange.com/questions/45165/how-to-get-accuracy-f1-precision-and-recall-for-a-keras-model
+"""
+def f1_score(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon())
+    recall = true_positives / (possible_positives + K.epsilon())
+    f1 = 2 * (precision * recall) / (precision + recall + K.epsilon())
+    return f1
+
+

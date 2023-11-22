@@ -21,6 +21,7 @@ from FeatureEngineering import TransformFeatures as fm
 from ModelEvaluation import Evaluation as ev
 from ModelEvaluation import ConformalPrediction as cp
 from FeatureEngineering import DrugTransformation as dt
+from ModelEvaluation import CatBoostWrapper as cbw
 
 warnings.filterwarnings('ignore')
 
@@ -156,6 +157,14 @@ if __name__ == '__main__':
         test_model = sl.load_model(best_model_name)
         #test_est = test_model.best_estimator_
         #test_model = test_est.named_steps['catboost']  # here needs to be name of best_model
-        #cp.conformalPrediction(test_model, X_valid, y_valid, X_test, y_test)
+        #featurenames = test_model.feature_names_
+        #cp.conformalPrediction(test_model, featurenames, X_valid, y_valid, X_test, y_test)
+
+        # In case of CatBoost
+        #wrapper_model = cbw.CatBoostWrapper(test_model)
+        #cp.conformalPrediction(wrapper_model.model, featurenames, X_valid, y_valid, X_test, y_test)
+
+
+
 
     print("Done!")
