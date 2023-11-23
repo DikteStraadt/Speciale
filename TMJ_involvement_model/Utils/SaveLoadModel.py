@@ -5,12 +5,13 @@ from Utils import Report as r
 
 def save_model(model, ml_type):
 
-    path = f"Temp/model-{ml_type}-{datetime.now().strftime('%d-%m-%Y %H-%M-%S')}.pkl"
+    model_name = f"model-{ml_type}-{datetime.now().strftime('%d-%m-%Y %H-%M-%S')}"
+    path = f"Temp/{model_name}.pkl"
 
     with open(path, 'wb') as files:
         pickle.dump(model, files)
 
-    print("Model saved")
+    print(f"Model saved as {model_name}")
 
 def load_model(path):
 

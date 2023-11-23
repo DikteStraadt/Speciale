@@ -1,5 +1,5 @@
 from matplotlib import pyplot
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import confusion_matrix, classification_report, f1_score
 from Utils import Report as r
 from Utils import SaveLoadModel as s
 
@@ -22,11 +22,15 @@ def evaluation(ml_type, model, X_test, y_test):
     print("\nClassification Report: ")
     print(classification_report(y_test, y_preds))
 
+    f1_macro = f1_score(y_test, y_preds, average='macro')
+    f1_micro = f1_score(y_test, y_preds, average='micro')
+    f1_weighted = f1_score(y_test, y_preds, average='weighted')
+
     r.write_to_report(f"({ml_type}) confusion matrix", confusion_matrix(y_test, y_preds).tolist())
     r.write_to_report(f"({ml_type}) classification report", classification_report(y_test, y_preds))
     r.write_to_report(f"({ml_type}) best model", str(model.best_estimator_))
     r.write_to_report(f"({ml_type}) best parameters", str(model.best_params_))
-    r.write_to_report(f"({ml_type}) f1 macro", model.best_score_)
+    r.write_to_report(f"({ml_type}) f1 macro", f1_macro)
 
     s.save_model(model, ml_type)
 

@@ -45,10 +45,6 @@ class CatBoost:
         feature_names = self.X_train.columns.tolist()
         model.named_steps['catboost'].set_feature_names(feature_names)
 
-        scoring = {
-            'f1_macro': make_scorer(f1_score, average='macro'),
-        }
-
         if self.config['n_categories'] == 2:
             param = {
                 'catboost__iterations': [100, 300, 700, 1000],
@@ -92,7 +88,7 @@ class CatBoost:
             cv=self.config["cv"],
             n_jobs=-1,
             random_state=42,
-            scoring=scoring,
+            scoring='f1_macro',
             refit='f1_macro',
             verbose=self.config["verbose"]
         )

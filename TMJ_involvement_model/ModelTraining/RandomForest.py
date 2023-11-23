@@ -38,10 +38,6 @@ class RandomForest:
             ("random forest", RandomForestClassifier()),
         ])
 
-        scoring = {
-            'f1_macro': make_scorer(f1_score, average='macro'),
-        }
-
         param = {
             'random forest__n_estimators': [100, 300, 700, 1000],
             'random forest__max_depth': [None, 3, 7, 10],
@@ -63,7 +59,7 @@ class RandomForest:
             cv=self.config["cv"],
             n_jobs=-1,
             random_state=42,
-            scoring=scoring,
+            scoring='f1_macro',
             refit='f1_macro',
             verbose=self.config["verbose"]
         )

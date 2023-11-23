@@ -43,10 +43,6 @@ class XGBoostClassifier:
             ("xgboost", xgb.XGBClassifier()),
         ])
 
-        scoring = {
-            'f1_macro': make_scorer(f1_score, average='macro'),
-        }
-
         param = {
             'xgboost__enable_categorical': [True],
             'xgboost__max_depth': [3, 5, 7, 10],
@@ -69,7 +65,7 @@ class XGBoostClassifier:
             cv=self.config["cv"],
             n_jobs=-1,
             random_state=42,
-            scoring=scoring,
+            scoring='f1_macro',
             refit='f1_macro',
             verbose=self.config["verbose"]
         )
