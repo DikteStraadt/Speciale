@@ -31,7 +31,7 @@ class SMOTE:
             r.write_to_report("smote values", self.config['time_slice_2_cat'][3])
         elif self.config['n_categories'] == 3:
             sampling_strategy = {1: self.config['time_slice_3_cat'][3], 2: self.config['time_slice_3_cat'][4]}
-            r.write_to_report("smote values", [self.config['time_slice_2_cat'][3], self.config['time_slice_2_cat'][4]])
+            r.write_to_report("smote values", [self.config['time_slice_3_cat'][3], self.config['time_slice_3_cat'][4]])
         else:
             sampling_strategy = {}
 
