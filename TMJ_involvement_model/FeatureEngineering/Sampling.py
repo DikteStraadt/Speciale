@@ -27,9 +27,11 @@ class SMOTE:
         categorical_columns = [col for col in X.columns if col not in non_categorical_columns]
 
         if self.config['n_categories'] == 2:
-            sampling_strategy = {1: self.config['smote_2_cat_class_1']}
+            sampling_strategy = {1: self.config['time_slice_2_cat'][3]}
+            r.write_to_report("smote values", self.config['time_slice_2_cat'][3])
         elif self.config['n_categories'] == 3:
-            sampling_strategy = {1: self.config['smote_3_cat_class_1'], 2: self.config['smote_3_cat_class_2']}
+            sampling_strategy = {1: self.config['time_slice_3_cat'][3], 2: self.config['time_slice_3_cat'][4]}
+            r.write_to_report("smote values", [self.config['time_slice_2_cat'][3], self.config['time_slice_2_cat'][4]])
         else:
             sampling_strategy = {}
 

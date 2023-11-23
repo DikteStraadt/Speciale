@@ -59,16 +59,17 @@ if __name__ == '__main__':
 
     for config in configurations:
 
+        r.create_empty_report()
         columns_to_exclude = ['sex', 'type', 'studyid', 'Unnamed: 0', 'visitationdate']
 
         if config['n_categories'] == 2:
             data = imported_data_2_cat.drop(columns=columns_to_exclude)
-            data = f.filter_visitations(data, config['time_slice'])
+            data = f.filter_visitations(data, config['time_slice_2_cat'])
+            r.write_to_report("time slice", f"{config['time_slice_2_cat'][0]} from {config['time_slice_2_cat'][1]} to {config['time_slice_2_cat'][2]}")
         elif config['n_categories'] == 3:
             data = imported_data_3_cat.drop(columns=columns_to_exclude)
-            data = f.filter_visitations(data, config['time_slice'])
-
-        r.create_empty_report()
+            data = f.filter_visitations(data, config['time_slice_3_cat'])
+            r.write_to_report("time slice", f"{config['time_slice_3_cat'][0]} from {config['time_slice_3_cat'][1]} to {config['time_slice_3_cat'][2]}")
 
         id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
 
@@ -76,7 +77,6 @@ if __name__ == '__main__':
         r.write_to_report("timestamp start", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
         r.write_to_report("timestamp end", "")  # placeholder
         r.write_to_report("n_categories", config['n_categories'])
-        r.write_to_report("time slice", config['time_slice'])
         r.write_to_report("original data size", f"{data.shape}")
 
         ##################### PROCESS DATA #####################
