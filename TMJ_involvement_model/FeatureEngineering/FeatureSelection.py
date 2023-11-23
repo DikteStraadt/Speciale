@@ -29,7 +29,7 @@ def feature_selection(X_train, y_train, X_test, estimator, config):
 
         extra = ['asybasis', 'asybasis_0', 'asybasis_1', 'asybasis_2', 'asybasis_3', 'asybasis_4',
                  'asypupilline', 'asypupilline_0', 'asypupilline_1', 'asypupilline_2', 'asypupilline_3', 'asypupilline_4',
-                 'Biologics', 'Conventional', 'Eye medicine', 'NSAID', 'Corticosteroids',
+                 'drug', 'Biologics', 'Conventional', 'Eye medicine', 'NSAID', 'Corticosteroids',
                  'asyoccl', 'asyoccl_0', 'asyoccl_1', 'asyoccl_2', 'asyoccl_3', 'asyoccl_4',
                  'profile', 'profile_0', 'profile_1', 'profile_2', 'profile_3',
                  'lowerface', 'lowerface_0', 'lowerface_1', 'lowerface_2', 'lowerface_3']
@@ -46,20 +46,20 @@ def feature_selection(X_train, y_train, X_test, estimator, config):
 
     elif config["feature_selection"] == "short":
 
-        clinical_columns = ['pain', 'painmove', 'morningstiffness', 'muscularpain', 'headache', 'openingfunction', 'neckpain', 'neckpalpation', 'laterpalp', 'postpalp', 'translation', 'masseter', 'temporalis', 'ptext', 'ptint', 'tempsen', 'sterno', 'stylomandibularligament', 'asymmetrymasseter', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite']
+        short_columns = ['pain', 'painmove', 'morningstiffness', 'muscularpain', 'headache', 'openingfunction', 'neckpain', 'neckpalpation', 'laterpalp', 'postpalp', 'translation', 'masseter', 'temporalis', 'ptext', 'ptint', 'tempsen', 'sterno', 'stylomandibularligament', 'asymmetrymasseter', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite']
 
-        X_train_fs = X_train.loc[:, clinical_columns]
-        X_test_fs = X_test.loc[:, clinical_columns]
+        X_train_fs = X_train.loc[:, short_columns]
+        X_test_fs = X_test.loc[:, short_columns]
 
-        extra = ['asybasis_0', 'asybasis_1', 'asybasis_2', 'asybasis_3', 'asybasis_4',
-                 'asypupilline_0', 'asypupilline_1', 'asypupilline_2', 'asypupilline_3', 'asypupilline_4',
-                 'Biologics', 'Conventional', 'Eye medicine', 'NSAID', 'Corticosteroids',
-                 'profile_0', 'profile_1', 'profile_2', 'profile_3',
-                 'lowerface_0', 'lowerface_1', 'lowerface_2', 'lowerface_3',
-                 'asymenton_0', 'asymenton_1', 'asymenton_2', 'asymenton_3','asymenton_4','asymenton_5','asymenton_6','asymenton_7',
-                 'asyoccl_0', 'asyoccl_1', 'asyoccl_2','asyoccl_3', 'asyoccl_4',
-                 'asylowmi_0', 'asylowmi_1', 'asylowmi_2','asylowmi_3', 'asylowmi_4','asylowmi_5',
-                 'sagittalrelation_0', 'sagittalrelation_1', 'sagittalrelation_2', 'sagittalrelation_3', 'sagittalrelation_4', 'sagittalrelation_5','sagittalrelation_6']
+        extra = ['asybasis', 'asybasis_0', 'asybasis_1', 'asybasis_2', 'asybasis_3', 'asybasis_4',
+                 'asypupilline', 'asypupilline_0', 'asypupilline_1', 'asypupilline_2', 'asypupilline_3', 'asypupilline_4',
+                 'drug', 'Biologics', 'Conventional', 'Eye medicine', 'NSAID', 'Corticosteroids',
+                 'profile', 'profile_0', 'profile_1', 'profile_2', 'profile_3',
+                 'lowerface', 'lowerface_0', 'lowerface_1', 'lowerface_2', 'lowerface_3',
+                 'asymenton', 'asymenton_0', 'asymenton_1', 'asymenton_2', 'asymenton_3','asymenton_4','asymenton_5','asymenton_6','asymenton_7',
+                 'asyoccl', 'asyoccl_0', 'asyoccl_1', 'asyoccl_2','asyoccl_3', 'asyoccl_4',
+                 'asylowmi', 'asylowmi_0', 'asylowmi_1', 'asylowmi_2','asylowmi_3', 'asylowmi_4','asylowmi_5',
+                 'sagittalrelation', 'sagittalrelation_0', 'sagittalrelation_1', 'sagittalrelation_2', 'sagittalrelation_3', 'sagittalrelation_4', 'sagittalrelation_5','sagittalrelation_6']
 
         for column in extra:
             if column in X_train.columns:

@@ -32,7 +32,7 @@ def evaluation(ml_type, model, X_test, y_test):
     r.write_to_report(f"({ml_type}) best parameters", str(model.best_params_))
     r.write_to_report(f"({ml_type}) f1 macro", f1_macro)
 
-    s.save_model(model, ml_type)
+    s.save_model(model, ml_type, f1_macro)
 
 def find_best_model():
 

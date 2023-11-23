@@ -3,9 +3,9 @@ import pickle
 from datetime import datetime
 from Utils import Report as r
 
-def save_model(model, ml_type):
+def save_model(model, ml_type, f1):
 
-    model_name = f"model-{ml_type}-{datetime.now().strftime('%d-%m-%Y %H-%M-%S')}"
+    model_name = f"model-{ml_type}-({round(f1, 4)})-{datetime.now().strftime('%d-%m-%Y %H-%M-%S')}"
     path = f"Temp/{model_name}.pkl"
 
     with open(path, 'wb') as files:
@@ -48,7 +48,7 @@ def rename_model(model_name, report):
     else:
         metric = "ERROR"
 
-    new_model_name = f"Results/{report['id']} model (ml={model_name}, f1 macro={round(metric, 4)}, categories={report['n_categories']}, slicing={report['time_slice']}, encoding={report['encoding']}, features={report['feature selection']} {report['timestamp end']}.pkl"
+    new_model_name = f"Results/{report['id']} model (ml={model_name}, f1 macro={round(metric, 4)}, categories={report['n_categories']}, slicing={report['time slice']}, encoding={report['encoding']}, features={report['feature selection']} {report['timestamp end']}.pkl"
 
     for filename in file_list:
         if filename.startswith(f"model-{model_name}"):

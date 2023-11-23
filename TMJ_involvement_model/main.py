@@ -76,7 +76,7 @@ if __name__ == '__main__':
         r.write_to_report("timestamp start", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
         r.write_to_report("timestamp end", "")  # placeholder
         r.write_to_report("n_categories", config['n_categories'])
-        r.write_to_report("time_slice", config['time_slice'])
+        r.write_to_report("time slice", config['time_slice'])
         r.write_to_report("original data size", f"{data.shape}")
 
         ##################### PROCESS DATA #####################
@@ -149,22 +149,29 @@ if __name__ == '__main__':
         report = r.read_report()
         best_model = ev.find_best_model()
         best_model_name = sl.rename_model(best_model, report)
-        r.rename_report_file()
-        sl.remove_models()
-
 
         ##################### PERFORM CONFORMANCE PREDICTION #####################
-        test_model = sl.load_model(best_model_name)
-        #test_est = test_model.best_estimator_
-        #test_model = test_est.named_steps['catboost']  # here needs to be name of best_model
-        #featurenames = test_model.feature_names_
-        #cp.conformalPrediction(test_model, featurenames, X_valid, y_valid, X_test, y_test)
 
-        # In case of CatBoost
-        #wrapper_model = cbw.CatBoostWrapper(test_model)
-        #cp.conformalPrediction(wrapper_model.model, featurenames, X_valid, y_valid, X_test, y_test)
+        if config["do_conformance_prediction"]:
 
+            test_model = sl.load_model(best_model_name)
+            test_est = test_model.best_estimator_
+            test_model = test_est.named_steps[best_model]
 
+            if best_model == "random forest":
+                feature_names = test_model.feature_names_in_
+                cp.conformalPrediction(test_model, feature_names, X_valid, y_valid, X_test, y_test)
+            elif best_model == "xgboost":
+                feature_names = test_model.feature_names_in_
+                cp.conformalPrediction(test_model, feature_names, X_valid, y_valid, X_test, y_test)
+            elif best_model == "catboost":
+                feature_names = test_model.feature_names_
+                wrapper_model = cbw.CatBoostWrapper(test_model)
+                cp.conformalPrediction(wrapper_model.model, feature_names, X_valid, y_valid, X_test, y_test)
 
+        ##################### CLEAN WORKSPACE #####################
+
+        r.rename_report_file()
+        sl.remove_models()
 
     print("Done!")
