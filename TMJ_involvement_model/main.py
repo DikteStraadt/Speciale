@@ -170,8 +170,8 @@ if __name__ == '__main__':
                 cp.conformalPrediction(test_model, feature_names, X_valid, y_valid, X_test, y_test)
             elif best_model == "catboost":
                 feature_names = test_model.feature_names_
-                wrapper_model = cbw.CatBoostWrapper(test_model)
-                cp.conformalPrediction(wrapper_model.model, feature_names, X_valid, y_valid, X_test, y_test)
+                wrapper_model = cbw.CatBoostWrapper(test_model, feature_names_=feature_names, classes_=test_model.classes_)
+                cp.conformalPrediction(wrapper_model, feature_names, X_valid, y_valid, X_test, y_test)
 
         ##################### CLEAN WORKSPACE #####################
 

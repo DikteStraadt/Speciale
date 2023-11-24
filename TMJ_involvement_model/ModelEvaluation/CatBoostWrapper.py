@@ -2,11 +2,13 @@ from catboost import CatBoostClassifier
 from types import MethodType
 
 class CatBoostWrapper:
-    def __init__(self, model):
+    def __init__(self, model, feature_names_, classes_):
         self.model = model
+        self.feature_names_in_ = feature_names_
+        self.classes_ = classes_
 
-    def fit(self, X, y, sample_weight=None):
-        return self.model.fit(X, y, sample_weight=sample_weight)
+    def fit(self, X, y):
+        return self.model.fit(X, y)
 
     def predict(self, X):
         return self.model.predict(X)
