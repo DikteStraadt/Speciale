@@ -121,7 +121,7 @@ class ConvertToCategories:
 
         data = data.astype(column_categories)
 
-        non_categorical_columns = ['ID', 'ageatvisitation', 'difftdate', 'overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
+        non_categorical_columns = ['ID', 'ageatvisitation', 'previousstatus', 'difftdate', 'overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
         categorical_columns = [col for col in data.columns if col not in non_categorical_columns]
 
         for col in categorical_columns:

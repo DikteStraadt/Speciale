@@ -48,7 +48,7 @@ def rename_model(model_name, report):
     else:
         metric = "ERROR"
 
-    new_model_name = f"Results/{report['id']} model (ml={model_name}, f1 macro={round(metric, 4)}, categories={report['n_categories']}, slicing={str(report['time slice'][0])} from {str(report['time slice'][1])} to {str(report['time slice'][2])} years, encoding={report['encoding']}, features={report['feature selection']} {report['timestamp end']}.pkl"
+    new_model_name = f"Results/{report['id']} model (ml={model_name}, f1 macro={round(metric, 4)}, categories={report['n_categories']}, slicing={str(report['time slice'])}, encoding={report['encoding']}, features={report['feature selection']} {report['timestamp end']}.pkl"
 
     for filename in file_list:
         if filename.startswith(f"model-{model_name}"):
