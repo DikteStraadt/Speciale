@@ -22,7 +22,7 @@ from ModelEvaluation import Evaluation as ev
 from ModelEvaluation import ConformalPrediction as cp
 from FeatureEngineering import DrugTransformation as dt
 from ModelEvaluation import CatBoostWrapper as cbw
-from Utils import CorrelationMatrix as cor
+from CorrelationMatrix import CorrelationMatrix as cor
 
 warnings.filterwarnings('ignore')
 
@@ -115,7 +115,8 @@ if __name__ == '__main__':
         data = data.drop(previous_status.columns, axis=1)
         previous_status[['index', 'ID']] = data[['index', 'ID']]
 
-        # cor.make_status_correlation_matrix(previous_status)
+        # Correlation matrix for previous involvement status values
+        # cor.make_previous_status_correlation_matrix(previous_status)
 
         X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=42, shuffle=True)
         X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, train_size=0.5, random_state=42, shuffle=True)
