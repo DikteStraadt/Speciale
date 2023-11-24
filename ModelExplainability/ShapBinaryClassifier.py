@@ -47,3 +47,5 @@ def forceplot_binary(clf, clf_pipe_name, index, X_train, y_train, explainer, sha
     fig = shap.force_plot(explainer.expected_value, shap_values[index, :], X_train.iloc[index, :], matplotlib=True,)
 
     return fig
+
+

@@ -3,6 +3,7 @@ import pandas as pd
 from mapie.classification import MapieClassifier
 from mapie.metrics import classification_coverage_score
 from mapie.metrics import classification_mean_width_score
+from Utils import Report as r
 
 def conformalPrediction(model, featurenames, X_calib, y_calib, X_new, y_new):
     X_calib = X_calib[featurenames]
@@ -17,8 +18,11 @@ def conformalPrediction(model, featurenames, X_calib, y_calib, X_new, y_new):
     cov = classification_coverage_score(y_new, y_set)
     setsize = classification_mean_width_score(y_set)
     print('Coverage: {:.2f}'.format(cov))
+    r.write_to_report("Conformal converage", format(cov,'.2f'))
     print("Avg. set size: {:.2f}".format(setsize))
+    r.write_to_report("Conformal Avg. set size", format(setsize,'.2f'))
     print(class_wise_performance(y_new, y_set, y_calib.unique()))
+    r.write_to_report("Conformal classwise performance", class_wise_performance(y_new, y_set, y_calib.unique()).to_json())
 
 
 """
