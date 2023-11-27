@@ -44,14 +44,40 @@ def forceplot_binary(clf, clf_pipe_name, index, X_train, y_train, explainer, sha
     print('***'*12)
     print()
 
-    fig = shap.force_plot(explainer.expected_value, shap_values[index, :], X_train.iloc[index, :], matplotlib=True,)
+    shap.force_plot(explainer.expected_value, shap_values[index, :], X_train.iloc[index, :], matplotlib=True, show=False, text_rotation=5)
+    plt.tight_layout()
+    plt.gcf().set_size_inches(20,7)
+    fig = plt.gcf()
+    plt.show()
+    fig.savefig(f'plots/force_plot_binary_{index}.png')
 
-    return fig
+def waterfallplotbinary(explainer, X_train,  observationIndex):
+    shap_values = explainer(X_train)
+    print(shap_values.shape)
 
-def aggregatedplot(shap_values, plotType):
+    shap.plots.waterfall(shap_values[observationIndex], max_display=20, show=False)
+    plt.tight_layout()
+    fig = plt.gcf()
+    plt.show()
+    fig.savefig(f'plots/waterfallplotbinary_observation{observationIndex}.png')
+
+
+
+
+
+def aggregatedplotbinary(explainer, X_train, plotType):
+
+    shap_values = explainer(X_train)
+
+    if plotType == 'beeswarm':
+        shap.plots.beeswarm(shap_values, show=False, max_display=20)
+        plt.gcf().set_size_inches(20, 13)
+        plt.tight_layout()
+        plt.show()
+
 
     if plotType == 'bar':
-        shap.plots.bar(shap_values)
+        shap.plots.bar(shap_values, show=False, max_display=20)
         plt.gcf().set_size_inches(20, 13)
         plt.tight_layout()
         plt.show()
