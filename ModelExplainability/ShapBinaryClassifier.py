@@ -48,4 +48,13 @@ def forceplot_binary(clf, clf_pipe_name, index, X_train, y_train, explainer, sha
 
     return fig
 
+def aggregatedplot(shap_values, plotType):
+
+    if plotType == 'bar':
+        shap.plots.bar(shap_values)
+        plt.gcf().set_size_inches(20, 13)
+        plt.tight_layout()
+        plt.show()
+
+
 

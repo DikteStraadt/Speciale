@@ -142,7 +142,10 @@ def waterfallplot(explainer, X_train, className, observationIndex):
     shap.plots.waterfall(shap_values_to_plot, max_display=20, show=False)
     plt.title(className)
     plt.tight_layout()
+    fig = plt.gcf()
     plt.show()
+    fig.savefig(f'plots/waterfallplot{className}_observation{observationIndex}.png')
+
 
 
 
