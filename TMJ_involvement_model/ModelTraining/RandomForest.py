@@ -34,6 +34,9 @@ class RandomForest:
         self.X_train = data_fs[0]
         self.X_test = data_fs[1]
 
+        r.write_to_report("(random forest) n_features", len(self.X_train.columns))
+        r.write_to_report("(random forest) feature names", self.X_train.columns.tolist())
+
         model = Pipeline(steps=[
             ("random forest", RandomForestClassifier()),
         ])

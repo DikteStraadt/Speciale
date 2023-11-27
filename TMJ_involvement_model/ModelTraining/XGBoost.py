@@ -34,6 +34,9 @@ class XGBoostClassifier:
         self.X_train = data_fs[0]
         self.X_test = data_fs[1]
 
+        r.write_to_report("(xgboost) n_features", len(self.X_train.columns))
+        r.write_to_report("(xgboost) feature names", self.X_train.columns.tolist())
+
         if self.config['n_categories'] == 2:
             xgboost_objective = 'binary:logistic'
         elif self.config['n_categories'] == 3:

@@ -35,6 +35,9 @@ class CatBoost:
         self.X_train = data_fs[0]
         self.X_test = data_fs[1]
 
+        r.write_to_report("(catboost) n_features", len(self.X_train.columns))
+        r.write_to_report("(catboost) feature names", self.X_train.columns.tolist())
+
         non_categorical_columns = ['overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
         categorical_columns = [col for col in self.X_train.columns if col not in non_categorical_columns]
 

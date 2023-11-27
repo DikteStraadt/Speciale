@@ -40,7 +40,6 @@ def feature_selection(X_train, y_train, X_test, estimator, config):
                 X_test_fs = pd.concat([X_test_fs, X_test[column]], axis=1)
 
         r.write_to_report("feature selection", "clinical")
-        r.write_to_report("n_features", len(X_train_fs.columns))
 
         return X_train_fs, X_test_fs
 
@@ -67,7 +66,6 @@ def feature_selection(X_train, y_train, X_test, estimator, config):
                 X_test_fs = pd.concat([X_test_fs, X_test[column]], axis=1)
 
         r.write_to_report("feature selection", "short")
-        r.write_to_report("n_features", len(X_train_fs.columns))
 
         return X_train_fs, X_test_fs
 
