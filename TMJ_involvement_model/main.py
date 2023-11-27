@@ -17,10 +17,11 @@ from ModelTraining import CatBoost as cat
 from sklearn.pipeline import Pipeline
 from FeatureEngineering import TypeConverter as tc
 from DataCleaning import PreprocessData as p
-from FeatureEngineering import TransformFeatures as fm
+from FeatureEngineering import RightLeftTransformation as fm
 from ModelEvaluation import Evaluation as ev
 from ModelEvaluation import ConformalPrediction as cp
 from FeatureEngineering import DrugTransformation as dt
+from FeatureEngineering import mmTransformation as mm
 from ModelEvaluation import CatBoostWrapper as cbw
 from CorrelationMatrix import CorrelationMatrix as cor
 
@@ -61,7 +62,7 @@ if __name__ == '__main__':
     for config in configurations:
 
         r.create_empty_report()
-        columns_to_exclude = ['sex', 'type', 'studyid', 'Unnamed: 0', 'visitationdate']
+        columns_to_exclude = ['type', 'studyid', 'Unnamed: 0', 'visitationdate']
 
         if config['n_categories'] == 2:
             data = imported_data_2_cat.drop(columns=columns_to_exclude)
@@ -90,6 +91,8 @@ if __name__ == '__main__':
             encoding_method = e.OneHotEncode(columns_to_encode)
 
         feature_engineering_pipeline = Pipeline(steps=[
+            ("Opening transformer", mm.OpeningTransformer()),
+            ("Protrusion transformer", mm.ProtrusionTransformer()),
             ("New drug categories", dt.DrugTransformer()),
             ("Convert type", tc.ConvertToCategories()),
             ("Merging features", fm.MergeFeatures()),

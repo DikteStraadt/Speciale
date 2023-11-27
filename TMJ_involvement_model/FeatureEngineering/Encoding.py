@@ -70,7 +70,7 @@ def doEmbedding(data, featureEm, target, embeddingName, n_categories, epochs):
     embeddingData = embeddingData.fillna(0)
 
     y = embeddingData[target]
-    X = embeddingData.drop(columns=[target, "ID", "previousstatus"], axis=1).astype(float)
+    X = embeddingData.drop(columns=[target, "ID", "sex", "previousstatus"], axis=1).astype(float)
 
     # evt. noget stratify på
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=11)
@@ -82,7 +82,7 @@ def doEmbedding(data, featureEm, target, embeddingName, n_categories, epochs):
     print(y_train.head())
 
     # remaining cols
-    remainfeatures = data.drop(columns=[featureEm, target, "ID", "previousstatus"], axis=1)
+    remainfeatures = data.drop(columns=[featureEm, target, "ID", "sex", "previousstatus"], axis=1)
     numeric_cols = remainfeatures.columns
     X_train[numeric_cols] = X_train[numeric_cols].astype(np.float32)
     X_test[numeric_cols] = X_test[numeric_cols].astype(np.float32)
