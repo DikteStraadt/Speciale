@@ -125,7 +125,7 @@ if __name__ == '__main__':
                  'previousinvolvementstatusvisitation14', 'previousinvolvementstatusvisitation15']]
 
         data = data.drop('involvementstatus', axis=1)
-
+        data = data.drop('previousstatus', axis=1)
         previous_status[['index', 'ID']] = data[['index', 'ID']]
 
             ##################### CORRELATION MATRIX FOR PREVIOUS STATUS' ####################
