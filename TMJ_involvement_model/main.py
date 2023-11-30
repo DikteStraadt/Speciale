@@ -41,11 +41,11 @@ if __name__ == '__main__':
     ##################### PREPROCESS AND SAVE DATA #####################
 
     if configurations[0]['preprocess_data_2_cat']:
-        p.preprocess_data(2, configurations[0]['previous_two_involvement_status'])  # Two categories
+        p.preprocess_data(2, configurations[0]['previous_involvement_status'])  # Two categories
         print("Data with 2 categories is preprocessed and saved")
 
     if configurations[0]['preprocess_data_3_cat']:
-        p.preprocess_data(3, configurations[0]['previous_two_involvement_status'])  # Three categories
+        p.preprocess_data(3, configurations[0]['previous_involvement_status'])  # Three categories
         print("Data with 3 categories is preprocessed and saved")
 
     ##################### IMPORT DATA #####################
@@ -80,11 +80,7 @@ if __name__ == '__main__':
         r.write_to_report("timestamp end", "")  # placeholder
         r.write_to_report("n_categories", config['n_categories'])
         r.write_to_report("original data size", f"{data.shape}")
-
-        if config['previous_two_involvement_status']:
-            r.write_to_report("previous values", "y-2")
-        else:
-            r.write_to_report("previous values", "y-15")
+        r.write_to_report("previous values", config['previous_involvement_status'])
 
         ##################### PROCESS DATA #####################
 
@@ -111,9 +107,10 @@ if __name__ == '__main__':
 
         target = data['involvementstatus']
 
-        if config["previous_two_involvement_status"]:
+        if config["previous_involvement_status"] == "y-2":
             previous_status = data[['previousstatus', 'previousinvolvementstatusvisitation_y-1', 'previousinvolvementstatusvisitation_y-2']]
-        else:
+            data = data.drop('previousstatus', axis=1)
+        elif config["previous_involvement_status"] == "y-15":
             previous_status = data[
                 ['previousstatus', 'previousinvolvementstatusvisitation0', 'previousinvolvementstatusvisitation1',
                  'previousinvolvementstatusvisitation2', 'previousinvolvementstatusvisitation3',
@@ -123,13 +120,14 @@ if __name__ == '__main__':
                  'previousinvolvementstatusvisitation10', 'previousinvolvementstatusvisitation11',
                  'previousinvolvementstatusvisitation12', 'previousinvolvementstatusvisitation13',
                  'previousinvolvementstatusvisitation14', 'previousinvolvementstatusvisitation15']]
-
-        data = data.drop('involvementstatus', axis=1)
-        data = data.drop('previousstatus', axis=1)
-        previous_status[['index', 'ID']] = data[['index', 'ID']]
+            data = data.drop('previousstatus', axis=1)
 
             ##################### CORRELATION MATRIX FOR PREVIOUS STATUS' ####################
-            # cor.make_previous_status_correlation_matrix(previous_status)
+            previous_status[['index', 'ID']] = data[['index', 'ID']]
+            cor.make_previous_status_correlation_matrix(previous_status, config)
+            exit()
+
+        data = data.drop('involvementstatus', axis=1)
 
         X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=42, shuffle=True)
         X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, train_size=0.5, random_state=42, shuffle=True)
@@ -161,6 +159,7 @@ if __name__ == '__main__':
         ])
 
         pipeline.transform(data)
+
 
         r.write_to_report("timestamp end", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
 

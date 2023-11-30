@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-def sliding_time_window_16_visitations(visitations_3D):
+def sliding_time_window_y_15_visitations(visitations_3D):
     modified_dataframes = []
 
     for i, dataframe in enumerate(visitations_3D):
@@ -51,7 +51,7 @@ def sliding_time_window_16_visitations(visitations_3D):
 
     return modified_dataframes
 
-def sliding_time_window_14_visitations(visitations_3D):
+def sliding_time_window_y_2_visitations(visitations_3D):
     modified_dataframes = []
 
     for i, dataframe in enumerate(visitations_3D):
@@ -97,7 +97,7 @@ def sliding_time_window_14_visitations(visitations_3D):
 
         dataframe = dataframe[1]
 
-    print("Previous involvement status' converted from list to columns (two previous status')")
+    print("Previous involvement status' converted from list to columns (two previous status)")
 
     return modified_dataframes
 
@@ -111,9 +111,11 @@ class SlidingTimeWindowForVisitations:
 
     def transform(self, visitations_3D, y=None):
 
-        if self.previous_two_values:
-            transformed_data = sliding_time_window_14_visitations(visitations_3D)
+        if self.previous_two_values == "y-2":
+            transformed_data = sliding_time_window_y_2_visitations(visitations_3D)
+        elif self.previous_two_values == "y-15":
+            transformed_data = sliding_time_window_y_15_visitations(visitations_3D)
         else:
-            transformed_data = sliding_time_window_16_visitations(visitations_3D)
+            transformed_data = visitations_3D
 
         return transformed_data

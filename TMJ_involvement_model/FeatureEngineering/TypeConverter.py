@@ -106,10 +106,10 @@ class ConvertToCategories:
             'transversal': CategoricalDtype(ordered=False),
         }
 
-        if self.config["previous_two_involvement_status"]:
+        if self.config["previous_involvement_status"] == "y-2":
             column_categories['previousinvolvementstatusvisitation_y-1'] = CategoricalDtype(ordered=False)
             column_categories['previousinvolvementstatusvisitation_y-2'] = CategoricalDtype(ordered=False)
-        else:
+        elif self.config["previous_involvement_status"] == "y-15":
             column_categories['previousinvolvementstatusvisitation0'] = CategoricalDtype(ordered=False)
             column_categories['previousinvolvementstatusvisitation1'] = CategoricalDtype(ordered=False)
             column_categories['previousinvolvementstatusvisitation2'] = CategoricalDtype(ordered=False)

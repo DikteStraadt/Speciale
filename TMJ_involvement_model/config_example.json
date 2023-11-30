@@ -3,7 +3,7 @@
     "preprocess_data_2_cat": false,
     "preprocess_data_3_cat": false,
     "time_slice_2_cat": [["diff", 0, 100, 2000]],
-    "time_slice_3_cat": [["diff", 0, 100, 1726, 500]],
+    "time_slice_3_cat": [["diff", 0, 100, 1726, 750]],
     "n_categories": [3, 2],
     "feature_selection": ["short", "clinical", "SFS"],
     "encoding_embedding": true,

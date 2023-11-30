@@ -2,7 +2,7 @@ from sklearn.pipeline import Pipeline
 from DataCleaning.RawData import CleanData as cd, ImportExportData as d, TimeSliceData as f
 from DataCleaning.Visitations import ReadWriteVisitations as v, CleanVisitations as cv, SlidingTimeWindowForVisitations as s
 
-def preprocess_data(n_categories, previous_two_values):
+def preprocess_data(n_categories, previous_values):
 
     # Import raw data
     data = d.import_data("Data/Master_Excel_Sep4.xlsx", "Sheet1")
@@ -18,9 +18,9 @@ def preprocess_data(n_categories, previous_two_values):
         ("Read visitations", v.ReadVisitations()),
         ("Remove visitations", cv.RemoveVisitations()),
         ("Convert visitation status", cv.ConvertVisitationStatus(n_categories)),
-        ("Add previous values", s.SlidingTimeWindowForVisitations(previous_two_values)),
+        ("Add previous values", s.SlidingTimeWindowForVisitations(previous_values)),
         ("Insert zeros", cv.InsertZeros()),
-        ("Combine to single DataFrame", v.CombineToDataFrame(previous_two_values))
+        ("Combine to single DataFrame", v.CombineToDataFrame(previous_values))
     ])
 
     data = preprocessing_pipeline.transform(data)

@@ -78,7 +78,7 @@ class CombineToDataFrame:
 
         columns_to_merge = {}
 
-        if self.previous_two_values:
+        if self.previous_two_values == "y-2":
             columns_to_merge['visitationdate'] = ['third_US', 'fourth_US', 'fifth_US',
                                                   'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
                                                   'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US',
@@ -86,6 +86,7 @@ class CombineToDataFrame:
 
             column_names = ['thirdUS', 'fourthUS', 'fifthUS', 'sixthUS', 'seventhUS',
                         'eighthUS', 'ninthUS', 'tenthUS', 'eleventhUS', 'twelfthUS', 'thirteenthUS', 'fourteenthUS', 'fifteenthUS', 'sixteenthUS', 'seventeenthUS']
+
         else:
             columns_to_merge['visitationdate'] = ['first_visitation', 'second_US', 'third_US', 'fourth_US', 'fifth_US',
                                                   'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
