@@ -142,7 +142,10 @@ def waterfallplot(explainer, X_train, className, observationIndex):
     shap.plots.waterfall(shap_values_to_plot, max_display=20, show=False)
     plt.title(className)
     plt.tight_layout()
+    fig = plt.gcf()
     plt.show()
+    fig.savefig(f'plots/waterfallplot{className}_observation{observationIndex}.png')
+
 
 
 
@@ -160,7 +163,7 @@ New set of shap values are created by looping over original
 SHAP values and selecting the set that corresponds to the prediction
 for that instance. Now getting one set of SHAP values per instance
 """
-def aggregatedplot(X, explainer, plotType, classString):
+def aggregatedplot(X_train, explainer, plotType, classString):
     """
     :param X: Dataset
     :param explainer: Tree explainer based on model
@@ -170,7 +173,7 @@ def aggregatedplot(X, explainer, plotType, classString):
     """
     classIndex = classMapping(classString)
 
-    shap_values = explainer(X)
+    shap_values = explainer(X_train)
     if plotType == 'beeswarm':
         shap.plots.beeswarm(shap_values[:,:,classIndex], show=False, max_display=20)
         plt.title(classString)

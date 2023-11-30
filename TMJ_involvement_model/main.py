@@ -173,17 +173,18 @@ if __name__ == '__main__':
             test_model = sl.load_model(best_model_name)
             test_est = test_model.best_estimator_
             test_model = test_est.named_steps[best_model]
+            n_categories = 2 if config['n_categories'] == 2 else 3
 
             if best_model == "random forest":
                 feature_names = test_model.feature_names_in_
-                cp.conformalPrediction(test_model, feature_names, X_valid, y_valid, X_test, y_test)
+                cp.conformalPrediction(test_model, feature_names, X_valid, y_valid, X_test, y_test, n_categories)
             elif best_model == "xgboost":
                 feature_names = test_model.feature_names_in_
-                cp.conformalPrediction(test_model, feature_names, X_valid, y_valid, X_test, y_test)
+                cp.conformalPrediction(test_model, feature_names, X_valid, y_valid, X_test, y_test, n_categories)
             elif best_model == "catboost":
                 feature_names = test_model.feature_names_
                 wrapper_model = cbw.CatBoostWrapper(test_model, feature_names_=feature_names, classes_=test_model.classes_)
-                cp.conformalPrediction(wrapper_model, feature_names, X_valid, y_valid, X_test, y_test)
+                cp.conformalPrediction(wrapper_model, feature_names, X_valid, y_valid, X_test, y_test, n_categories)
 
         ##################### CLEAN WORKSPACE #####################
 
