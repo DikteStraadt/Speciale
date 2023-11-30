@@ -40,8 +40,8 @@ def generate_seaborn_heatmap(result_df, n):
 
 def make_previous_status_correlation_matrix(df_previous_status, config):
 
-    if config["previous_two_involvement_status"]:
-        print("Cannot create correlation matrix when only two previous involvement status is included in visitation")
+    if not config["previous_involvement_status"] == "y-15":
+        print("Cannot create correlation matrix when only two/none previous involvement status is included in visitation")
     else:
         df_previous_status[['Base', 'Suffix']] = df_previous_status['ID'].str.split('_', expand=True)
         df_previous_status['Suffix'] = pd.to_numeric(df_previous_status['Suffix'])
