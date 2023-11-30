@@ -3,6 +3,9 @@ from pandas import CategoricalDtype
 
 class ConvertToCategories:
 
+    def __init__(self, config):
+        self.config = config
+
     def fit(self, data, y=None):
         return self
 
@@ -101,23 +104,28 @@ class ConvertToCategories:
             #'openbite': CategoricalDtype(ordered=True),
             #'deepbite': CategoricalDtype(ordered=True),
             'transversal': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation0': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation1': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation2': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation3': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation4': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation5': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation6': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation7': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation8': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation9': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation10': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation11': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation12': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation13': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation14': CategoricalDtype(ordered=False),
-            'previousinvolvementstatusvisitation15': CategoricalDtype(ordered=False),
         }
+
+        if self.config["previous_two_involvement_status"]:
+            column_categories['previousinvolvementstatusvisitation_y-1'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation_y-2'] = CategoricalDtype(ordered=False)
+        else:
+            column_categories['previousinvolvementstatusvisitation0'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation1'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation2'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation3'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation4'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation5'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation6'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation7'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation8'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation9'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation10'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation11'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation12'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation13'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation14'] = CategoricalDtype(ordered=False)
+            column_categories['previousinvolvementstatusvisitation15'] = CategoricalDtype(ordered=False)
 
         data = data.astype(column_categories)
 

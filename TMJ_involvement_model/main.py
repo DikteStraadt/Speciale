@@ -41,11 +41,11 @@ if __name__ == '__main__':
     ##################### PREPROCESS AND SAVE DATA #####################
 
     if configurations[0]['preprocess_data_2_cat']:
-        p.preprocess_data(2)  # Two categories
+        p.preprocess_data(2, configurations[0]['previous_two_involvement_status'])  # Two categories
         print("Data with 2 categories is preprocessed and saved")
 
     if configurations[0]['preprocess_data_3_cat']:
-        p.preprocess_data(3)  # Three categories
+        p.preprocess_data(3, configurations[0]['previous_two_involvement_status'])  # Three categories
         print("Data with 3 categories is preprocessed and saved")
 
     ##################### IMPORT DATA #####################
@@ -94,7 +94,7 @@ if __name__ == '__main__':
             ("Opening transformer", mm.OpeningTransformer()),
             ("Protrusion transformer", mm.ProtrusionTransformer()),
             ("New drug categories", dt.DrugTransformer()),
-            ("Convert type", tc.ConvertToCategories()),
+            ("Convert type", tc.ConvertToCategories(config)),
             ("Merging features", fm.MergeFeatures()),
             ("Encoding", encoding_method),
             ("Normalization", n.NormalizeData(config)),
@@ -105,21 +105,29 @@ if __name__ == '__main__':
         ##################### SPLIT DATA #####################
 
         target = data['involvementstatus']
-        previous_status = data[['previousstatus', 'previousinvolvementstatusvisitation0', 'previousinvolvementstatusvisitation1',
-                          'previousinvolvementstatusvisitation2', 'previousinvolvementstatusvisitation3',
-                          'previousinvolvementstatusvisitation4', 'previousinvolvementstatusvisitation5',
-                          'previousinvolvementstatusvisitation6', 'previousinvolvementstatusvisitation7',
-                          'previousinvolvementstatusvisitation8', 'previousinvolvementstatusvisitation9',
-                          'previousinvolvementstatusvisitation10', 'previousinvolvementstatusvisitation11',
-                          'previousinvolvementstatusvisitation12', 'previousinvolvementstatusvisitation13',
-                          'previousinvolvementstatusvisitation14', 'previousinvolvementstatusvisitation15']]
+
+        if config["previous_two_involvement_status"]:
+            previous_status = data[['previousstatus', 'previousinvolvementstatusvisitation_y-1', 'previousinvolvementstatusvisitation_y-2']]
+        else:
+            previous_status = data[
+                ['previousstatus', 'previousinvolvementstatusvisitation0', 'previousinvolvementstatusvisitation1',
+                 'previousinvolvementstatusvisitation2', 'previousinvolvementstatusvisitation3',
+                 'previousinvolvementstatusvisitation4', 'previousinvolvementstatusvisitation5',
+                 'previousinvolvementstatusvisitation6', 'previousinvolvementstatusvisitation7',
+                 'previousinvolvementstatusvisitation8', 'previousinvolvementstatusvisitation9',
+                 'previousinvolvementstatusvisitation10', 'previousinvolvementstatusvisitation11',
+                 'previousinvolvementstatusvisitation12', 'previousinvolvementstatusvisitation13',
+                 'previousinvolvementstatusvisitation14', 'previousinvolvementstatusvisitation15']]
 
         data = data.drop('involvementstatus', axis=1)
-        data = data.drop(previous_status.columns, axis=1)
+
+        if not config["do_include_previous_involvement_status"]:
+            data = data.drop(previous_status.columns, axis=1)
+
         previous_status[['index', 'ID']] = data[['index', 'ID']]
 
-        # Correlation matrix for previous involvement status values
-        # cor.make_previous_status_correlation_matrix(previous_status)
+            ##################### CORRELATION MATRIX FOR PREVIOUS STATUS' ####################
+            # cor.make_previous_status_correlation_matrix(previous_status)
 
         X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=42, shuffle=True)
         X_valid, X_test, y_valid, y_test = train_test_split(X_rem, y_rem, train_size=0.5, random_state=42, shuffle=True)

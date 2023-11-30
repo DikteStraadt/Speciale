@@ -61,6 +61,9 @@ class ReadVisitations:
 
 class CombineToDataFrame:
 
+    def __init__(self, previous_two_values):
+        self.previous_two_values = previous_two_values
+
     def fit(self, visitations_3D, y=None):
         return self
 
@@ -75,12 +78,23 @@ class CombineToDataFrame:
 
         columns_to_merge = {}
 
-        columns_to_merge['visitationdate'] = ['first_visitation', 'second_US', 'third_US', 'fourth_US', 'fifth_US',
-                                              'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
-                                              'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US',
-                                              'fifteenth_US', 'sixteenth_US', 'seventeenth_US']
-        column_names = ['firstvisitation', 'secondUS', 'thirdUS', 'fourthUS', 'fifthUS', 'sixthUS', 'seventhUS',
+        if self.previous_two_values:
+            columns_to_merge['visitationdate'] = ['third_US', 'fourth_US', 'fifth_US',
+                                                  'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
+                                                  'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US',
+                                                  'fifteenth_US', 'sixteenth_US', 'seventeenth_US']
+
+            column_names = ['thirdUS', 'fourthUS', 'fifthUS', 'sixthUS', 'seventhUS',
                         'eighthUS', 'ninthUS', 'tenthUS', 'eleventhUS', 'twelfthUS', 'thirteenthUS', 'fourteenthUS', 'fifteenthUS', 'sixteenthUS', 'seventeenthUS']
+        else:
+            columns_to_merge['visitationdate'] = ['first_visitation', 'second_US', 'third_US', 'fourth_US', 'fifth_US',
+                                                  'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
+                                                  'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US',
+                                                  'fifteenth_US', 'sixteenth_US', 'seventeenth_US']
+
+            column_names = ['firstvisitation', 'secondUS', 'thirdUS', 'fourthUS', 'fifthUS', 'sixthUS', 'seventhUS',
+                            'eighthUS', 'ninthUS', 'tenthUS', 'eleventhUS', 'twelfthUS', 'thirteenthUS', 'fourteenthUS',
+                            'fifteenthUS', 'sixteenthUS', 'seventeenthUS']
 
         for col in result_df.columns:
 
@@ -102,6 +116,9 @@ class CombineToDataFrame:
             new_df[prefix] = result_df[cols].apply(lambda row: ', '.join(row.dropna().astype(str)), axis=1)
 
         new_df.replace(to_replace='', value=np.nan, inplace=True)
+
+        new_df.rename(columns={'previousinvolvementstatusvisitationy-1': 'previousinvolvementstatusvisitation_y-1'}, inplace=True)
+        new_df.rename(columns={'previousinvolvementstatusvisitationy-2': 'previousinvolvementstatusvisitation_y-2'}, inplace=True)
 
         print("Visitations combined to single data frame")
 
