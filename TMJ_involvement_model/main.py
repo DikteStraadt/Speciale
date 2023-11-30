@@ -81,6 +81,11 @@ if __name__ == '__main__':
         r.write_to_report("n_categories", config['n_categories'])
         r.write_to_report("original data size", f"{data.shape}")
 
+        if config['previous_two_involvement_status']:
+            r.write_to_report("previous values", "y-2")
+        else:
+            r.write_to_report("previous values", "y-15")
+
         ##################### PROCESS DATA #####################
 
         columns_to_encode = ['asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
@@ -120,9 +125,6 @@ if __name__ == '__main__':
                  'previousinvolvementstatusvisitation14', 'previousinvolvementstatusvisitation15']]
 
         data = data.drop('involvementstatus', axis=1)
-
-        if not config["do_include_previous_involvement_status"]:
-            data = data.drop(previous_status.columns, axis=1)
 
         previous_status[['index', 'ID']] = data[['index', 'ID']]
 

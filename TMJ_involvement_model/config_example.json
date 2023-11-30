@@ -8,7 +8,6 @@
     "encoding_embedding": [true],
     "do_embedding": [true],
     "do_conformance_prediction": [true],
-    "do_include_previous_involvement_status": true,
     "previous_two_involvement_status": true,
     "SFS_n_features": 25,
     "cv": 5,
