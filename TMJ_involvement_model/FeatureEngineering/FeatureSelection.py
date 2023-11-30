@@ -20,7 +20,7 @@ def feature_selection(X_train, y_train, X_test, estimator, config):
 
     elif config["feature_selection"] == "clinical":
 
-        clinical_columns = ['painmove', 'laterpalp', 'translation', 'openingmm',
+        clinical_columns = ['previousinvolvementstatusvisitation_y-1', 'previousinvolvementstatusvisitation_y-2', 'painmove', 'laterpalp', 'translation', 'openingmm',
                             'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
                             'Krepitation']
 
@@ -45,7 +45,7 @@ def feature_selection(X_train, y_train, X_test, estimator, config):
 
     elif config["feature_selection"] == "short":
 
-        short_columns = ['pain', 'painmove', 'morningstiffness', 'muscularpain', 'headache', 'openingfunction', 'neckpain', 'neckpalpation', 'laterpalp', 'postpalp', 'translation', 'masseter', 'temporalis', 'ptext', 'ptint', 'tempsen', 'sterno', 'stylomandibularligament', 'asymmetrymasseter', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite']
+        short_columns = ['previousinvolvementstatusvisitation_y-1', 'previousinvolvementstatusvisitation_y-2', 'pain', 'painmove', 'morningstiffness', 'muscularpain', 'headache', 'openingfunction', 'neckpain', 'neckpalpation', 'laterpalp', 'postpalp', 'translation', 'masseter', 'temporalis', 'ptext', 'ptint', 'tempsen', 'sterno', 'stylomandibularligament', 'asymmetrymasseter', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite']
 
         X_train_fs = X_train.loc[:, short_columns]
         X_test_fs = X_test.loc[:, short_columns]
