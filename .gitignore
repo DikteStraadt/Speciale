@@ -1,4 +1,5 @@
 *.xlsx
+*.pkl
 report*.*
 *.csv
 /.idea/

@@ -48,7 +48,7 @@ class EntityEmbeddingTransformer:
         if self.config['do_embedding']:
 
             for idx, featureEm in enumerate(self.embeddingList):
-                string = "entityEmbedding_" + str(idx)
+                string = featureEm
                 data = doEmbedding(data, featureEm, self.target, string, self.config['n_categories'], self.config['embedding_epochs'], self.config['previous_involvement_status'])
 
         else:

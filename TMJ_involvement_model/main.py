@@ -189,6 +189,7 @@ if __name__ == '__main__':
 
         ##################### CLEAN WORKSPACE #####################
 
+        ##
         r.rename_report_file()
         sl.remove_models()
 
