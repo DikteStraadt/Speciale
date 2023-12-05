@@ -4,25 +4,25 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
 
 class NormalizeData:
 
+    def __init__(self, config):
+        self.config = config
+
     def fit(self, data, y=None):
         return self
 
     def transform(self, data, y=None):
 
-        excluded_columns = ['Unnamed: 0', 'studyid', 'visitationdate', 'involvementstatus']
-        columns_to_normalize = data.drop(columns=excluded_columns)
+        columns_to_normalize = ['overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm',
+                                'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
 
-        scaler = RobustScaler()  # StandardScaler(), MinMaxScaler()
-
-        normalized_columns = pd.DataFrame(scaler.fit_transform(columns_to_normalize), columns=columns_to_normalize.columns)
-        normalized_df = pd.concat([data[excluded_columns], normalized_columns], axis=1)
+        scaler = StandardScaler()  # StandardScaler(), MinMaxScaler(), RobustScaler()
+        data[columns_to_normalize] = scaler.fit_transform(data[columns_to_normalize])
 
         # Get ranges for each column
-        summary = normalized_df.describe()
-        column_ranges = summary.loc[['min', 'max']]
+        # column_ranges = data.describe().loc[['min', 'max']]
 
-        print(normalized_df)
+        print("Data normalized")
 
-        return normalized_df
+        return data
 
 

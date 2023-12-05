@@ -1,5 +1,5 @@
 import numpy as np
-import DataCleaning.Utils as u
+import DataCleaning.Utils.Utils as u
 
 class RemoveVisitations:
 
@@ -86,7 +86,16 @@ class InsertZeros:
 
         prefixes_to_exclude = ['study_id', 'type', 'sex', 'columns_to_include', 'first', 'second', 'third', 'fourth',
                                'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth',
-                               'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth']
+                               'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth',
+                               'previous_involvement_status_visitation_0', 'previous_involvement_status_visitation_1',
+                               'previous_involvement_status_visitation_2', 'previous_involvement_status_visitation_3',
+                               'previous_involvement_status_visitation_4', 'previous_involvement_status_visitation_5',
+                               'previous_involvement_status_visitation_6', 'previous_involvement_status_visitation_7',
+                               'previous_involvement_status_visitation_8', 'previous_involvement_status_visitation_9',
+                               'previous_involvement_status_visitation_10', 'previous_involvement_status_visitation_11',
+                               'previous_involvement_status_visitation_12', 'previous_involvement_status_visitation_13',
+                               'previous_involvement_status_visitation_14', 'previous_involvement_status_visitation_15',
+                               'previous_involvement_status_visitation_16']
 
         for visitation_2D in visitations_3D[0:17]:
 
@@ -104,8 +113,8 @@ class InsertZeros:
                     elif type(cell_value) == float:
                         if np.isnan(cell_value):
                             visitation_2D.at[i, column_name] = 0
-                    else:
-                        print(f'Error other data type, row: {i}, column: {column_name}, value: {cell_value}')
+                    #else:
+                    #    print(f'Other data type than string or float, row: {i}, column: {column_name}, value: {cell_value}')
 
         print("Zeros inserted")
 

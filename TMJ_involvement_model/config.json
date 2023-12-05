@@ -1,0 +1,18 @@
+{
+    "previous_involvement_status": ["y-2"],
+    "preprocess_data_2_cat": [false],
+    "preprocess_data_3_cat": [false],
+    "time_slice_2_cat": [["diff", 0, 100, 2400]],
+    "time_slice_3_cat": [["diff", 0, 100, 2500, 1000]],
+    "n_categories": [2],
+    "feature_selection": ["short"],
+    "encoding_embedding": [true],
+    "do_embedding": [true],
+    "do_conformance_prediction": [true],
+    "SFS_n_features": 2,
+    "cv": 2,
+    "iterations": 2,
+    "verbose": 3,
+    "embedding_epochs": 2,
+    "catboost_SFS_iterations": 2
+}
