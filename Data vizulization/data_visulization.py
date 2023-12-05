@@ -90,12 +90,13 @@ for i in range(len(data)):
 print("Distribution of arthritis type of patients:", type_array)
 
 ############### Plotting distribution of JIA types as bar chart ###############
-fig = plt.figure(figsize=(10, 12))
+fig = plt.figure(figsize=(10, 13))
 labels = ['pauci', 'poly', 'systemic', 'enthecitis', 'psoriasis related', 'poly+psoriasis', 'systemic+psoriasis', 'pauci+psoriasis', 'CRMO', 'CRMO+JIA', 'Not registered']
 plt.bar(labels, type_array, color='navy', width=0.4)
 plt.ylabel("Number of patients", fontsize=17)
 plt.title("Subtype age distribution at first clinical examination", fontsize=20)
 plt.xticks(rotation='vertical')
+plt.xlabel("Arthritis subtype", fontsize=15)
 plt.xticks(rotation=45)
 plt.yticks(fontsize=17)
 plt.show()
@@ -123,6 +124,7 @@ labels = ['No TMJ', 'Right TMJ', 'Left TMJ', 'Both TMJ', "Misregistered"]
 plt.bar(labels, status_array, color='navy', width=0.4)
 plt.xticks(rotation='vertical')
 plt.ylabel("Number of patients", fontsize=17)
+plt.xlabel('Overall TMJ involvement score', fontsize=15)
 plt.title("Overall TMJ involvement status distribution", fontsize=20)
 plt.xticks(rotation=45, fontsize=13)
 plt.yticks(fontsize=17)

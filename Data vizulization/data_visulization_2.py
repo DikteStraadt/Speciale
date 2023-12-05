@@ -101,9 +101,9 @@ for row in status_matrix:
     if item == 7:
         overview_array[7]+=1
 
-fig = plt.figure(figsize=(10, 12))
+fig = plt.figure(figsize=(10, 13))
 labels = ['No TMJ involement', 'TMJ arthritis right', 'TMJ arthritis left', 'TMJ arthritis both', 'TMJ chronic right', 'TMJ chronic left', 'TMJ chronic both' ,'Obs arthritis']
-plt.xlabel('Type', fontsize=13)
+plt.xlabel('TMJ involvement score of visitations', fontsize=13)
 plt.ylabel('Number of visitations', fontsize=13)
 plt.title("TMJ involvement status for all examinations", fontsize=20)
 plt.xticks(rotation='vertical')
