@@ -24,6 +24,8 @@ from FeatureEngineering import DrugTransformation as dt
 from FeatureEngineering import mmTransformation as mm
 from ModelEvaluation import CatBoostWrapper as cbw
 from CorrelationMatrix import CorrelationMatrix as cor
+from FeatureEngineering import InverseNormalization as i
+from FeatureEngineering import InverseEmbeddingTransformation as ie
 
 warnings.filterwarnings('ignore')
 
@@ -158,11 +160,18 @@ if __name__ == '__main__':
             ("catboost", cat.CatBoost(X_train, X_test, y_train, y_test, config))
         ])
 
+        ##################### INVERSE TRANSFORM FEATURES #####################
         pipeline.transform(data)
+        inverse_transform_pipeline = Pipeline(steps=[
+            ("inverse encoding", ie.ReverseEmbeddingTransformer),
+            ("inverse normalization", i.InverseNormalizeData),
+        ])
 
+        data = inverse_transform_pipeline.transform(data)
         d.export_data(data, f"Temp/{id} inverse transformed data.xlsx")
-        r.write_to_report("timestamp end", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
 
+        ##################### UTILS AND FIND BEST MODEL #####################
+        r.write_to_report("timestamp end", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
         report = r.read_report()
         best_model = ev.find_best_model()
         best_model_name = sl.rename_model(best_model, report)
