@@ -163,8 +163,8 @@ if __name__ == '__main__':
         ##################### INVERSE TRANSFORM FEATURES #####################
         pipeline.transform(data)
         inverse_transform_pipeline = Pipeline(steps=[
-            ("inverse encoding", ie.ReverseEmbeddingTransformer),
-            ("inverse normalization", i.InverseNormalizeData),
+            ("inverse encoding", ie.ReverseEmbeddingTransformer(columns_to_encode)),
+            ("inverse normalization", i.InverseNormalizeData()),
         ])
 
         data = inverse_transform_pipeline.transform(data)

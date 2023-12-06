@@ -3,9 +3,6 @@ from sklearn.preprocessing import StandardScaler
 
 class InverseNormalizeData:
 
-    def __init__(self, config):
-        self.config = config
-
     def fit(self, data, y=None):
         return self
 
