@@ -43,7 +43,8 @@ def rename_report_file():
     json_data = json.loads(string_data)
     new_filename = f"Results/{json_data['id']} report (categories={json_data['n_categories']}, slicing={str(json_data['time slice'])}, previous values={json_data['previous values']}, encoding={json_data['encoding']}, features={json_data['feature selection']} {json_data['timestamp end']}.json"
     os.rename(path, new_filename)
-    os.rename(f"Temp/{json_data['id']} data.xlsx", f"Results/{json_data['id']} data.xlsx")
+    os.rename(f"Temp/{json_data['id']} transformed data.xlsx", f"Results/{json_data['id']} transformed data.xlsx")
+    os.rename(f"Temp/{json_data['id']} inverse transformed data.xlsx", f"Results/{json_data['id']} inverse transformed data.xlsx")
 
 def read_report():
 
