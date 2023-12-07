@@ -15,4 +15,6 @@ class ReverseEmbeddingTransformer:
             for key, value in dict.items():
                 data[x].replace(value, key, inplace=True)
 
-        print('Data back to original format!')
+        print('Data inverse transformed back from embedded to original format!')
+
+        return data

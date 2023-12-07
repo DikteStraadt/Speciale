@@ -77,8 +77,16 @@ class CombineToDataFrame:
         result_df = pd.concat(data_frames, axis=0, ignore_index=True)
 
         columns_to_merge = {}
+        if self.previous_two_values == "y-1":
+            columns_to_merge['visitationdate'] = ['second_US', 'third_US', 'fourth_US', 'fifth_US',
+                                                  'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
+                                                  'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US',
+                                                  'fifteenth_US', 'sixteenth_US', 'seventeenth_US']
 
-        if self.previous_two_values == "y-2":
+            column_names = ['secondUS', 'thirdUS', 'fourthUS', 'fifthUS', 'sixthUS', 'seventhUS',
+                        'eighthUS', 'ninthUS', 'tenthUS', 'eleventhUS', 'twelfthUS', 'thirteenthUS', 'fourteenthUS', 'fifteenthUS', 'sixteenthUS', 'seventeenthUS']
+
+        elif self.previous_two_values == "y-2":
             columns_to_merge['visitationdate'] = ['third_US', 'fourth_US', 'fifth_US',
                                                   'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
                                                   'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US',

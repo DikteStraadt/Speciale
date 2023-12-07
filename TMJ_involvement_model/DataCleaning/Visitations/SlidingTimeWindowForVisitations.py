@@ -51,13 +51,13 @@ def sliding_time_window_y_15_visitations(visitations_3D):
 
     return modified_dataframes
 
-def sliding_time_window_y_2_visitations(visitations_3D):
+def sliding_time_window_y(visitations_3D, N):
     modified_dataframes = []
 
     for i, dataframe in enumerate(visitations_3D):
         current_dataframe = dataframe.copy()
 
-        if i > 1:
+        if i > 0:
             previous_status_values = []
 
             for index, row in current_dataframe.iterrows():
@@ -66,7 +66,7 @@ def sliding_time_window_y_2_visitations(visitations_3D):
                 previous_status_value = []
 
                 prev_i = i-1
-                while len(previous_status_value) < 2 and prev_i >= 0:
+                while len(previous_status_value) < N and prev_i >= 0:
                     prev_dataframe = visitations_3D[prev_i]
                     previous_status_column_name = f"involvement_status_{prev_i}"
 
@@ -79,17 +79,25 @@ def sliding_time_window_y_2_visitations(visitations_3D):
                 previous_status_values.append(previous_status_value)
 
             current_dataframe['previous_status'] = previous_status_values
-            current_dataframe = current_dataframe[current_dataframe['previous_status'].apply(lambda x: len(str(x)) >= 9)]
+
+            if N == 1:
+                current_dataframe = current_dataframe[current_dataframe['previous_status'].apply(lambda x: len(str(x)) >= 4)]
+            elif N == 2:
+                current_dataframe = current_dataframe[current_dataframe['previous_status'].apply(lambda x: len(str(x)) >= 9)]
+
             modified_dataframes.append(current_dataframe)
 
-    columns_to_add = ['previous_involvement_status_visitation_y-1', 'previous_involvement_status_visitation_y-2']
+    if N == 1:
+        columns_to_add = ['previous_involvement_status_visitation_y-1']
+    elif N == 2:
+        columns_to_add = ['previous_involvement_status_visitation_y-1', 'previous_involvement_status_visitation_y-2']
+
     for dataframe in enumerate(modified_dataframes):
 
         dataframe[1][columns_to_add] = pd.DataFrame([], columns=columns_to_add)
 
-        for j in range(2):
-
-            column_name = f'previous_involvement_status_visitation_y-{j+1}'
+        for j in range(N):
+            column_name = f'previous_involvement_status_visitation_y-{j + 1}'
 
             dataframe[1][column_name] = dataframe[1]['previous_status'].apply(
                 lambda x: x[j] if isinstance(x, list) and j < len(x) else np.nan
@@ -97,7 +105,7 @@ def sliding_time_window_y_2_visitations(visitations_3D):
 
         dataframe = dataframe[1]
 
-    print("Previous involvement status' converted from list to columns (two previous status)")
+    print("Previous involvement status' converted from list to columns (previous status)")
 
     return modified_dataframes
 
@@ -110,9 +118,10 @@ class SlidingTimeWindowForVisitations:
         return self
 
     def transform(self, visitations_3D, y=None):
-
-        if self.previous_two_values == "y-2":
-            transformed_data = sliding_time_window_y_2_visitations(visitations_3D)
+        if self.previous_two_values == "y-1":
+            transformed_data = sliding_time_window_y(visitations_3D, 1)
+        elif self.previous_two_values == "y-2":
+            transformed_data = sliding_time_window_y(visitations_3D, 2)
         elif self.previous_two_values == "y-15":
             transformed_data = sliding_time_window_y_15_visitations(visitations_3D)
         else:

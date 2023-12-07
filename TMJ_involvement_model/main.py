@@ -2,6 +2,7 @@ import string
 import warnings
 import random
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 from Utils import Configuration as c, Report as r, SaveLoadModel as sl
 
@@ -24,7 +25,6 @@ from FeatureEngineering import DrugTransformation as dt
 from FeatureEngineering import mmTransformation as mm
 from ModelEvaluation import CatBoostWrapper as cbw
 from CorrelationMatrix import CorrelationMatrix as cor
-from FeatureEngineering import InverseNormalization as i
 from FeatureEngineering import InverseEmbeddingTransformation as ie
 
 warnings.filterwarnings('ignore')
@@ -93,6 +93,8 @@ if __name__ == '__main__':
         else:
             encoding_method = e.OneHotEncode(columns_to_encode)
 
+        scaler = StandardScaler()  # StandardScaler(), MinMaxScaler(), RobustScaler()
+
         feature_engineering_pipeline = Pipeline(steps=[
             ("Opening transformer", mm.OpeningTransformer()),
             ("Protrusion transformer", mm.ProtrusionTransformer()),
@@ -100,7 +102,7 @@ if __name__ == '__main__':
             ("Convert type", tc.ConvertToCategories(config)),
             ("Merging features", fm.MergeFeatures()),
             ("Encoding", encoding_method),
-            ("Normalization", n.NormalizeData(config)),
+            ("Normalization", n.NormalizeData(config, scaler, True)),
         ])
 
         data = feature_engineering_pipeline.transform(data)
@@ -109,7 +111,10 @@ if __name__ == '__main__':
 
         target = data['involvementstatus']
 
-        if config["previous_involvement_status"] == "y-2":
+        if config["previous_involvement_status"] == "y-1":
+            previous_status = data[['previousstatus', 'previousinvolvementstatusvisitation_y-1']]
+            data = data.drop('previousstatus', axis=1)
+        elif config["previous_involvement_status"] == "y-2":
             previous_status = data[['previousstatus', 'previousinvolvementstatusvisitation_y-1', 'previousinvolvementstatusvisitation_y-2']]
             data = data.drop('previousstatus', axis=1)
         elif config["previous_involvement_status"] == "y-15":
@@ -154,23 +159,26 @@ if __name__ == '__main__':
 
         ##################### PERFORM FEATURE SELECTION AND TRAIN MODEL #####################
 
-        pipeline = Pipeline(steps=[
+        ml_pipeline = Pipeline(steps=[
             ("randomforest", rf.RandomForest(X_train, X_test, y_train, y_test, config)),
             ("xgboost", xg.XGBoostClassifier(X_train, X_test, y_train, y_test, config)),
             ("catboost", cat.CatBoost(X_train, X_test, y_train, y_test, config))
         ])
 
+        ml_pipeline.transform(data)
+
         ##################### INVERSE TRANSFORM FEATURES #####################
-        pipeline.transform(data)
+
         inverse_transform_pipeline = Pipeline(steps=[
             ("inverse encoding", ie.ReverseEmbeddingTransformer(columns_to_encode)),
-            ("inverse normalization", i.InverseNormalizeData()),
+            ("inverse normalization", n.NormalizeData(config, scaler, False)),
         ])
 
         data = inverse_transform_pipeline.transform(data)
         d.export_data(data, f"Temp/{id} inverse transformed data.xlsx")
 
         ##################### UTILS AND FIND BEST MODEL #####################
+
         r.write_to_report("timestamp end", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
         report = r.read_report()
         best_model = ev.find_best_model()

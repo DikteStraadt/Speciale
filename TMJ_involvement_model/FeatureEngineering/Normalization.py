@@ -4,24 +4,24 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
 
 class NormalizeData:
 
-    def __init__(self, config):
+    def __init__(self, config, scaler, transform_bool):
         self.config = config
+        self.scaler = scaler
+        self.transform_bool = transform_bool
 
     def fit(self, data, y=None):
         return self
 
     def transform(self, data, y=None):
 
-        columns_to_normalize = ['overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm',
-                                'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
+        columns_to_normalize = ['overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
 
-        scaler = StandardScaler()  # StandardScaler(), MinMaxScaler(), RobustScaler()
-        data[columns_to_normalize] = scaler.fit_transform(data[columns_to_normalize])
-
-        # Get ranges for each column
-        # column_ranges = data.describe().loc[['min', 'max']]
-
-        print("Data normalized")
+        if self.transform_bool:
+            data[columns_to_normalize] = self.scaler.fit_transform(data[columns_to_normalize])
+            print("Data normalized")
+        else:
+            data[columns_to_normalize] = self.scaler.inverse_transform(data[columns_to_normalize])
+            print("Data inverse normalized")
 
         return data
 
