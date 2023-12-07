@@ -93,7 +93,7 @@ if __name__ == '__main__':
         else:
             encoding_method = e.OneHotEncode(columns_to_encode)
 
-        scaler = StandardScaler()  # StandardScaler(), MinMaxScaler(), RobustScaler()
+        scaler = StandardScaler()
 
         feature_engineering_pipeline = Pipeline(steps=[
             ("Opening transformer", mm.OpeningTransformer()),
