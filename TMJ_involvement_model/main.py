@@ -134,6 +134,7 @@ if __name__ == '__main__':
             cor.make_previous_status_correlation_matrix(previous_status, config)
             exit()
 
+        d.export_data(data, f"Temp/{id} transformed data.xlsx")
         data = data.drop('involvementstatus', axis=1)
 
         X_train, X_rem, y_train, y_rem = train_test_split(data, target, train_size=0.8, random_state=42, shuffle=True)
@@ -152,7 +153,6 @@ if __name__ == '__main__':
         data_train = pd.concat([y_train, X_train], axis=1)
         data_train = data_train.drop('index', axis=1)
         data_train = smote_pipeline.transform(data_train)
-        d.export_data(data, f"Temp/{id} transformed data.xlsx")
 
         y_train = data_train['involvementstatus']
         X_train = data_train.drop(columns=['involvementstatus'], axis=1)
@@ -175,7 +175,8 @@ if __name__ == '__main__':
         ])
 
         data = inverse_transform_pipeline.transform(data)
-        d.export_data(data, f"Temp/{id} inverse transformed data.xlsx")
+        data_for_export = pd.concat([data, target], axis=1)
+        d.export_data(data_for_export, f"Temp/{id} inverse transformed data.xlsx")
 
         ##################### UTILS AND FIND BEST MODEL #####################
 
