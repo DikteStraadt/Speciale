@@ -148,6 +148,7 @@ if __name__ == '__main__':
         ##################### UPSAMPLE DATA #####################
 
         smote_pipeline = Pipeline(steps=[
+            ("dummy classifier", dc.myDummyClassifier(X_train, X_test, y_train, y_test, config)),
             ("Sampling", s.SMOTE(config))
         ])
 
@@ -161,7 +162,6 @@ if __name__ == '__main__':
         ##################### PERFORM FEATURE SELECTION AND TRAIN MODEL #####################
 
         ml_pipeline = Pipeline(steps=[
-            ("dummy classifier", dc.myDummyClassifier(X_train, X_test, y_train, y_test, config)),
             ("catboost", cat.CatBoost(X_train, X_test, y_train, y_test, config)),
             ("randomforest", rf.RandomForest(X_train, X_test, y_train, y_test, config)),
             ("xgboost", xg.XGBoostClassifier(X_train, X_test, y_train, y_test, config))
