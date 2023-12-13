@@ -29,6 +29,4 @@ class myDummyClassifier:
         r.write_to_report(f"(dummy) classification report", classification_report(self.y_test, y_pred))
         r.write_to_report(f"(dummy) accuracy", f1_score(self.y_test, y_pred, average='micro'))
 
-        exit()
-
         return data
