@@ -15,6 +15,7 @@ from FeatureEngineering import Sampling as s
 from ModelTraining import RandomForest as rf
 from ModelTraining import XGBoost as xg
 from ModelTraining import CatBoost as cat
+from ModelTraining import DummyClassifier as dc
 from sklearn.pipeline import Pipeline
 from FeatureEngineering import TypeConverter as tc
 from DataCleaning import PreprocessData as p
@@ -160,9 +161,10 @@ if __name__ == '__main__':
         ##################### PERFORM FEATURE SELECTION AND TRAIN MODEL #####################
 
         ml_pipeline = Pipeline(steps=[
+            ("dummy classifier", dc.myDummyClassifier(X_train, X_test, y_train, y_test, config)),
+            ("catboost", cat.CatBoost(X_train, X_test, y_train, y_test, config)),
             ("randomforest", rf.RandomForest(X_train, X_test, y_train, y_test, config)),
-            ("xgboost", xg.XGBoostClassifier(X_train, X_test, y_train, y_test, config)),
-            ("catboost", cat.CatBoost(X_train, X_test, y_train, y_test, config))
+            ("xgboost", xg.XGBoostClassifier(X_train, X_test, y_train, y_test, config))
         ])
 
         ml_pipeline.transform(data)
