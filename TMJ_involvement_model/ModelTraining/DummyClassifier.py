@@ -27,7 +27,7 @@ class myDummyClassifier:
 
         r.write_to_report(f"(dummy) confusion matrix", confusion_matrix(self.y_test, y_pred).tolist())
         r.write_to_report(f"(dummy) classification report", classification_report(self.y_test, y_pred))
-        r.write_to_report(f"(dummy) f1 micro", f1_score(self.y_test, y_pred, average='micro'))
+        r.write_to_report(f"(dummy) accuracy", f1_score(self.y_test, y_pred, average='micro'))
 
         exit()
 
