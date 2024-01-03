@@ -106,32 +106,9 @@ class ConvertToCategories:
             'transversal': CategoricalDtype(ordered=False),
         }
 
-        if self.config["previous_involvement_status"] == "y-1":
-            column_categories['previousinvolvementstatusvisitation_y-1'] = CategoricalDtype(ordered=False)
-        elif self.config["previous_involvement_status"] == "y-2":
-            column_categories['previousinvolvementstatusvisitation_y-1'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation_y-2'] = CategoricalDtype(ordered=False)
-        elif self.config["previous_involvement_status"] == "y-15":
-            column_categories['previousinvolvementstatusvisitation0'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation1'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation2'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation3'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation4'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation5'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation6'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation7'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation8'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation9'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation10'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation11'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation12'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation13'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation14'] = CategoricalDtype(ordered=False)
-            column_categories['previousinvolvementstatusvisitation15'] = CategoricalDtype(ordered=False)
-
         data = data.astype(column_categories)
 
-        non_categorical_columns = ['ID', 'ageatvisitation', 'previousstatus', 'difftdate', 'overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
+        non_categorical_columns = ['ID', 'ageatvisitation', 'overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
         categorical_columns = [col for col in data.columns if col not in non_categorical_columns]
 
         for col in categorical_columns:

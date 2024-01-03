@@ -25,11 +25,9 @@ class XGBoostClassifier:
         self.X_train = self.X_train.drop(columns=['ID'])
         self.X_train = self.X_train.drop(columns=['sex'])
         self.X_train = self.X_train.drop(columns=['ageatvisitation'])
-        self.X_train = self.X_train.drop(columns=['difftdate'])
         self.X_test = self.X_test.drop(columns=['ID'])
         self.X_test = self.X_test.drop(columns=['sex'])
         self.X_test = self.X_test.drop(columns=['ageatvisitation'])
-        self.X_test = self.X_test.drop(columns=['difftdate'])
 
         data_fs = f.feature_selection(self.X_train, self.y_train, self.X_test, xgb.XGBClassifier(), self.config)
 
@@ -39,10 +37,7 @@ class XGBoostClassifier:
         r.write_to_report("(xgboost) n_features", len(self.X_train.columns))
         r.write_to_report("(xgboost) feature names", self.X_train.columns.tolist())
 
-        if self.config['n_categories'] == 2:
-            xgboost_objective = 'binary:logistic'
-        elif self.config['n_categories'] == 3:
-            xgboost_objective = 'multi:softmax'
+        xgboost_objective = 'binary:logistic'
 
         model = Pipeline(steps=[
             ("xgboost", xgb.XGBClassifier()),

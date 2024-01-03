@@ -25,11 +25,9 @@ class RandomForest:
         self.X_train = self.X_train.drop(columns=['ID'])
         self.X_train = self.X_train.drop(columns=['sex'])
         self.X_train = self.X_train.drop(columns=['ageatvisitation'])
-        self.X_train = self.X_train.drop(columns=['difftdate'])
         self.X_test = self.X_test.drop(columns=['ID'])
         self.X_test = self.X_test.drop(columns=['sex'])
         self.X_test = self.X_test.drop(columns=['ageatvisitation'])
-        self.X_test = self.X_test.drop(columns=['difftdate'])
 
         data_fs = f.feature_selection(self.X_train, self.y_train, self.X_test, RandomForestClassifier(), self.config)
 

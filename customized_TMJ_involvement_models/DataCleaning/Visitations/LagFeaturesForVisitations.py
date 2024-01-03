@@ -5,8 +5,8 @@ import pandas as pd
 
 class LagFeaturesForVisitations:
 
-    def __init__(self, previous_two_values):
-        self.previous_two_values = previous_two_values
+    def __init__(self, lag_features):
+        self.lag_features = lag_features
 
     def fit(self, visitations_3D, y=None):
         return self

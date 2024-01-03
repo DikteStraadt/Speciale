@@ -14,7 +14,7 @@ def preprocess_data(lag_features):
         ("Edit misregistered data", cd.EditData()),
         ("Remove Patients", cd.RemovePatients()),
         ("Convert timestamps", cd.ConvertTimestamps()),
-        ("Calculate age and diff for visitation dates", ca.CalculateAge()),
+        ("Calculate age for visitation dates", ca.CalculateAge()),
         ("Read visitations", v.ReadVisitations()),
         ("Remove visitations", cv.RemoveVisitations()),
         ("Convert visitation status", cv.ConvertVisitationStatus()),

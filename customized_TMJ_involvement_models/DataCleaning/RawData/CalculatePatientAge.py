@@ -22,6 +22,6 @@ class CalculateAge:
                 except pd.errors.ParserError:
                     print(f"Warning: Failed to parse dates in column {col}")
 
-        print("Diff dates calculated for time slicing")
+        print("Age has been calculated and added as feature")
 
         return data

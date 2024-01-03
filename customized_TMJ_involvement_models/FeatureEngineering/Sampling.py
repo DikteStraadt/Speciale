@@ -19,27 +19,20 @@ class SMOTE:
         id_column = data["ID"]
         sex_column = data["sex"]
         age_column = data["ageatvisitation"]
-        diff_column = data["difftdate"]
         y = data["involvementstatus"]
-        X = data.drop(columns=["sex", "involvementstatus", "ID", "ageatvisitation", "difftdate"])
+        X = data.drop(columns=["sex", "involvementstatus", "ID", "ageatvisitation"])
         print("Before SMOTE: ", Counter(y))
 
         non_categorical_columns = ['overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
         categorical_columns = [col for col in X.columns if col not in non_categorical_columns]
 
-        if self.config['n_categories'] == 2:
-            sampling_strategy = {1: self.config['time_slice_2_cat'][3]}
-            r.write_to_report("smote values", self.config['time_slice_2_cat'][3])
-        elif self.config['n_categories'] == 3:
-            sampling_strategy = {1: self.config['time_slice_3_cat'][3], 2: self.config['time_slice_3_cat'][4]}
-            r.write_to_report("smote values", [self.config['time_slice_3_cat'][3], self.config['time_slice_3_cat'][4]])
-        else:
-            sampling_strategy = {}
+        sampling_strategy = {1: self.config['smote_values'][0]}
+        r.write_to_report("smote values", self.config['smote_values'][0])
 
         smote = SMOTENC(categorical_features=categorical_columns, random_state=42, sampling_strategy=sampling_strategy)
         X_res, y_res = smote.fit_resample(X, y)
 
-        final_df = pd.concat([id_column.reset_index(drop=True),sex_column.reset_index(drop=True), age_column.reset_index(drop=True), diff_column.reset_index(drop=True), y_res.reset_index(drop=True), X_res.reset_index(drop=True)], axis=1)  #".reset_index(drop=True)
+        final_df = pd.concat([id_column.reset_index(drop=True),sex_column.reset_index(drop=True), age_column.reset_index(drop=True), y_res.reset_index(drop=True), X_res.reset_index(drop=True)], axis=1)
         print("After SMOTE: ", Counter(y_res))
 
         r.write_to_report("smote data size", f"{final_df.shape}")

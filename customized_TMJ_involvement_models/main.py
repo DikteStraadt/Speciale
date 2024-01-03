@@ -8,7 +8,7 @@ from Utils import Configuration as c, Report as r, SaveLoadModel as sl
 
 from datetime import datetime
 from sklearn.model_selection import train_test_split
-from DataCleaning.RawData import ImportExportData as d, CalculatePatientAge as f
+from DataCleaning.RawData import ImportExportData as d
 from FeatureEngineering import Normalization as n
 from FeatureEngineering import Encoding as e
 from FeatureEngineering import Sampling as s
@@ -60,19 +60,12 @@ if __name__ == '__main__':
         r.write_to_report("id", id)
         r.write_to_report("timestamp start", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
         r.write_to_report("timestamp end", "")  # placeholder
-        r.write_to_report("n_categories", config['n_categories'])
         r.write_to_report("original data size", f"{data.shape}")
-        r.write_to_report("previous values", config['previous_involvement_status'])
+        r.write_to_report("lag features", config['lag_features'])
 
         ##################### PROCESS DATA #####################
 
         columns_to_encode = ['asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
-
-        if config['encoding_embedding']:
-            encoding_method = e.EntityEmbeddingTransformer('involvementstatus', columns_to_encode, config)
-        else:
-            encoding_method = e.OneHotEncode(columns_to_encode)
-
         scaler = StandardScaler()
 
         feature_engineering_pipeline = Pipeline(steps=[
@@ -81,7 +74,7 @@ if __name__ == '__main__':
             ("New drug categories", dt.DrugTransformer()),
             ("Convert type", tc.ConvertToCategories(config)),
             ("Merging features", fm.MergeFeatures()),
-            ("Encoding", encoding_method),
+            ("Encoding", e.EntityEmbeddingTransformer('involvementstatus', columns_to_encode, config)),
             ("Normalization", n.NormalizeData(config, scaler, True)),
         ])
 
@@ -90,30 +83,6 @@ if __name__ == '__main__':
         ##################### SPLIT DATA #####################
 
         target = data['involvementstatus']
-
-        if config["previous_involvement_status"] == "y-1":
-            previous_status = data[['previousstatus', 'previousinvolvementstatusvisitation_y-1']]
-            data = data.drop('previousstatus', axis=1)
-        elif config["previous_involvement_status"] == "y-2":
-            previous_status = data[['previousstatus', 'previousinvolvementstatusvisitation_y-1', 'previousinvolvementstatusvisitation_y-2']]
-            data = data.drop('previousstatus', axis=1)
-        elif config["previous_involvement_status"] == "y-15":
-            previous_status = data[
-                ['previousstatus', 'previousinvolvementstatusvisitation0', 'previousinvolvementstatusvisitation1',
-                 'previousinvolvementstatusvisitation2', 'previousinvolvementstatusvisitation3',
-                 'previousinvolvementstatusvisitation4', 'previousinvolvementstatusvisitation5',
-                 'previousinvolvementstatusvisitation6', 'previousinvolvementstatusvisitation7',
-                 'previousinvolvementstatusvisitation8', 'previousinvolvementstatusvisitation9',
-                 'previousinvolvementstatusvisitation10', 'previousinvolvementstatusvisitation11',
-                 'previousinvolvementstatusvisitation12', 'previousinvolvementstatusvisitation13',
-                 'previousinvolvementstatusvisitation14', 'previousinvolvementstatusvisitation15']]
-            data = data.drop('previousstatus', axis=1)
-
-            ##################### CORRELATION MATRIX FOR PREVIOUS STATUS' ####################
-            previous_status[['index', 'ID']] = data[['index', 'ID']]
-            cor.make_previous_status_correlation_matrix(previous_status, config)
-            exit()
-
         d.export_data(data, f"Temp/{id} transformed data.xlsx")
         data = data.drop('involvementstatus', axis=1)
 
@@ -132,7 +101,7 @@ if __name__ == '__main__':
         ])
 
         data_train = pd.concat([y_train, X_train], axis=1)
-        data_train = data_train.drop('index', axis=1)
+        #data_train = data_train.drop('index', axis=1)
         data_train = smote_pipeline.transform(data_train)
 
         y_train = data_train['involvementstatus']
@@ -168,23 +137,20 @@ if __name__ == '__main__':
 
         ##################### PERFORM CONFORMANCE PREDICTION #####################
 
-        if config["do_conformance_prediction"]:
+        test_model = sl.load_model(best_model_name)
+        test_est = test_model.best_estimator_
+        test_model = test_est.named_steps[best_model]
 
-            test_model = sl.load_model(best_model_name)
-            test_est = test_model.best_estimator_
-            test_model = test_est.named_steps[best_model]
-            n_categories = 2 if config['n_categories'] == 2 else 3
-
-            if best_model == "random forest":
-                feature_names = test_model.feature_names_in_
-                cp.conformalPrediction(test_model, feature_names, X_valid, y_valid, X_test, y_test, n_categories)
-            elif best_model == "xgboost":
-                feature_names = test_model.feature_names_in_
-                cp.conformalPrediction(test_model, feature_names, X_valid, y_valid, X_test, y_test, n_categories)
-            elif best_model == "catboost":
-                feature_names = test_model.feature_names_
-                wrapper_model = cbw.CatBoostWrapper(test_model, feature_names_=feature_names, classes_=test_model.classes_)
-                cp.conformalPrediction(wrapper_model, feature_names, X_valid, y_valid, X_test, y_test, n_categories)
+        if best_model == "random forest":
+            feature_names = test_model.feature_names_in_
+            cp.conformalPrediction(test_model, feature_names, X_valid, y_valid, X_test, y_test)
+        elif best_model == "xgboost":
+            feature_names = test_model.feature_names_in_
+            cp.conformalPrediction(test_model, feature_names, X_valid, y_valid, X_test, y_test)
+        elif best_model == "catboost":
+            feature_names = test_model.feature_names_
+            wrapper_model = cbw.CatBoostWrapper(test_model, feature_names_=feature_names, classes_=test_model.classes_)
+            cp.conformalPrediction(wrapper_model, feature_names, X_valid, y_valid, X_test, y_test)
 
         ##################### CLEAN WORKSPACE #####################
 

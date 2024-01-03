@@ -1,9 +1,9 @@
 {
-    "preprocess_data": [true],
+    "preprocess_data": [false],
     "lag_features": [false],
-    "feature_selection": ["short"],
+    "feature_selection": ["ultra_short_feature_list"],
     "do_embedding": [true],
-    "smote_values": [[100, 2400]],
+    "smote_values": [[2400]],
     "SFS_n_features": 2,
     "cv": 2,
     "iterations": 2,

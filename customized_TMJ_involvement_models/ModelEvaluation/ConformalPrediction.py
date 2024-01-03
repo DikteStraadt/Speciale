@@ -5,16 +5,13 @@ from mapie.metrics import classification_coverage_score
 from mapie.metrics import classification_mean_width_score
 from Utils import Report as r
 
-def conformalPrediction(model, featurenames, X_calib, y_calib, X_new, y_new, n_categories):
+def conformalPrediction(model, featurenames, X_calib, y_calib, X_new, y_new):
     X_calib = X_calib[featurenames]
     X_new = X_new[featurenames]
     y_calib = y_calib.astype(int)
     y_new = y_new.astype(int)
 
-    if n_categories == 2:
-        mapie_score = MapieClassifier(model, cv="prefit", method='score')
-    else:
-        mapie_score = MapieClassifier(model, cv="prefit", method='raps')
+    mapie_score = MapieClassifier(model, cv="prefit", method='score')
     mapie_score.fit(X_calib, y_calib)  # by default 20% of regularization data is used for regularization
     y_pred, y_set = mapie_score.predict(X_new, alpha=0.05, include_last_label="randomized")
     y_set = np.squeeze(y_set)

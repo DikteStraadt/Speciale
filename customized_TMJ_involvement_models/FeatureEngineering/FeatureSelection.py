@@ -18,36 +18,17 @@ def feature_selection(X_train, y_train, X_test, estimator, config):
 
         return X_train_fs, X_test_fs
 
-    elif config["feature_selection"] == "clinical":
-        if config["previous_involvement_status"] == "y-1":
-            clinical_columns = ['previousinvolvementstatusvisitation_y-1', 'painmove', 'laterpalp', 'translation', 'openingmm',
-                                'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
-                                'Krepitation']
-        elif config["previous_involvement_status"] == "y-2":
-            clinical_columns = ['previousinvolvementstatusvisitation_y-1', 'previousinvolvementstatusvisitation_y-2', 'painmove', 'laterpalp', 'translation', 'openingmm',
-                                'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
-                                'Krepitation']
-        elif config["previous_involvement_status"] == "y-15":
-            clinical_columns = ['previousinvolvementstatusvisitation0', 'previousinvolvementstatusvisitation1',
-                                'previousinvolvementstatusvisitation2', 'previousinvolvementstatusvisitation3',
-                                'previousinvolvementstatusvisitation4', 'previousinvolvementstatusvisitation5',
-                                'previousinvolvementstatusvisitation6', 'previousinvolvementstatusvisitation7',
-                                'previousinvolvementstatusvisitation8', 'previousinvolvementstatusvisitation9',
-                                'previousinvolvementstatusvisitation10', 'previousinvolvementstatusvisitation11',
-                                'previousinvolvementstatusvisitation12', 'previousinvolvementstatusvisitation13',
-                                'previousinvolvementstatusvisitation14', 'previousinvolvementstatusvisitation15',
-                                'painmove', 'laterpalp', 'translation', 'openingmm',
-                                'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm',
-                                'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
-                                'Krepitation']
-        elif config["previous_involvement_status"] == "no":
-            clinical_columns = ['painmove', 'laterpalp', 'translation', 'openingmm',
+    elif config["feature_selection"] == "ultra_short_feature_list":
+        if config["lag_features"]:
+            print("Feature selection lag feature Do Something")
+        else:
+            ultra_short_features = ['painmove', 'laterpalp', 'translation', 'openingmm',
                                 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm',
                                 'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
                                 'Krepitation']
 
-        X_train_fs = X_train.loc[:, clinical_columns]
-        X_test_fs = X_test.loc[:, clinical_columns]
+        X_train_fs = X_train.loc[:, ultra_short_features]
+        X_test_fs = X_test.loc[:, ultra_short_features]
 
         extra = ['asybasis', 'asybasis_0', 'asybasis_1', 'asybasis_2', 'asybasis_3', 'asybasis_4',
                  'asypupilline', 'asypupilline_0', 'asypupilline_1', 'asypupilline_2', 'asypupilline_3', 'asypupilline_4',
@@ -61,68 +42,7 @@ def feature_selection(X_train, y_train, X_test, estimator, config):
                 X_train_fs = pd.concat([X_train_fs, X_train[column]], axis=1)
                 X_test_fs = pd.concat([X_test_fs, X_test[column]], axis=1)
 
-        r.write_to_report("feature selection", "clinical")
-
-        return X_train_fs, X_test_fs
-
-    elif config["feature_selection"] == "short":
-
-        short_columns = ['previousinvolvementstatusvisitation_y-1', 'previousinvolvementstatusvisitation_y-2', 'pain', 'painmove', 'morningstiffness', 'muscularpain', 'headache', 'openingfunction', 'neckpain', 'neckpalpation', 'laterpalp', 'postpalp', 'translation', 'masseter', 'temporalis', 'ptext', 'ptint', 'tempsen', 'sterno', 'stylomandibularligament', 'asymmetrymasseter', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite']
-        if config["previous_involvement_status"] == "y-1":
-            short_columns = ['previousinvolvementstatusvisitation_y-1',
-                             'pain', 'painmove', 'morningstiffness', 'muscularpain', 'headache', 'openingfunction',
-                             'neckpain', 'neckpalpation', 'laterpalp', 'postpalp', 'translation', 'masseter',
-                             'temporalis', 'ptext', 'ptint', 'tempsen', 'sterno', 'stylomandibularligament',
-                             'asymmetrymasseter', 'openingmm', 'opening', 'protrusionmm', 'protrusion',
-                             'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite']
-        elif config["previous_involvement_status"] == "y-2":
-            short_columns = ['previousinvolvementstatusvisitation_y-1', 'previousinvolvementstatusvisitation_y-2',
-                             'pain', 'painmove', 'morningstiffness', 'muscularpain', 'headache', 'openingfunction',
-                             'neckpain', 'neckpalpation', 'laterpalp', 'postpalp', 'translation', 'masseter',
-                             'temporalis', 'ptext', 'ptint', 'tempsen', 'sterno', 'stylomandibularligament',
-                             'asymmetrymasseter', 'openingmm', 'opening', 'protrusionmm', 'protrusion',
-                             'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite']
-        elif config["previous_involvement_status"] == "y-15":
-            short_columns = ['previousinvolvementstatusvisitation0', 'previousinvolvementstatusvisitation1',
-                                'previousinvolvementstatusvisitation2', 'previousinvolvementstatusvisitation3',
-                                'previousinvolvementstatusvisitation4', 'previousinvolvementstatusvisitation5',
-                                'previousinvolvementstatusvisitation6', 'previousinvolvementstatusvisitation7',
-                                'previousinvolvementstatusvisitation8', 'previousinvolvementstatusvisitation9',
-                                'previousinvolvementstatusvisitation10', 'previousinvolvementstatusvisitation11',
-                                'previousinvolvementstatusvisitation12', 'previousinvolvementstatusvisitation13',
-                                'previousinvolvementstatusvisitation14', 'previousinvolvementstatusvisitation15',
-                                'pain', 'painmove', 'morningstiffness', 'muscularpain', 'headache', 'openingfunction',
-                                'neckpain', 'neckpalpation', 'laterpalp', 'postpalp', 'translation', 'masseter',
-                                'temporalis', 'ptext', 'ptint', 'tempsen', 'sterno', 'stylomandibularligament',
-                                'asymmetrymasseter', 'openingmm', 'opening', 'protrusionmm', 'protrusion',
-                                'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite']
-
-        elif config["previous_involvement_status"] == "no":
-            short_columns = ['pain', 'painmove', 'morningstiffness', 'muscularpain', 'headache', 'openingfunction',
-                             'neckpain', 'neckpalpation', 'laterpalp', 'postpalp', 'translation', 'masseter',
-                             'temporalis', 'ptext', 'ptint', 'tempsen', 'sterno', 'stylomandibularligament',
-                             'asymmetrymasseter', 'openingmm', 'opening', 'protrusionmm', 'protrusion',
-                             'laterotrusionrightmm', 'laterotrusionleftmm', 'overjet', 'overbite', 'openbite']
-
-        X_train_fs = X_train.loc[:, short_columns]
-        X_test_fs = X_test.loc[:, short_columns]
-
-        extra = ['asybasis', 'asybasis_0', 'asybasis_1', 'asybasis_2', 'asybasis_3', 'asybasis_4',
-                 'asypupilline', 'asypupilline_0', 'asypupilline_1', 'asypupilline_2', 'asypupilline_3', 'asypupilline_4',
-                 'drug', 'Biologics', 'Conventional', 'Eye medicine', 'NSAID', 'Corticosteroids',
-                 'profile', 'profile_0', 'profile_1', 'profile_2', 'profile_3',
-                 'lowerface', 'lowerface_0', 'lowerface_1', 'lowerface_2', 'lowerface_3',
-                 'asymenton', 'asymenton_0', 'asymenton_1', 'asymenton_2', 'asymenton_3','asymenton_4','asymenton_5','asymenton_6','asymenton_7',
-                 'asyoccl', 'asyoccl_0', 'asyoccl_1', 'asyoccl_2','asyoccl_3', 'asyoccl_4',
-                 'asylowmi', 'asylowmi_0', 'asylowmi_1', 'asylowmi_2','asylowmi_3', 'asylowmi_4','asylowmi_5',
-                 'sagittalrelation', 'sagittalrelation_0', 'sagittalrelation_1', 'sagittalrelation_2', 'sagittalrelation_3', 'sagittalrelation_4', 'sagittalrelation_5','sagittalrelation_6']
-
-        for column in extra:
-            if column in X_train.columns:
-                X_train_fs = pd.concat([X_train_fs, X_train[column]], axis=1)
-                X_test_fs = pd.concat([X_test_fs, X_test[column]], axis=1)
-
-        r.write_to_report("feature selection", "short")
+        r.write_to_report("feature selection", "ultra short feature list")
 
         return X_train_fs, X_test_fs
 

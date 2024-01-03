@@ -25,11 +25,9 @@ class CatBoost:
         self.X_train = self.X_train.drop(columns=['ID'])
         self.X_train = self.X_train.drop(columns=['sex'])
         self.X_train = self.X_train.drop(columns=['ageatvisitation'])
-        self.X_train = self.X_train.drop(columns=['difftdate'])
         self.X_test = self.X_test.drop(columns=['ID'])
         self.X_test = self.X_test.drop(columns=['sex'])
         self.X_test = self.X_test.drop(columns=['ageatvisitation'])
-        self.X_test = self.X_test.drop(columns=['difftdate'])
 
         self.X_train = self.X_train.loc[:, self.X_train.nunique() > 1]
 
@@ -61,41 +59,23 @@ class CatBoost:
 
         model.named_steps['catboost'].set_feature_names(feature_names)
 
-        if self.config['n_categories'] == 2:
-            param = {
-                'catboost__num_trees': [100, 300, 700, 1000],
-                'catboost__learning_rate': [0.01, 0.1, 0.2, 0.3],
-                'catboost__max_depth': [3, 5, 7, 10],
-                'catboost__l2_leaf_reg': [1, 3, 5, 10],
-                'catboost__border_count': [32, 64, 128],
-                'catboost__thread_count': [4],
-                'catboost__bagging_temperature': [1.0, 1.5, 2.0],
-                'catboost__colsample_bylevel': [0.3, 0.5, 0.8, 1.0],
-                'catboost__random_strength': [0.1, 0.5, 1.0],
-                'catboost__grow_policy': ['SymmetricTree', 'Depthwise', 'Lossguide'],
-                'catboost__min_data_in_leaf': [1, 5, 10, 20, 50],
-                'catboost__class_weights': [[1, 2], [0.5, 2], [0.5, 4]],
-                'catboost__early_stopping_rounds': [50],
-                'catboost__random_seed': [42],
-            }
-        elif self.config['n_categories'] == 3:
-            param = {
-                'catboost__iterations': [100, 300, 700, 1000],
-                'catboost__learning_rate': [0.01, 0.1, 0.2, 0.3],
-                'catboost__max_depth': [3, 5, 7, 10],
-                'catboost__l2_leaf_reg': [1, 3, 5, 10],
-                'catboost__border_count': [32, 64, 128],
-                'catboost__thread_count': [4],
-                'catboost__bagging_temperature': [1.0, 1.5, 2.0],
-                'catboost__colsample_bylevel': [0.3, 0.5, 0.8, 1.0],
-                'catboost__random_strength': [0.1, 0.5, 1.0],
-                'catboost__grow_policy': ['SymmetricTree', 'Depthwise', 'Lossguide'],
-                'catboost__min_data_in_leaf': [1, 5, 10, 20, 50],
-                'catboost__class_weights': [[1, 2, 0.5], [0.5, 2, 1], [0.5, 1, 2]],
-                'catboost__early_stopping_rounds': [50],
-                'catboost__loss_function': ['MultiClass'],
-                'catboost__random_seed': [42],
-            }
+        param = {
+            'catboost__num_trees': [2],
+            #'catboost__num_trees': [100, 300, 700, 1000],
+            'catboost__learning_rate': [0.01, 0.1, 0.2, 0.3],
+            'catboost__max_depth': [3, 5, 7, 10],
+            'catboost__l2_leaf_reg': [1, 3, 5, 10],
+            'catboost__border_count': [32, 64, 128],
+            'catboost__thread_count': [4],
+            'catboost__bagging_temperature': [1.0, 1.5, 2.0],
+            'catboost__colsample_bylevel': [0.3, 0.5, 0.8, 1.0],
+            'catboost__random_strength': [0.1, 0.5, 1.0],
+            'catboost__grow_policy': ['SymmetricTree', 'Depthwise', 'Lossguide'],
+            'catboost__min_data_in_leaf': [1, 5, 10, 20, 50],
+            'catboost__class_weights': [[1, 2], [0.5, 2], [0.5, 4]],
+            'catboost__early_stopping_rounds': [50],
+            'catboost__random_seed': [42],
+        }
 
         catboost = RandomizedSearchCV(
             estimator=model,
