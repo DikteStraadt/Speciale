@@ -28,6 +28,8 @@ featureList = [
     ['stylomandibularligamentright', 'stylomandibularligamentleft'],
     ['asymmetrymasseterright', 'asymmetrymasseterleft'],
     ['sagittalrelationright', 'sagitalrelationleft'],
+
+    # LAG FEATURES
 ]  # 54
 
 

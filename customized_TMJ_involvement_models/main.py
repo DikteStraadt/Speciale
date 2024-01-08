@@ -31,7 +31,7 @@ warnings.filterwarnings('ignore')
 
 if __name__ == '__main__':
 
-    sl.remove_models()
+    sl.clean_temp_folder()
 
     ##################### IMPORT CONFIGS #####################
 
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     ##################### PREPROCESS AND SAVE DATA #####################
 
     if configurations[0]['preprocess_data']:
-        p.preprocess_data(configurations[0]['lag_features'])
+        p.preprocess_data(configurations[0]['lag_features'], configurations[0]['n_lag_features'], configurations[0]['lag_feature_list'])
         print("Data is preprocessed and saved")
 
     ##################### IMPORT DATA #####################
@@ -65,8 +65,8 @@ if __name__ == '__main__':
 
         ##################### PROCESS DATA #####################
 
-        columns_to_encode = ['asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
         scaler = StandardScaler()
+        columns_to_encode = ['asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
 
         feature_engineering_pipeline = Pipeline(steps=[
             ("Opening transformer", mm.OpeningTransformer()),
@@ -155,6 +155,6 @@ if __name__ == '__main__':
         ##################### CLEAN WORKSPACE #####################
 
         r.rename_report_file()
-        sl.remove_models()
+        sl.clean_temp_folder()
 
     print("Done!")

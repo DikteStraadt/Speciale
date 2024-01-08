@@ -20,19 +20,19 @@ def load_model(path):
 
     return model
 
-def remove_models():
+def clean_temp_folder():
 
     folder_path = 'Temp'
     file_list = os.listdir(folder_path)
 
-    for model_name in file_list:
+    for file in file_list:
 
-        file_path = os.path.join(folder_path, model_name)
+        file_path = os.path.join(folder_path, file)
         try:
             os.remove(file_path)
-            print(f"Deleted: {model_name}")
+            print(f"Deleted: {file}")
         except Exception as e:
-            print(f"Error deleting {model_name}: {e}")
+            print(f"Error deleting {file}: {e}")
 
 def rename_model(model_name, report):
 

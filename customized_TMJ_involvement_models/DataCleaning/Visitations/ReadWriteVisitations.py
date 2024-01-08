@@ -48,7 +48,7 @@ class ReadVisitations:
 
             list_visitations.insert(0, 'type', data['type'])
             list_visitations.insert(0, 'sex', data['sex'])
-            new_id_column = data['ID'].apply(lambda x: x + f'_{i}')
+            new_id_column = data['ID'] + f'_{i}'
             list_visitations.insert(0, 'ID', new_id_column)
             list_visitations.insert(0, 'study_id', data['study_id'])
             list_list_visitations.append(list_visitations)
@@ -60,45 +60,60 @@ class ReadVisitations:
 
 class CombineToDataFrame:
 
-    def __init__(self, lag_features):
+    def __init__(self, lag_features, n_lag_features):
         self.lag_features = lag_features
+        self.n_lag_features = n_lag_features
 
     def fit(self, visitations_3D, y=None):
         return self
 
     def transform(self, visitations_3D, y=None):
 
-        data_frames = []
+        #data_frames = visitations_3D.copy()
 
-        for visitation_2D in visitations_3D[0:17]:
-            data_frames.append(visitation_2D)
+        #for visitation_2D in visitations_3D[0:17]:
+        #    data_frames.append(visitation_2D)
 
-        result_df = pd.concat(data_frames, axis=0, ignore_index=True)
-
+        result_df = pd.concat(visitations_3D, axis=0, ignore_index=True)
         columns_to_merge = {}
-        if self.lag_features:
-            print("Something with lag feature. Fix this")
-            # columns_to_merge['visitationdate'] = ['second_US', 'third_US', 'fourth_US', 'fifth_US',
-            #                                      'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
-            #                                      'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US',
-            #                                      'fifteenth_US', 'sixteenth_US', 'seventeenth_US']
 
-            # column_names = ['secondUS', 'thirdUS', 'fourthUS', 'fifthUS', 'sixthUS', 'seventhUS',
-            #            'eighthUS', 'ninthUS', 'tenthUS', 'eleventhUS', 'twelfthUS', 'thirteenthUS', 'fourteenthUS', 'fifteenthUS', 'sixteenthUS', 'seventeenthUS']
+        if self.lag_features:
+
+            if self.n_lag_features == 1:
+                columns_to_merge['visitationdate'] = ['second_US', 'third_US', 'fourth_US', 'fifth_US',
+                                                     'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
+                                                     'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US',
+                                                     'fifteenth_US', 'sixteenth_US', 'seventeenth_US']
+
+                column_names = ['secondUS', 'thirdUS', 'fourthUS', 'fifthUS', 'sixthUS', 'seventhUS',
+                                'eighthUS', 'ninthUS', 'tenthUS', 'eleventhUS', 'twelfthUS', 'thirteenthUS', 'fourteenthUS', 'fifteenthUS', 'sixteenthUS', 'seventeenthUS']
+
+            elif self.n_lag_features == 2:
+                columns_to_merge['visitationdate'] = ['third_US', 'fourth_US', 'fifth_US',
+                                                      'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
+                                                      'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US',
+                                                      'fifteenth_US', 'sixteenth_US', 'seventeenth_US']
+
+                column_names = ['thirdUS', 'fourthUS', 'fifthUS', 'sixthUS', 'seventhUS',
+                                'eighthUS', 'ninthUS', 'tenthUS', 'eleventhUS', 'twelfthUS', 'thirteenthUS',
+                                'fourteenthUS', 'fifteenthUS', 'sixteenthUS', 'seventeenthUS']
 
         else:
+
             columns_to_merge['visitationdate'] = ['first_visitation', 'second_US', 'third_US', 'fourth_US', 'fifth_US',
                                                   'sixth_US', 'seventh_US', 'eighth_US', 'ninth_US', 'tenth_US',
                                                   'eleventh_US', 'twelfth_US', 'thirteenth_US', 'fourteenth_US',
                                                   'fifteenth_US', 'sixteenth_US', 'seventeenth_US']
 
             column_names = ['firstvisitation', 'secondUS', 'thirdUS', 'fourthUS', 'fifthUS', 'sixthUS', 'seventhUS',
-                            'eighthUS', 'ninthUS', 'tenthUS', 'eleventhUS', 'twelfthUS', 'thirteenthUS', 'fourteenthUS',
-                            'fifteenthUS', 'sixteenthUS', 'seventeenthUS']
+                            'eighthUS', 'ninthUS', 'tenthUS', 'eleventhUS', 'twelfthUS', 'thirteenthUS', 'fourteenthUS', 'fifteenthUS', 'sixteenthUS', 'seventeenthUS']
 
         for col in result_df.columns:
 
-            prefix = ''.join(filter(str.isalpha, col))
+            if col.endswith("-1") or col.endswith("-2"):
+                prefix = col.replace("_", "")
+            else:
+                prefix = ''.join(filter(str.isalpha, col))
 
             if prefix not in columns_to_merge:
                 columns_to_merge[prefix] = []

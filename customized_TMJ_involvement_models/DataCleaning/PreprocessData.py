@@ -2,7 +2,7 @@ from sklearn.pipeline import Pipeline
 from DataCleaning.RawData import CleanData as cd, ImportExportData as d, CalculatePatientAge as ca
 from DataCleaning.Visitations import ReadWriteVisitations as v, CleanVisitations as cv, LagFeaturesForVisitations as l
 
-def preprocess_data(lag_features):
+def preprocess_data(lag_features, n_lag_features, lag_feature_list):
 
     # Import raw data
     data = d.import_data("Data/Master_Excel_Sep4.xlsx", "Sheet1")
@@ -12,15 +12,15 @@ def preprocess_data(lag_features):
     preprocessing_pipeline = Pipeline(steps=[
         ("Clean columns", cd.CleanColumns()),
         ("Edit misregistered data", cd.EditData()),
-        ("Remove Patients", cd.RemovePatients()),
+        ("Remove patients", cd.RemovePatients()),
         ("Convert timestamps", cd.ConvertTimestamps()),
         ("Calculate age for visitation dates", ca.CalculateAge()),
         ("Read visitations", v.ReadVisitations()),
         ("Remove visitations", cv.RemoveVisitations()),
         ("Convert visitation status", cv.ConvertVisitationStatus()),
-        ("Add previous values", l.LagFeaturesForVisitations(lag_features)),
+        ("Add lag features", l.AddLagFeatures(lag_features, n_lag_features, lag_feature_list)),
         ("Insert zeros", cv.InsertZeros()),
-        ("Combine to single DataFrame", v.CombineToDataFrame(lag_features))
+        ("Combine to single DataFrame", v.CombineToDataFrame(lag_features, n_lag_features))
     ])
 
     data = preprocessing_pipeline.transform(data)

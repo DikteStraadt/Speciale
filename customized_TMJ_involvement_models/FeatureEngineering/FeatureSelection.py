@@ -9,7 +9,7 @@ from Utils import Report as r
 
 def feature_selection(X_train, y_train, X_test, estimator, config):
 
-    if config["feature_selection"] == "SFS":
+    if config["SFS_feature_selection"]:
 
         sfs_data = ForwardSubsetSelection(estimator, y_train, config).transform(X_train)
 
@@ -18,31 +18,19 @@ def feature_selection(X_train, y_train, X_test, estimator, config):
 
         return X_train_fs, X_test_fs
 
-    elif config["feature_selection"] == "ultra_short_feature_list":
+    else:
+
         if config["lag_features"]:
-            print("Feature selection lag feature Do Something")
+            feature_list = [col for col in X_train.columns if any(col.startswith(prefix) for prefix in config['feature_list'])]
         else:
-            ultra_short_features = ['painmove', 'laterpalp', 'translation', 'openingmm',
-                                'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm',
-                                'overjet', 'overbite', 'openbite', 'chewingfunction', 'retrognathism', 'deepbite',
-                                'Krepitation']
+            feature_list_with_new_drugs = config['feature_list'] + ['Biologics', 'Conventional', 'Eye medicine', 'NSAID', 'Corticosteroids']
+            feature_list_with_new_drugs.remove('drug')
+            feature_list = config['feature_list'] if 'drug' not in config['feature_list'] else feature_list_with_new_drugs
 
-        X_train_fs = X_train.loc[:, ultra_short_features]
-        X_test_fs = X_test.loc[:, ultra_short_features]
+        X_train_fs = X_train.loc[:, feature_list]
+        X_test_fs = X_test.loc[:, feature_list]
 
-        extra = ['asybasis', 'asybasis_0', 'asybasis_1', 'asybasis_2', 'asybasis_3', 'asybasis_4',
-                 'asypupilline', 'asypupilline_0', 'asypupilline_1', 'asypupilline_2', 'asypupilline_3', 'asypupilline_4',
-                 'drug', 'Biologics', 'Conventional', 'Eye medicine', 'NSAID', 'Corticosteroids',
-                 'asyoccl', 'asyoccl_0', 'asyoccl_1', 'asyoccl_2', 'asyoccl_3', 'asyoccl_4',
-                 'profile', 'profile_0', 'profile_1', 'profile_2', 'profile_3',
-                 'lowerface', 'lowerface_0', 'lowerface_1', 'lowerface_2', 'lowerface_3']
-
-        for column in extra:
-            if column in X_train.columns:
-                X_train_fs = pd.concat([X_train_fs, X_train[column]], axis=1)
-                X_test_fs = pd.concat([X_test_fs, X_test[column]], axis=1)
-
-        r.write_to_report("feature selection", "ultra short feature list")
+        r.write_to_report("feature selection", "list")
 
         return X_train_fs, X_test_fs
 
@@ -93,40 +81,4 @@ class ForwardSubsetSelection:
         r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS features names ({str(self.estimator).split('(')[0]})", features)
         r.write_to_report(f"({str(self.estimator).split('(')[0]}) SFS cv score ({str(self.estimator).split('(')[0]})", sfs.k_score_)
 
-        return data
-
-class PCATransformer:
-
-    # DEPRECATED
-
-    def __init__(self, n_components):
-        self.n_components = n_components
-
-    def fit(self, data, y=None):
-        return self
-
-    def transform(self, data, y=None):
-        data_no_pca = data
-
-        fig, ax = plt.subplots(figsize=(32, 24))
-        sns.heatmap(data_no_pca.corr())
-        plt.tight_layout()
-        plt.savefig("withoutPCA", dpi=300)
-
-        pca = PCA(n_components=self.n_components)
-        pca.fit(data_no_pca)
-        data_pca = pca.transform(data_no_pca)
-        data_pca = pd.DataFrame(data_pca)
-
-        fig, ax = plt.subplots(figsize=(32, 24))
-        sns.heatmap(data_pca.corr())
-        plt.tight_layout()
-        plt.savefig("withPCA", dpi=300)
-
-        data = pd.concat([data[columns_to_exclude], data_pca], axis=1)
-
-        r.write_to_report("feature selection", "PCA")
-        r.write_to_report("PCA components", self.n_components)
-
-        print("PCA performed")
         return data

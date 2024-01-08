@@ -22,9 +22,11 @@ class EntityEmbeddingTransformer:
 
     def transform(self, data, y=None):
 
+        columns_to_encode = [col for col in data.columns if any(col.startswith(prefix) for prefix in self.embeddingList)]
+
         if self.config['do_embedding']:
 
-            for idx, featureEm in enumerate(self.embeddingList):
+            for idx, featureEm in enumerate(columns_to_encode):
                 string = featureEm
                 data = doEmbedding(data, featureEm, self.target, string, self.config['embedding_epochs'], self.config['lag_features'])
 
@@ -43,12 +45,7 @@ def doEmbedding(data, featureEm, target, embeddingName, epochs, lag_features):
     embeddingData = embeddingData.fillna(0)
 
     y = embeddingData[target]
-
-    if lag_features:
-        print("Lag features gør noget")
-        # X = embeddingData.drop(columns=[target, "ID", "sex", "previousstatus"], axis=1).astype(float)
-    else:
-        X = embeddingData.drop(columns=[target, "ID", "sex"], axis=1).astype(float)
+    X = embeddingData.drop(columns=[target, "ID", "sex"], axis=1).astype(float)
 
     # evt. noget stratify på
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=11)
@@ -60,11 +57,7 @@ def doEmbedding(data, featureEm, target, embeddingName, epochs, lag_features):
     print(y_train.head())
 
     # remaining cols
-    if lag_features:
-        print("lag features gøøør noget")
-        # remainfeatures = data.drop(columns=[featureEm, target, "ID", "sex", "previousstatus"], axis=1)
-    else:
-        remainfeatures = data.drop(columns=[featureEm, target, "ID", "sex"], axis=1)
+    remainfeatures = data.drop(columns=[featureEm, target, "ID", "sex"], axis=1)
 
     numeric_cols = remainfeatures.columns
     X_train[numeric_cols] = X_train[numeric_cols].astype(np.float32)

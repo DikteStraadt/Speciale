@@ -8,6 +8,19 @@ from FeatureEngineering import FeatureSelection as f
 from Utils import Report as r
 from ModelEvaluation import Evaluation as e
 
+def get_categorical_columns(all_columns):
+
+    non_categorical_columns = ['overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion',
+       'laterotrusionrightmm', 'laterotrusionleftmm', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile',
+       'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
+
+    suffixes_to_exclude = ['-1', '-2']
+    categorical_columns = [col for col in all_columns if col not in non_categorical_columns and not any(
+        col.endswith(suffix) for suffix in suffixes_to_exclude)]
+
+    return categorical_columns
+
+
 class CatBoost:
 
     def __init__(self, X_train, X_test, y_train, y_test, config):
@@ -31,31 +44,21 @@ class CatBoost:
 
         self.X_train = self.X_train.loc[:, self.X_train.nunique() > 1]
 
-        self.X_train.to_excel(f"Data/before_feature_selection_x_train_cat.xlsx")
-
         data_fs = f.feature_selection(self.X_train, self.y_train, self.X_test, CatBoostClassifier(iterations=self.config['catboost_SFS_iterations'], allow_const_label=True), self.config)
 
         self.X_train = data_fs[0]
         self.X_test = data_fs[1]
 
-        self.X_train.to_excel(f"Data/after_feature_selection_x_train_cat.xlsx")
-
-
         r.write_to_report("(catboost) n_features", len(self.X_train.columns))
         r.write_to_report("(catboost) feature names", self.X_train.columns.tolist())
 
-        non_categorical_columns = ['overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm', 'asypupilline', 'asybasis', 'asyoccl', 'asymenton', 'profile', 'asyupmid', 'asylowmi', 'lowerface', 'sagittalrelation']
-        categorical_columns = [col for col in self.X_train.columns if col not in non_categorical_columns]
-
-        print(categorical_columns)
+        categorical_columns = get_categorical_columns(self.X_train.columns)
 
         model = Pipeline(steps=[
             ("catboost", CatBoostClassifier(cat_features=categorical_columns)),
         ])
 
         feature_names = self.X_train.columns.tolist()
-
-        print(feature_names)
 
         model.named_steps['catboost'].set_feature_names(feature_names)
 
@@ -88,8 +91,6 @@ class CatBoost:
             refit='f1_macro',
             verbose=self.config["verbose"]
         )
-
-        self.X_train.to_excel(f"Data/before_fit_x_train_cat.xlsx")
 
         catboost.fit(self.X_train, self.y_train)
 
