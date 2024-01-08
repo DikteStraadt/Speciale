@@ -2,6 +2,7 @@ from Utils import Report as r
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
+import tensorflow as tf
 from tensorflow.keras.layers import Input, Embedding, Concatenate, Dense, Reshape
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import SGD
@@ -40,6 +41,16 @@ class EntityEmbeddingTransformer:
         return data
 
 def doEmbedding(data, featureEm, target, embeddingName, epochs, lag_features):
+
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+
+    if gpus:
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+    else:
+        print("No GPU devices found.")
+
+
     print(data.isna().sum())
     embeddingData = data.copy()
     embeddingData = embeddingData.fillna(0)
