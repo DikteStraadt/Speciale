@@ -1,37 +1,25 @@
 import pandas as pd
+import re
 
-featureList = [
-    ['swallenright', 'swallenleft'],
-    ['clickright', 'clickleft'],
-    ['lockright', 'lockleft'],
-    ['crepitationright','crepitationleft'],
-    ['painright', 'painleft'],
-    ['painmoveright', 'painmoveleft'],
-    ['muscularpainright', 'muscularpainleft'],
-    ['rotationright', 'rotationleft'],
-    ['swallenjointright', 'swallenjointleft'],
-    ['laterpalpright', 'laterpalpleft'],
-    ['postpalpright', 'postpalpleft'],
-    ['clickopeningright', 'clickopeningleft'],
-    ['clickclosingright', 'clickclosingleft'],
-    ['clicklaterotrusionright', 'clicklaterotrusionleft'],
-    ['clickprotrusionright', 'clickprotrusionleft'],
-    ['translationright', 'translationleft'],
-    ['hypermobilityright', 'hypermobilityleft'],
-    ['Krepitationright', 'Krepitationleft'],
-    ['masseterright', 'masseterleft'],
-    ['temporalisright', 'temporalisleft'],
-    ['ptextright', 'ptextleft'],
-    ['ptintright', 'ptintleft'],
-    ['tempsenright', 'tempsenleft'],
-    ['sternoright', 'sternoleft'],
-    ['stylomandibularligamentright', 'stylomandibularligamentleft'],
-    ['asymmetrymasseterright', 'asymmetrymasseterleft'],
-    ['sagittalrelationright', 'sagitalrelationleft'],
+def find_feature_pairs(data):
 
-    # LAG FEATURES
-]  # 54
+    feature_pairs = []
 
+    for column1 in data.columns:
+        pattern = re.compile(r'^(.*?)(right|left)(.*)$')
+        match1 = pattern.match(column1)
+
+        if match1 and column1 != 'laterotrusionrightmm' and column1 != 'laterotrusionleftmm':
+            prefix, indicator, suffix = match1.groups()
+            column2 = prefix + ("left" if indicator == "right" else "right") + suffix
+
+            if column2 in data.columns:
+                common_part = match1.group(1) + suffix
+
+                if common_part not in [item for tuple in feature_pairs for item in tuple]:
+                    feature_pairs.append((column1, column2, common_part))
+
+    return feature_pairs
 
 def getHighestSeverity(right, left):
     mergedList = []
@@ -50,12 +38,18 @@ class MergeFeatures:
 
         new_df = data
 
-        for featurepair in featureList:
-            featureNameMerged = featurepair[0].removesuffix('right')
-            mergedList = getHighestSeverity(new_df[featurepair[0]], new_df[featurepair[1]])
-            new_df[featureNameMerged] = mergedList
+        feature_pair_list = find_feature_pairs(new_df)
 
-            new_df.drop([featurepair[0], featurepair[1]], axis=1, inplace=True)
+        for feature_pair in feature_pair_list:
+
+            # Merge features using your custom logic or function (getHighestSeverity)
+            merged_list = getHighestSeverity(new_df[feature_pair[0]], new_df[feature_pair[1]])
+
+            # Create a new column with the merged feature name
+            new_df[feature_pair[2]] = merged_list
+
+            # Drop the original features
+            new_df.drop([feature_pair[0], feature_pair[1]], axis=1, inplace=True)
 
         print("Merging of features is done")
 

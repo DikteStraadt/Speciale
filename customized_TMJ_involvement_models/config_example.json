@@ -1,0 +1,15 @@
+{
+    "preprocess_data": [true],
+    "lag_features": [true],
+    "n_lag_features": [1, 2],
+    "lag_feature_list": [["pain_move_left", "pain_move_right", "later_palp_right", "later_palp_left", "translation_right", "translation_left", "opening_mm", "opening", "protrusion_mm", "protrusion", "laterotrusion_left_mm", "laterotrusion_right_mm", "overjet", "overbite", "openbite", "chewing_function", "retrognathism", "deepbite", "Krepitation_left", "Krepitation_right", "asy_basis", "asy_pupil_line", "asy_occl", "profile", "drug", "lower_face"]],
+    "SFS_feature_selection": [false],
+    "feature_list":[["painmove","laterpalp","translation","openingmm","opening","protrusionmm","protrusion","laterotrusionrightmm","laterotrusionleftmm","overjet","overbite","openbite","chewingfunction","retrognathism","deepbite","Krepitation","asybasis","asypupilline","drug","asyoccl","profile","lowerface"]],
+    "do_embedding": [true],
+    "SFS_n_features": 15,
+    "cv": 5,
+    "iterations": 50,
+    "verbose": 3,
+    "embedding_epochs": 10,
+    "catboost_SFS_iterations": 50
+}
