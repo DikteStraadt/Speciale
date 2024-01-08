@@ -61,6 +61,8 @@ if __name__ == '__main__':
         r.write_to_report("timestamp end", "")  # placeholder
         r.write_to_report("original data size", f"{data.shape}")
         r.write_to_report("lag features", config['lag_features'])
+        r.write_to_report("number of lag features", config['n_lag_features'])
+
 
         ##################### PROCESS DATA #####################
 

@@ -48,7 +48,7 @@ def rename_model(model_name, report):
     else:
         metric = "ERROR"
 
-    new_model_name = f"Results/{report['id']} model (ml={model_name}, f1 macro={round(metric, 4)}, smote={str(report['smote values'])}, lag features values={report['lag features']}, features={report['feature selection']} {report['timestamp end']}.pkl"
+    new_model_name = f"Results/{report['id']} model (ml={model_name}, f1 macro={round(metric, 4)}, lag features={report['lag features']}, number of lag feature={report['number of lag features']}, features={report['feature selection']} {report['timestamp end']}.pkl"
 
     for filename in file_list:
         if filename.startswith(f"model-{model_name}"):
