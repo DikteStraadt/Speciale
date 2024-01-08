@@ -25,7 +25,6 @@ from ModelEvaluation import ConformalPrediction as cp
 from FeatureEngineering import DrugTransformation as dt
 from FeatureEngineering import mmTransformation as mm
 from ModelEvaluation import CatBoostWrapper as cbw
-from FeatureEngineering import InverseEmbeddingTransformation as ie
 
 warnings.filterwarnings('ignore')
 
