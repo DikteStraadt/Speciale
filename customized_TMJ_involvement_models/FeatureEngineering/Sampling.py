@@ -21,13 +21,13 @@ class SMOTE:
         age_column = data["ageatvisitation"]
         y = data["involvementstatus"]
         X = data.drop(columns=["sex", "involvementstatus", "ID", "ageatvisitation"])
+
         print("Before SMOTE: ", Counter(y))
+        majority_class_size = list(Counter(y).items())[0][1]
+        sampling_strategy = {1: majority_class_size}
 
         non_categorical_columns = ['overjet', 'openbite', 'overbite', 'deepbite', 'openingmm', 'opening', 'protrusionmm', 'protrusion', 'laterotrusionrightmm', 'laterotrusionleftmm']
         categorical_columns = [col for col in X.columns if col not in non_categorical_columns]
-
-        sampling_strategy = {1: self.config['smote_values'][0]}
-        r.write_to_report("smote values", self.config['smote_values'][0])
 
         smote = SMOTENC(categorical_features=categorical_columns, random_state=42, sampling_strategy=sampling_strategy)
         X_res, y_res = smote.fit_resample(X, y)

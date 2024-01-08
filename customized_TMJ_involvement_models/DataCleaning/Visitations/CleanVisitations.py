@@ -48,6 +48,9 @@ class RemoveVisitations:
 
 class ConvertVisitationStatus:
 
+    def fit(self, visitations_3D, y=None):
+        return self
+
     def transform(self, visitations_3D, y=None):
 
         visitations_number = 1
