@@ -63,8 +63,7 @@ class CatBoost:
         model.named_steps['catboost'].set_feature_names(feature_names)
 
         param = {
-            'catboost__num_trees': [2],
-            #'catboost__num_trees': [100, 300, 700, 1000],
+            'catboost__num_trees': [100, 300, 700, 1000],
             'catboost__learning_rate': [0.01, 0.1, 0.2, 0.3],
             'catboost__max_depth': [3, 5, 7, 10],
             'catboost__l2_leaf_reg': [1, 3, 5, 10],
