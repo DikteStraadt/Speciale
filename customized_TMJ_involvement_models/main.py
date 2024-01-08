@@ -117,17 +117,6 @@ if __name__ == '__main__':
 
         ml_pipeline.transform(data)
 
-        ##################### INVERSE TRANSFORM FEATURES #####################
-
-        inverse_transform_pipeline = Pipeline(steps=[
-            ("inverse encoding", ie.ReverseEmbeddingTransformer(columns_to_encode)),
-            ("inverse normalization", n.NormalizeData(config, scaler, False)),
-        ])
-
-        data = inverse_transform_pipeline.transform(data)
-        data_for_export = pd.concat([data, target], axis=1)
-        d.export_data(data_for_export, f"Temp/{id} inverse transformed data.xlsx")
-
         ##################### UTILS AND FIND BEST MODEL #####################
 
         r.write_to_report("timestamp end", datetime.now().strftime('%d-%m-%Y %H-%M-%S'))
